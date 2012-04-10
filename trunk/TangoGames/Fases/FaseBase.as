@@ -15,8 +15,8 @@ package TangoGames.Fases
 		 * Valor de Retorno para controle da interrupcao da Fase
 		 */
 		public static const INTERRUPCAO_CONTINUAR:uint = 0;
-		public static const INTERRUPCAO_REINICIAR:uint = 0;
-		public static const INTERRUPCAO_FINALIZAR:uint = 0;
+		public static const INTERRUPCAO_REINICIAR:uint = 1;
+		public static const INTERRUPCAO_FINALIZAR:uint = 2;
 		
 		private var IN_Nivel:int;
 		private var _mainapp:DisplayObjectContainer;
@@ -30,8 +30,8 @@ package TangoGames.Fases
 			if (this.toString() == "[object FaseBase]" ) {
 				throw (new Error("FaseBase: Esta classe não pode ser instanciada diretamente"))
 			}
-			if (this is FaseInterface) {
-				throw (new Error("FaseBase: A classe derivada deve implementas FaseInterface"))				
+			if (!(this is FaseInterface)) {
+				throw (new Error("FaseBase: A classe derivada do " + this.toString() + " deve implementar a interface FaseInterface"))				
 			}
 			if (_main == null) {
 				throw (new Error("FaseBase: O Parametro main não pode ser nulo"))				
@@ -71,7 +71,9 @@ package TangoGames.Fases
 			throw (new Error ("A classe derivada deve sobrescrever o metodo update"));
 			
 		}
-		
+		/**
+		 * Metodo reinicia a fase interrompida do ponto de pausa
+		 */
 		protected function continuaFase():void {
 			_mainapp.addEventListener(Event.ENTER_FRAME, update, false, 0, true);			
 		}
@@ -91,9 +93,17 @@ package TangoGames.Fases
 				case INTERRUPCAO_FINALIZAR :
 					removeFase();
 				break;
+					throw ( new Error ("Valor de retorno não correspondente ao valor esperado (0-continua / 1-reinicia / 2-finaliza)") ) 
 				default:
 			} 
 		}
+		/**
+		 * metodo chamado quando a fase for interrompida
+		 * pausa, fim de jogo e fase concluida
+		 * @return
+		 * retorna o controle da ação a seguir.
+		 * INTERRUPCAO_CONTINUAR =0; INTERRUPCAO_REINICIAR= 1 ; INTERRUPCAO_FINALIZAR:uint = 2; 
+		 */
 		protected function interrompidaFase():uint {
 			return 0;
 		}
