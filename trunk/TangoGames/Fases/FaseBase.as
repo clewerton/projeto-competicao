@@ -10,7 +10,14 @@ package TangoGames.Fases
 	 * @author Diogo Honorato
 	 */
 	public class FaseBase extends MovieClip
-	{
+	{ 
+		/**
+		 * Valor de Retorno para controle da interrupcao da Fase
+		 */
+		public static const INTERRUPCAO_CONTINUAR:uint = 0;
+		public static const INTERRUPCAO_REINICIAR:uint = 0;
+		public static const INTERRUPCAO_FINALIZAR:uint = 0;
+		
 		private var IN_Nivel:int;
 		private var _mainapp:DisplayObjectContainer;
 		private var BO_fimdeJogo:Boolean;
@@ -22,6 +29,9 @@ package TangoGames.Fases
 		{
 			if (this.toString() == "[object FaseBase]" ) {
 				throw (new Error("FaseBase: Esta classe não pode ser instanciada diretamente"))
+			}
+			if (this is FaseInterface) {
+				throw (new Error("FaseBase: A classe derivada deve implementas FaseInterface"))				
 			}
 			if (_main == null) {
 				throw (new Error("FaseBase: O Parametro main não pode ser nulo"))				
@@ -66,28 +76,56 @@ package TangoGames.Fases
 			_mainapp.addEventListener(Event.ENTER_FRAME, update, false, 0, true);			
 		}
 		
-		protected function pausaFase():void {
+		/**
+		 * Metodo chamado para interromper a fase
+		 */
+		protected function interrompeFase():void {
 			_mainapp.removeEventListener(Event.ENTER_FRAME, update);
-			dispatchEvent(new FaseEvent(FaseEvent.FASE_PAUSA));
+			switch (interrompidaFase()) {
+				case INTERRUPCAO_CONTINUAR :
+					continuaFase();
+					break;
+				case INTERRUPCAO_REINICIAR :
+					reiniciarFase();
+					break;
+				case INTERRUPCAO_FINALIZAR :
+					removeFase();
+				break;
+				default:
+			} 
 		}
-		
-		protected function concluiFase():void {
-			_mainapp.removeEventListener(Event.ENTER_FRAME, update);
-			dispatchEvent(new FaseEvent(FaseEvent.FASE_CONCLUIDA));
+		protected function interrompidaFase():uint {
+			return 0;
 		}
-		
-		protected function terminaFase():void {
-			_mainapp.removeEventListener(Event.ENTER_FRAME, update);
-			dispatchEvent(new FaseEvent(FaseEvent.FASE_PAUSA));
-		}
-
+		/**
+		 * Metodo chamado para reiniciar a fase
+		 */
+		protected function reiniciarFase():void {
+			BO_fimdeJogo = false;
+			BO_faseConcluida = false;
+			reiniciacao();
+			continuaFase();
+		}		
+		/**
+		 * Este metodo deve ser sobrescrito com ações específicas
+		 * da classe derivada para reiniciar a fase
+		 */
+		protected function reiniciacao():void {
+			throw (new Error ("A classe derivada deve sobrescrever o metodo reiniciacao"));
+		}		
+		/**
+		 * Metodo chamado para remover a fase
+		 */
 		protected function removeFase():void {
 			remocao();
 			TC_teclas.destroi();
 			TC_teclas = null;
 			_mainapp.removeChild(this);
 		}
-		
+		/**
+		 * Este metodo deve ser sobrescrito com ações específicas
+		 * da classe derivada para remover a classe
+		 */		
 		protected function remocao():void {
 			throw (new Error ("A classe derivada deve sobrescrever o metodo remocao"));
 		}
