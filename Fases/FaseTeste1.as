@@ -27,7 +27,7 @@ package Fases {
 		override protected function update(e:Event):void {
 			_f.y += 1;
 			if (pressTecla(Keyboard.P)) {
-				pausaFase()
+				interrompeFase()
 			}
 		}
 	}
