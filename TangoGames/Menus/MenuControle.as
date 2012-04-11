@@ -15,17 +15,17 @@ package TangoGames.Menus {
 		//Vetor de menus existentes
 		private var MenuCorrente:MenuBase;
 
-		public function MenuControle(main:DisplayObjectContainer) {
+		public function MenuControle(_main:DisplayObjectContainer) {
 			if (this.toString() == "[object MenuControle]" ) {
 				throw (new Error("MenuControle: Esta classe não pode ser instanciada diretamente"))
 			}
-			if (main == null) {
+			if (_main == null) {
 				throw (new Error("MenuControle: O Parametro main não pode ser nulo"))				
 			}
-			if (!(main is MenuMainInterface)) {
+			if (!(_main is MenuMainInterface)) {
 				throw (new Error("MenuControle: O objeto main fornecido deve implementar a Interface MenuMainInterface"))
 			}
-			this._mainapp = main;
+			this._mainapp = _main;
 		}
 		
 		public function inicia() {

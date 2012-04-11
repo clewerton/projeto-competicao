@@ -9,21 +9,17 @@ package TangoGames.Fases
 	 * ...
 	 * @author Diogo Honorato
 	 */
-	public class FaseBase extends MovieClip
-	{ 
-		/**
-		 * Valor de Retorno para controle da interrupcao da Fase
-		 */
-		public static const INTERRUPCAO_CONTINUAR:uint = 0;
-		public static const INTERRUPCAO_REINICIAR:uint = 1;
-		public static const INTERRUPCAO_FINALIZAR:uint = 2;
+	public class FaseBase extends MovieClip {
 		
 		private var IN_Nivel:int;
 		private var _mainapp:DisplayObjectContainer;
 		private var BO_fimdeJogo:Boolean;
 		private var BO_faseConcluida:Boolean;
+		private var BO_pausa:Boolean;
+		
+		//controle de teclado
 		private var TC_teclas:TeclasControle;
-
+		
 		
 		public function FaseBase(_main:DisplayObjectContainer, Nivel:int) 
 		{
@@ -43,11 +39,9 @@ package TangoGames.Fases
 		 * Inicia a execução da fase
 		 */
 		public function iniciaFase():void {
-			if (inicializacao()) {
 			_mainapp.addChild(this);
-			TC_teclas = new TeclasControle(this);
-			stage.focus = this;
-			continuaFase();
+			if (FaseInterface(this).inicializacao()) {
+				continuaFase();
 			}
 		}
 		/**
@@ -56,10 +50,10 @@ package TangoGames.Fases
 		 * @return
 		 * se falso(false) não a fase não será iniciada;
 		 */
-		protected function inicializacao():Boolean {
-			throw (new Error ("A classe derivada deve sobrescrever o metodo inicialiazacao"));
-			return false
-		}
+		//protected function inicializacao():Boolean {
+		//	throw (new Error ("A classe derivada deve sobrescrever o metodo inicialiazacao"));
+		//	return false
+		//}
 		
 		/**
 		 * Esta função será executa a cada evento Enter-Frame.
@@ -67,78 +61,84 @@ package TangoGames.Fases
 		 * @param	e
 		 * parametro do tipo event obrigatório para funções de manipulação de eventos
 		 */
-		protected function update(e:Event):void {
-			throw (new Error ("A classe derivada deve sobrescrever o metodo update"));
-			
-		}
+		//protected function update(e:Event):void {
+		//	throw (new Error ("A classe derivada deve sobrescrever o metodo update"));
+		//}
 		/**
 		 * Metodo reinicia a fase interrompida do ponto de pausa
 		 */
-		protected function continuaFase():void {
-			_mainapp.addEventListener(Event.ENTER_FRAME, update, false, 0, true);			
+		public function continuaFase():void {
+			TC_teclas = new TeclasControle(stage);
+			stage.stageFocusRect = false;
+			stage.focus = stage;
+			BO_pausa = false;
+			_mainapp.addEventListener(Event.ENTER_FRAME, FaseInterface(this).update, false, 0, true);			
 		}
 		
 		/**
-		 * Metodo chamado para interromper a fase
+		 * Metodo chamado para fase parada
 		 */
-		protected function interrompeFase():void {
-			_mainapp.removeEventListener(Event.ENTER_FRAME, update);
-			switch (interrompidaFase()) {
-				case INTERRUPCAO_CONTINUAR :
-					continuaFase();
-					break;
-				case INTERRUPCAO_REINICIAR :
-					reiniciarFase();
-					break;
-				case INTERRUPCAO_FINALIZAR :
-					removeFase();
-				break;
-					throw ( new Error ("Valor de retorno não correspondente ao valor esperado (0-continua / 1-reinicia / 2-finaliza)") ) 
-				default:
-			} 
+		protected function pausaFase():void {
+			TC_teclas.destroi();
+			TC_teclas = null;
+			BO_pausa = true;
+			_mainapp.removeEventListener(Event.ENTER_FRAME, FaseInterface(this).update);
+			dispatchEvent(new FaseEvent(FaseEvent.FASE_PAUSA))
 		}
+		
 		/**
-		 * metodo chamado quando a fase for interrompida
-		 * pausa, fim de jogo e fase concluida
-		 * @return
-		 * retorna o controle da ação a seguir.
-		 * INTERRUPCAO_CONTINUAR =0; INTERRUPCAO_REINICIAR= 1 ; INTERRUPCAO_FINALIZAR:uint = 2; 
+		 * Metodo chamado para terminar a fase
 		 */
-		protected function interrompidaFase():uint {
-			return 0;
+		protected function terminoFase():void {
+			BO_fimdeJogo = true;
+			_mainapp.removeEventListener(Event.ENTER_FRAME, FaseInterface(this).update);
+			dispatchEvent(new FaseEvent(FaseEvent.FASE_FIMDEJOGO))
 		}
+
+		/**
+		 * Metodo chamado para concluir a fase
+		 */
+		protected function concluidaFase():void {
+			BO_faseConcluida = true;
+			_mainapp.removeEventListener(Event.ENTER_FRAME, FaseInterface(this).update);
+			dispatchEvent(new FaseEvent(FaseEvent.FASE_CONCLUIDA));
+		}
+
 		/**
 		 * Metodo chamado para reiniciar a fase
 		 */
-		protected function reiniciarFase():void {
+		public function reiniciarFase():void {
 			BO_fimdeJogo = false;
 			BO_faseConcluida = false;
-			reiniciacao();
+			BO_pausa = false;
+			FaseInterface(this).reiniciacao();
 			continuaFase();
 		}		
 		/**
 		 * Este metodo deve ser sobrescrito com ações específicas
 		 * da classe derivada para reiniciar a fase
 		 */
-		protected function reiniciacao():void {
-			throw (new Error ("A classe derivada deve sobrescrever o metodo reiniciacao"));
-		}		
+		//protected function reiniciacao():void {
+		//	throw (new Error ("A classe derivada deve sobrescrever o metodo reiniciacao"));
+		//}		
 		/**
 		 * Metodo chamado para remover a fase
 		 */
-		protected function removeFase():void {
-			remocao();
-			TC_teclas.destroi();
-			TC_teclas = null;
+		public function removeFase():void {
+			FaseInterface(this).remocao();
+			if (TC_teclas != null) {
+				TC_teclas.destroi();
+				TC_teclas = null;
+			}
 			_mainapp.removeChild(this);
 		}
 		/**
 		 * Este metodo deve ser sobrescrito com ações específicas
 		 * da classe derivada para remover a classe
 		 */		
-		protected function remocao():void {
-			throw (new Error ("A classe derivada deve sobrescrever o metodo remocao"));
-		}
+		//protected function remocao():void {
+		//	throw (new Error ("A classe derivada deve sobrescrever o metodo remocao"));
+		//}
 		
 		protected function pressTecla(tecla:uint):Boolean {
 			return TC_teclas.pressTecla(tecla);
@@ -154,6 +154,9 @@ package TangoGames.Fases
 			return BO_faseConcluida;
 		}
 		
+		public function get pausa():Boolean 
+		{
+			return BO_pausa;
+		}
 	}
-
 }

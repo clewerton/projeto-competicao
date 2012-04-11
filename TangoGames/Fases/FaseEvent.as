@@ -8,9 +8,10 @@ package TangoGames.Fases
 	 */
 	public class FaseEvent extends Event 
 	{
-		public static const FASE_PAUSA:String = "FasePausa"
-		public static const FASE_FIMDEJOGO:String = "FaseFimdeJogo"
-		public static const FASE_CONCLUIDA:String = "FaseConcluida"
+		public static const FASE_PAUSA:String = "FasePausa";
+		public static const FASE_FIMDEJOGO:String = "FaseFimdeJogo";
+		public static const FASE_CONCLUIDA:String = "FaseConcluida";
+		
 		public function FaseEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false) 
 		{ 
 			super(type, bubbles, cancelable);

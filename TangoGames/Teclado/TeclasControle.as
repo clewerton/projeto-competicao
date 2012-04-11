@@ -20,13 +20,11 @@ package TangoGames.Teclado
 			
 		private function teclaPrecionada(e:KeyboardEvent):void 
 		{
-			OB_teclas[e.keyCode] = false;
-			trace("Precionada"+e.keyCode)
+			OB_teclas[e.keyCode] = true;
 		}
 		
 		private function teclaLiberada(e:KeyboardEvent):void {
-			OB_teclas[e.keyCode] = true;
-			trace("Liberada"+e.keyCode)
+			OB_teclas[e.keyCode] = false;
 		}
 
 		public function pressTecla(codigoTecla:uint):Boolean {
