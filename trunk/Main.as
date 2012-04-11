@@ -9,10 +9,10 @@ package
 	 * ...
 	 * @author Diogo Honorato
 	 */
-	public class Main extends MovieClip implements MenuMainInterface
+	public class Main extends MovieClip implements MenuMainInterface,FaseMainInterface
 	{
-		var menu:MenuControle;
-		var fase:FaseControle;
+		var menus:MenuControle;
+		var fases:FaseControle;
 		
 		public function Main() 
 		{
@@ -20,25 +20,28 @@ package
 		}
 		
 		private function mainmenu():void {
-			menu = new MenuPrincipal(this);
-			menu.inicia();
-			fase = new FasesJogo(this);
+			menus = new MenuPrincipal(this);
+			menus.inicia();
+			fases = new FasesJogo(this);
 		}
 		
 		public function manipulaMenuOpcaoSelecionada(MenuCor:MenuBase, Opcao: MenuOpcao):Boolean {
-			trace(MenuCor.ID_Menu); 
-			trace(Opcao.valorRetorno);
 			switch (MenuCor.ID_Menu) 
 			{
 				case "MenuFases": 
 					
 				break;
 			default:
-				fase.iniciaFase(MenuCor.ID_Menu, Opcao.valorRetorno);
+				fases.iniciaFase(MenuCor.ID_Menu, Opcao.valorRetorno);
 				return true;
 			}
 			
 			return false
 		}
+		
+		public function manipulaSairFases():void {
+			menus.inicia();
+		}
+		
 	}
 }

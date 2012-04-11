@@ -4,32 +4,37 @@ package Fases {
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.ui.Keyboard;
+	import TangoGames.Fases.FaseInterface;
 	
 	/**
 	 * ...
 	 * @author Humberto Anjos
 	 */
-	public class FaseTeste1 extends FaseBase 
-	{
+	public class FaseTeste1 extends FaseBase implements FaseInterface {
 		var _f:FlordaVida;
 		public function FaseTeste1(_mainapp:DisplayObjectContainer, Nivel:int) {
 			super(_mainapp, Nivel);
 		}
 		
-		override protected function inicializacao():Boolean 
-		{
+		public function inicializacao():Boolean {
 			_f = new FlordaVida();
 			this.addChild(_f);
-			_f.x = stage.width / 2;
-			_f.y = 0 - _f.height / 2;
+			reiniciacao();
 			return true
 		}
-		override protected function update(e:Event):void {
+		public function update(e:Event):void {
 			_f.y += 1;
 			if (pressTecla(Keyboard.P)) {
-				interrompeFase()
+				pausaFase();
 			}
 		}
+		
+		public function reiniciacao():void {
+			_f.x = stage.stageWidth/ 2;
+			_f.y = 0 - _f.height / 2;
+		}
+			
+		public function remocao():void {};
 	}
 }
 import flash.display.Sprite;
