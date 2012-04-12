@@ -1,5 +1,7 @@
 package TangoGames.Fases 
 {
+	import TangoGames.Atores.AtorBase;
+	import TangoGames.Atores.AtorInterface;
 	import TangoGames.Teclado.TeclasControle;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.MovieClip;
@@ -20,6 +22,9 @@ package TangoGames.Fases
 		//controle de teclado
 		private var TC_teclas:TeclasControle;
 		
+		//controle de atores
+		private var VT_Atores:Vector.<AtorBase>;
+		
 		
 		public function FaseBase(_main:DisplayObjectContainer, Nivel:int) 
 		{
@@ -34,6 +39,7 @@ package TangoGames.Fases
 			}
 			this._mainapp = _main;
 			this.IN_Nivel = Nivel;
+			VT_Atores = new Vector.<AtorBase>;
 		}
 		/**
 		 * Inicia a execução da fase
@@ -72,7 +78,12 @@ package TangoGames.Fases
 			stage.stageFocusRect = false;
 			stage.focus = stage;
 			BO_pausa = false;
-			_mainapp.addEventListener(Event.ENTER_FRAME, FaseInterface(this).update, false, 0, true);			
+			_mainapp.addEventListener(Event.ENTER_FRAME, updateFase, false, 0, true);			
+		}
+		
+		private function updateFase(e:Event):void {
+			FaseInterface(this).update(e);
+			for each (var ator:AtorBase in VT_Atores) { AtorInterface(ator).update(e); }
 		}
 		
 		/**
@@ -82,7 +93,7 @@ package TangoGames.Fases
 			TC_teclas.destroi();
 			TC_teclas = null;
 			BO_pausa = true;
-			_mainapp.removeEventListener(Event.ENTER_FRAME, FaseInterface(this).update);
+			_mainapp.removeEventListener(Event.ENTER_FRAME, updateFase);
 			dispatchEvent(new FaseEvent(FaseEvent.FASE_PAUSA))
 		}
 		
@@ -91,7 +102,7 @@ package TangoGames.Fases
 		 */
 		protected function terminoFase():void {
 			BO_fimdeJogo = true;
-			_mainapp.removeEventListener(Event.ENTER_FRAME, FaseInterface(this).update);
+			_mainapp.removeEventListener(Event.ENTER_FRAME, updateFase);
 			dispatchEvent(new FaseEvent(FaseEvent.FASE_FIMDEJOGO))
 		}
 
@@ -100,7 +111,7 @@ package TangoGames.Fases
 		 */
 		protected function concluidaFase():void {
 			BO_faseConcluida = true;
-			_mainapp.removeEventListener(Event.ENTER_FRAME, FaseInterface(this).update);
+			_mainapp.removeEventListener(Event.ENTER_FRAME, updateFase);
 			dispatchEvent(new FaseEvent(FaseEvent.FASE_CONCLUIDA));
 		}
 
@@ -111,7 +122,10 @@ package TangoGames.Fases
 			BO_fimdeJogo = false;
 			BO_faseConcluida = false;
 			BO_pausa = false;
+			
 			FaseInterface(this).reiniciacao();
+			for each (var ator:AtorBase in VT_Atores) AtorInterface(ator).reinicializa();
+
 			continuaFase();
 		}		
 		/**
@@ -130,6 +144,10 @@ package TangoGames.Fases
 				TC_teclas.destroi();
 				TC_teclas = null;
 			}
+			for each ( var ator:AtorBase in VT_Atores) {
+				AtorInterface(ator).remove();
+			}
+			VT_Atores = new Vector.<AtorBase>;
 			_mainapp.removeChild(this);
 		}
 		/**
@@ -140,8 +158,16 @@ package TangoGames.Fases
 		//	throw (new Error ("A classe derivada deve sobrescrever o metodo remocao"));
 		//}
 		
+		public function adicionaAtor(_ator:AtorBase) {
+			_mainapp.addChild(_ator);
+			AtorInterface(_ator).inicializa();
+			_ator.funcaoTeclas = this.pressTecla;
+			VT_Atores.push(_ator);
+		}
+		
 		protected function pressTecla(tecla:uint):Boolean {
-			return TC_teclas.pressTecla(tecla);
+			if (TC_teclas != null) { return TC_teclas.pressTecla(tecla) };
+			return false;
 		}
 		
 		public function get fimdeJogo():Boolean 

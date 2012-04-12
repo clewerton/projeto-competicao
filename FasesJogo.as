@@ -14,8 +14,8 @@ package
 		public function FasesJogo(_mainapp:DisplayObjectContainer) 
 		{
 			super(_mainapp);
-			adicionaFase("menufase1", FaseTeste1);
-			adicionaFase("menufase2", FaseTeste2);
+			adicionaFase("menufase1", FaseCastelo);
+			adicionaFase("menufase2", FaseTeste1);
 		}	
 	}
 }

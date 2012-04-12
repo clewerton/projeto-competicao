@@ -15,11 +15,9 @@ package TangoGames.Fases
 		private var faseCorrente:FaseBase;
 		private var fases:Object;
 		private var _mainapp:DisplayObjectContainer;
-		
 		public function FaseControle(_main:DisplayObjectContainer) 
 		{
-			
-			if (this.toString() == "[object FaseBase]" ) {
+			if (this.toString() == "[object FaseControle]" ) {
 				throw (new Error("FaseControle: Esta classe não pode ser instanciada diretamente"))
 			}
 			if (_main == null) {
@@ -31,38 +29,51 @@ package TangoGames.Fases
 
 			this._mainapp = _main;
 			
-			fases = new Object;
+			this.fases = new Object;
+			
+			this.faseCorrente = null;
 			
 		}
 		
 		public function iniciaFase(Nomefase:String, Nivel:int):void {
-			
+			if (faseCorrente != null) removeFaseCorrente();
 			faseCorrente = new fases[Nomefase](_mainapp,Nivel);
 			faseCorrente.iniciaFase();
-			faseCorrente.addEventListener(FaseEvent.FASE_CONCLUIDA, controleconclusaoFase, false, 0, true);
-			faseCorrente.addEventListener(FaseEvent.FASE_FIMDEJOGO, controleFimdeJogoFase, false, 0, true);
-			faseCorrente.addEventListener(FaseEvent.FASE_PAUSA, controlePausaFase, false, 0, true);
+			faseCorrente.addEventListener(FaseEvent.FASE_CONCLUIDA, controleInterrupcaoFase, false, 0, true);
+			faseCorrente.addEventListener(FaseEvent.FASE_FIMDEJOGO, controleInterrupcaoFase, false, 0, true);
+			faseCorrente.addEventListener(FaseEvent.FASE_PAUSA    , controleInterrupcaoFase, false, 0, true);
 		}
+		
 		public function removeFaseCorrente() {
-			faseCorrente.removeEventListener(FaseEvent.FASE_CONCLUIDA, controleconclusaoFase);
-			faseCorrente.removeEventListener(FaseEvent.FASE_FIMDEJOGO, controleFimdeJogoFase);
-			faseCorrente.removeEventListener(FaseEvent.FASE_PAUSA, controlePausaFase);
+			faseCorrente.removeEventListener(FaseEvent.FASE_CONCLUIDA, controleInterrupcaoFase);
+			faseCorrente.removeEventListener(FaseEvent.FASE_FIMDEJOGO, controleInterrupcaoFase);
+			faseCorrente.removeEventListener(FaseEvent.FASE_PAUSA    , controleInterrupcaoFase);
 			faseCorrente.removeFase();
+			faseCorrente = null;
 		}
 		
-		protected function controlePausaFase(e:FaseEvent):void 
-		{
-			criaMenuControle();
-		}
-		
-		protected function controleFimdeJogoFase(e:FaseEvent):void 
-		{
-			criaMenuControle();
-		}
-		
-		protected function controleconclusaoFase(e:FaseEvent):void 
-		{
-			criaMenuControle();
+		private function controleInterrupcaoFase(e:FaseEvent):void 
+		{	var mn:MenuBase = new MenuBase("MenuControle", criaFundo());
+			switch (e.type) {
+				case FaseEvent.FASE_PAUSA:
+					mn.adicionaOpcao("Continuar", 0)
+					mn.adicionaOpcao("Reiniciar", 1);
+					mn.adicionaOpcao("Abandonar", 2);
+				break;
+				case FaseEvent.FASE_FIMDEJOGO:
+					mn.adicionaOpcao("Reiniciar", 1);
+					mn.adicionaOpcao("Sair", 2);
+				break;
+				case FaseEvent.FASE_CONCLUIDA:
+					mn.adicionaOpcao("Joga Novamente", 1);
+					mn.adicionaOpcao("Proxima Fase", 4);
+					mn.adicionaOpcao("Sair", 2);
+				break;
+					
+				default:
+			}
+			_mainapp.addChild(mn);
+			mn.addEventListener(MenuEvent.OPCAO_SELECIONADA, manipulaOpcao, false,0, true);
 		}
 		
 		protected function adicionaFase(nomeFase:String,classeFase:Class):void {
@@ -112,7 +123,5 @@ package TangoGames.Fases
 			sp.graphics.endFill();
 			return sp;
 		}
-
 	}
-
 }
