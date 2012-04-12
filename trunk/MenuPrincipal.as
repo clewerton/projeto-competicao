@@ -44,11 +44,8 @@ package
 		
 		private function defineMenuFases():MenuBase {
 			var mn:MenuBase = new MenuBase("MenuFases",new MenuPrincipalFundo());
-			mn.adicionaOpcao("Fase 1", 1);
-			mn.adicionaOpcao("Fase 2", 2);
-			mn.adicionaOpcao("Fase 3", 3);
-			mn.adicionaOpcao("Fase 4", 4);
-			mn.adicionaOpcao("Fase 5", 5);
+			mn.adicionaOpcao("Defenda o Castelo", 1);
+			mn.adicionaOpcao("Fase Teste 1", 2);
 			mn.adicionaOpcao("Voltar", 2 , defineMenuInicial);			
 			mn.formatacao = TF_txtForm;
 			return mn;
@@ -66,9 +63,9 @@ package
 		private function defineNivel():MenuBase {
 			var nome:String = ("menufase" + FaseID.toString());
 			var mn:MenuBase = new MenuBase(nome,new MenuPrincipalFundo());
-			mn.adicionaOpcao("Nivel 1", 1);
-			mn.adicionaOpcao("Nivel 2", 2);
-			mn.adicionaOpcao("Nivel 3", 3);
+			mn.adicionaOpcao("Fácil", 1);
+			mn.adicionaOpcao("Médio", 2);
+			mn.adicionaOpcao("Dificíl", 3);
 			mn.adicionaOpcao("Voltar", 2 , defineMenuFases);			
 			mn.formatacao = TF_txtForm;
 			return mn;

@@ -27,6 +27,15 @@ package Fases {
 			if (pressTecla(Keyboard.P)) {
 				pausaFase();
 			}
+			if (pressTecla(Keyboard.UP )) {
+				_f.y -= 2;
+			}
+			if (_f.y > (stage.stageHeight + (_f.height / 2))) {
+				terminoFase();
+			}
+			if (_f.y < - _f.height ) {
+				concluidaFase();
+			}
 		}
 		
 		public function reiniciacao():void {
