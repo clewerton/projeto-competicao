@@ -13,11 +13,15 @@ package Fases
 	
 	/**
 	 * ...
-	 * @author ...
+	 * @author Diogo Honorato
 	 */
 	public class FaseEspaco extends FaseBase implements FaseInterface
 	{
-		private var naveHeroi:Heroi;
+		
+		private var VGHitmeteoro:Vector.<Class> = new Vector.<Class>;
+		
+		
+		private var naveHeroi:HeroiAtor;
 		private var numStars:int = 80;
 		private var MC_estrelas:MovieClip;
 		private var AR_estrelas:Array = new Array;
@@ -36,21 +40,17 @@ package Fases
 			naveHeroi.x = naveHeroi.width;
 			naveHeroi.y = stage.stageHeight / 2;
 			
-			if (AR_Meteoros != null) {
-				
-				for (var i:int; i < AR_Meteoros.length; i++) {
-					AR_Meteoros[i].marcadoRemocao = true;
-				}
-				
-			}
+		//remove inimigos
+			for each ( var ator:AtorBase in Atores) if (ator is MeteoroAtor) ator.marcadoRemocao = true;
 			
-			AR_Meteoros= new Array;
+			
 			contInimigos = 120;
-			//for each ( var ator:AtorBase in Atores) if (ator is InimigoAtor) ator.marcadoRemocao = true;
 		}
 		public function inicializacao():Boolean {
-						
-			naveHeroi = new Heroi();
+			
+			VGHitmeteoro.push(HeroiAtor);
+			
+			naveHeroi = new HeroiAtor();
 			naveHeroi.x = naveHeroi.width;
 			naveHeroi.y = stage.stageHeight / 2;
 			
@@ -91,8 +91,8 @@ package Fases
 					MC_meteoroInimigo = new MeteoroAtor(nivel);
 					MC_meteoroInimigo.y = (stage.stageHeight - stage.stageHeight / 9) * Math.random();
 					MC_meteoroInimigo.x = stage.stageWidth + MC_meteoroInimigo.width;
-					adicionaAtor(MC_meteoroInimigo);
-					AR_Meteoros.push(MC_meteoroInimigo);
+					adicionaAtor(MC_meteoroInimigo, VGHitmeteoro);
+					//AR_Meteoros.push(MC_meteoroInimigo);
 				}
 				else if ( nivel == 2) {
 					contInimigos = 72;
@@ -100,8 +100,8 @@ package Fases
 					MC_meteoroInimigo = new MeteoroAtor(nivel);
 					MC_meteoroInimigo.y = (stage.stageHeight - stage.stageHeight / 9) * Math.random();
 					MC_meteoroInimigo.x = stage.stageWidth + MC_meteoroInimigo.width;
-					adicionaAtor(MC_meteoroInimigo);
-					AR_Meteoros.push(MC_meteoroInimigo);
+					adicionaAtor(MC_meteoroInimigo, VGHitmeteoro);
+					//AR_Meteoros.push(MC_meteoroInimigo);
 				}
 				else if ( nivel == 3) {
 					contInimigos = 72;
@@ -109,10 +109,12 @@ package Fases
 					MC_meteoroInimigo = new MeteoroAtor(nivel);
 					MC_meteoroInimigo.y = (stage.stageHeight - stage.stageHeight / 9) * Math.random();
 					MC_meteoroInimigo.x = stage.stageWidth + MC_meteoroInimigo.width;
-					adicionaAtor(MC_meteoroInimigo);
-					AR_Meteoros.push(MC_meteoroInimigo);
+					adicionaAtor(MC_meteoroInimigo, VGHitmeteoro);
+					//AR_Meteoros.push(MC_meteoroInimigo);
 				}
-				
+				if (((MC_meteoroInimigo.y + MC_meteoroInimigo.height / 2) >= stage.stageHeight) || ((MC_meteoroInimigo.y - MC_meteoroInimigo.height / 2) <= 0)) {
+						MC_meteoroInimigo.y = stage.stageHeight / 2;
+				}
 				
 			}
 			
@@ -123,6 +125,11 @@ package Fases
 		
 		public function colisao(C1:AtorBase, C2:AtorBase) {
 			trace(C1 + " colidiu com " + C2);
+			
+			/*if (C1 is InimigoAtor && C2 is Castelo )  {
+				InimigoAtor(C1).baterCastelo();
+			}*/
+			
 		}
 		
 		

@@ -10,7 +10,7 @@ package Fases.FaseEspacoElementos
 	 * ...
 	 * @author Diogo Honorato
 	 */
-	public class Heroi extends AtorBase implements AtorInterface
+	public class HeroiAtor extends AtorBase implements AtorInterface
 	{
 		
 		private var Vx:Number = 0;
@@ -18,7 +18,7 @@ package Fases.FaseEspacoElementos
 		private var MC_naveHeroi:MovieClip;
 		
 		
-		public function Heroi() 
+		public function HeroiAtor() 
 		{
 			
 			MC_naveHeroi = new NaveHeroi();
