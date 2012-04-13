@@ -13,6 +13,8 @@ package TangoGames.Atores
 		private var SP_figurino:DisplayObject;
 		private var FC_funcaoTeclas:Function;
 		private var BO_marcadoRemocao:Boolean;
+		private var VT_hitGrupos: Vector.<Class>;
+		private var OB_hitObject:DisplayObject;
 		public function AtorBase(_figurino:DisplayObjectContainer) 	{
 			if (this.toString() == "[object AtorBase]" ) {
 				throw (new Error("AtorBase: Esta classe não pode ser instanciada diretamente"))
@@ -26,6 +28,8 @@ package TangoGames.Atores
 			addChild(SP_figurino);
 			FC_funcaoTeclas =  null;
 			BO_marcadoRemocao = false;
+			VT_hitGrupos = new Vector.<Class>;
+			OB_hitObject = figurino;
 		}
 		
 		protected function pressTecla(tecla:uint):Boolean {
@@ -51,6 +55,26 @@ package TangoGames.Atores
 		public function set marcadoRemocao(value:Boolean):void 
 		{
 			BO_marcadoRemocao = value;
+		}
+		
+		public function get hitGrupos():Vector.<Class> 
+		{
+			return VT_hitGrupos;
+		}
+		
+		public function set hitGrupos(value:Vector.<Class>):void 
+		{
+			VT_hitGrupos = value;
+		}
+		
+		public function get hitObject():DisplayObject 
+		{
+			return OB_hitObject;
+		}
+		
+		public function set hitObject(value:DisplayObject):void 
+		{
+			OB_hitObject = value;
 		}
 	}
 }

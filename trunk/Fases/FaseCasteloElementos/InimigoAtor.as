@@ -50,5 +50,11 @@ package Fases.FaseCasteloElementos
 			NU_velX =  Math.cos(ang) * NU_veloc;
 			NU_velY =  Math.sin(ang) * NU_veloc;
 		}
+		
+		public function baterCastelo():void {
+			BO_ataca = false;
+			this.x -= NU_velX;
+			this.y -= NU_velY;
+		}
 	}
 }
