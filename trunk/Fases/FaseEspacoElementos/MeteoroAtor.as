@@ -27,6 +27,8 @@ package Fases.FaseEspacoElementos
 			Tipo = Rnd(1, 3);
 			MC_Meteoro.gotoAndStop(Tipo);
 			//MC_Meteoro.x = stage.stageWidth + MC_Meteoro.width;
+			
+			this.rotation = Rnd(0, 360);
 		}
 		
 		
