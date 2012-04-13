@@ -10,60 +10,62 @@ package Fases.FaseEspacoElementos
 	 * ...
 	 * @author Diogo Honorato
 	 */
-	public class Meteoros extends AtorBase implements AtorInterface
+	public class MeteoroAtor extends AtorBase implements AtorInterface
 	{
 		
 		private var MC_Meteoro:MovieClip;
-		private var Tipo:int;
+		private var Tipo:int = 1;
+		private var dificuldade:int;		
 		
-		
-		public function Meteoros(Nivel:int) 
+		public function MeteoroAtor(nivel:int) 
 		{
+			dificuldade = nivel;
 			
-			MC_Meteoro = new Meteroro();
+			MC_Meteoro = new Meteoro();
 			super(MC_Meteoro);
 			
 			Tipo = Rnd(1, 3);
 			MC_Meteoro.gotoAndStop(Tipo);
+			//MC_Meteoro.x = stage.stageWidth + MC_Meteoro.width;
 		}
 		
 		
 		private function moveMeteoro():void {
 			
-			if (Nivel == 1) {
+			if (dificuldade == 1) {
 				
 				if (Tipo == 1) {
-					MC_Meteoro -= 1;
+					this.x -= 3;
 				}
-				else if (Tipo == 2) {
-					MC_Meteoro -= 2
+				else if (Tipo == 4) {
+					this.x -= 2
 				}
-				else if (Tipo == 3) {
-					MC_Meteoro -= 3;
-				}
-			}
-			
-			else if (Nivel == 2) {
-				if (Tipo == 1) {
-					MC_Meteoro -= 2;
-				}
-				else if (Tipo == 2) {
-					MC_Meteoro -= 3;
-				}
-				else if (Tipo == 3) {
-					MC_Meteoro -= 4;
+				else if (Tipo == 5) {
+					this.x -= 3;
 				}
 			}
 			
-			else if (Nivel == 3) {
+			else if (dificuldade == 2) {
 				if (Tipo == 1) {
-					MC_Meteoro -= 3;
+					this.x -= 4;
+				}
+				else if (Tipo == 7) {
+					this.x -= 3;
+				}
+				else if (Tipo == 10) {
+					this.x -= 4;
+				}
+			}
+			
+			else if (dificuldade == 3) {
+				if (Tipo == 1) {
+					this.x -= 7;
 				}
 				else if (Tipo == 2) {
-					MC_Meteoro -= 5;
+					this.x -= 10;
 				}
 				else if (Tipo == 3) {
-					MC_Meteoro -= 7;
+					this.x -= 14;
 				}
 			}
 			
@@ -73,9 +75,11 @@ package Fases.FaseEspacoElementos
 		
 		private function limiteMeteoro():void { // verifica a posição dos meteoros 
 			
-			
-			
-			
+			if (this.x < 0 - this.width) {
+							
+				marcadoRemocao = true;
+			}
+
 		}
 		
 		
@@ -84,15 +88,14 @@ package Fases.FaseEspacoElementos
 		}
 
 		public function reinicializa():void {
-			Vx = 0;
-			Vy = 0;
+			
 		}
 		
 		public function update(e:Event):void {
 			
-			moveHeroi();
-			limiteHeroi();
-			
+			moveMeteoro();
+			limiteMeteoro();
+						
 		}
 		public function remove():void {
 			
