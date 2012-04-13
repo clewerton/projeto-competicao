@@ -42,7 +42,7 @@ package Fases.FaseCasteloElementos
 		}
 		
 		public function inicializa():void {
-			NU_velocHeroi = 2;
+			NU_velocHeroi = 5;
 			OB_Torres = new Object;
 			OB_Torres[MovieClip(MC_castelo.Hitbox1).name] = MC_castelo.Hitbox1;
 			OB_Torres[MovieClip(MC_castelo.Hitbox2).name] = MC_castelo.Hitbox2;

@@ -45,7 +45,8 @@ package
 		private function defineMenuFases():MenuBase {
 			var mn:MenuBase = new MenuBase("MenuFases",new MenuPrincipalFundo());
 			mn.adicionaOpcao("Defenda o Castelo", 1);
-			mn.adicionaOpcao("Fase Teste 1", 2);
+			mn.adicionaOpcao("Viajem Espacial", 2);
+			mn.adicionaOpcao("Fase Teste 1", 3);
 			mn.adicionaOpcao("Voltar", 2 , defineMenuInicial);			
 			mn.formatacao = TF_txtForm;
 			return mn;
