@@ -72,8 +72,12 @@ package Fases
 			
 		}
 		
-		public function remocao():void {};
+		public function remocao():void { };
+		
+		public function colisao(C1:AtorBase, C2:AtorBase) {
+			trace(C1 + " colidiu com " + C2);
+		}
+		
 		
 	}
-
 }
