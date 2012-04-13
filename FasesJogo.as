@@ -15,7 +15,8 @@ package
 		{
 			super(_mainapp);
 			adicionaFase("menufase1", FaseCastelo);
-			adicionaFase("menufase2", FaseTeste1);
+			adicionaFase("menufase2", FaseEspaco);
+			adicionaFase("menufase3", FaseTeste1);
 		}	
 	}
 }

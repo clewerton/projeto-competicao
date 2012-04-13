@@ -1,5 +1,8 @@
 package TangoGames.Fases 
 {
+	import Fases.FaseCasteloElementos.Castelo;
+	import flash.utils.getDefinitionByName;
+	import flash.utils.getQualifiedClassName;
 	import TangoGames.Atores.AtorBase;
 	import TangoGames.Atores.AtorInterface;
 	import TangoGames.Teclado.TeclasControle;
@@ -24,6 +27,7 @@ package TangoGames.Fases
 		
 		//controle de atores
 		private var VT_Atores:Vector.<AtorBase>;
+		private var OB_GrupoAtores:Object;
 		
 		
 		public function FaseBase(_main:DisplayObjectContainer, Nivel:int) 
@@ -40,6 +44,7 @@ package TangoGames.Fases
 			this._mainapp = _main;
 			this.IN_Nivel = Nivel;
 			VT_Atores = new Vector.<AtorBase>;
+			OB_GrupoAtores = new Object;
 		}
 		/**
 		 * Inicia a execução da fase
@@ -82,8 +87,21 @@ package TangoGames.Fases
 		}
 		
 		private function updateFase(e:Event):void {
+			
+			//chama update da fase
 			FaseInterface(this).update(e);
-			for each (var ator:AtorBase in VT_Atores) { AtorInterface(ator).update(e); }
+			
+			//chama o update dos atores
+			var ator:AtorBase;
+			var VT_remover:Vector.<AtorBase> =  new Vector.<AtorBase>;
+			for each (ator in VT_Atores) { 
+				if (ator.marcadoRemocao) VT_remover.push(ator);
+				else AtorInterface(ator).update(e);
+			}
+			
+			//Remover atores que estao marcados para remoção
+			for each (ator in VT_remover) removeAtor(ator); 
+			VT_remover =  new Vector.<AtorBase>;			
 		}
 		
 		/**
@@ -129,13 +147,6 @@ package TangoGames.Fases
 			continuaFase();
 		}		
 		/**
-		 * Este metodo deve ser sobrescrito com ações específicas
-		 * da classe derivada para reiniciar a fase
-		 */
-		//protected function reiniciacao():void {
-		//	throw (new Error ("A classe derivada deve sobrescrever o metodo reiniciacao"));
-		//}		
-		/**
 		 * Metodo chamado para remover a fase
 		 */
 		public function removeFase():void {
@@ -151,20 +162,44 @@ package TangoGames.Fases
 			_mainapp.removeChild(this);
 		}
 		/**
-		 * Este metodo deve ser sobrescrito com ações específicas
-		 * da classe derivada para remover a classe
-		 */		
-		//protected function remocao():void {
-		//	throw (new Error ("A classe derivada deve sobrescrever o metodo remocao"));
-		//}
-		
-		public function adicionaAtor(_ator:AtorBase) {
+		 * Adiciona AtorBase na fase
+		 * @param	_ator
+		 * Ator que será acrescentado na cena da fase
+		 */
+		public function adicionaAtor(_ator:AtorBase)  {
 			_mainapp.addChild(_ator);
 			AtorInterface(_ator).inicializa();
 			_ator.funcaoTeclas = this.pressTecla;
 			VT_Atores.push(_ator);
+			adicionaGrupoAtor(_ator);
+		}
+		public function removeAtor(_ator:AtorBase)  {
+			var i:uint = VT_Atores.indexOf(_ator);
+			VT_Atores.splice(i, 1);
+			removeGrupoAtor(_ator);
+			AtorInterface(_ator).remove();
+			_mainapp.removeChild(_ator);
 		}
 		
+		public function adicionaGrupoAtor(_ator:AtorBase)  {
+			//trace(getDefinitionByName(getQualifiedClassName(_ator)));
+			var tipo:String = getQualifiedClassName(_ator);
+			var VT_grupo:Vector.<AtorBase>;
+			if (tipo in OB_GrupoAtores) VT_grupo = OB_GrupoAtores[tipo];
+			else VT_grupo = new Vector.<AtorBase>;
+			VT_grupo.push(_ator);
+		}
+
+		public function removeGrupoAtor(_ator:AtorBase)  {
+			//trace(getDefinitionByName(getQualifiedClassName(_ator)));
+			var tipo:String = getQualifiedClassName(_ator);
+			if (tipo in OB_GrupoAtores) {
+				var VT_grupo:Vector.<AtorBase> = OB_GrupoAtores[tipo];
+				var i:int = VT_grupo.indexOf(_ator);
+				if (i >= 0) VT_grupo.splice(i, 1);
+			}
+		}
+
 		protected function pressTecla(tecla:uint):Boolean {
 			if (TC_teclas != null) { return TC_teclas.pressTecla(tecla) };
 			return false;
@@ -183,6 +218,11 @@ package TangoGames.Fases
 		public function get pausa():Boolean 
 		{
 			return BO_pausa;
+		}
+		
+		public function get Atores():Vector.<AtorBase> 
+		{
+			return VT_Atores;
 		}
 	}
 }

@@ -16,11 +16,11 @@ package Fases
 	 * ...
 	 * @author ...
 	 */
-	public class FaseCastelo extends FaseBase implements FaseInterface
+	public class FaseEspaco extends FaseBase implements FaseInterface
 	{
 		private var casteloAtor:Castelo;
 		private var UI_contador:uint;
-		public function FaseCastelo(_main:DisplayObjectContainer, Nivel:int) 
+		public function FaseEspaco(_main:DisplayObjectContainer, Nivel:int) 
 		{
 			super(_main, Nivel);
 			this.addChild(new BackGroundCastelo);
