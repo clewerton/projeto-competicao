@@ -1,4 +1,5 @@
 package Fases {
+	import TangoGames.Atores.AtorBase;
 	import TangoGames.Fases.FaseBase;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
@@ -43,7 +44,11 @@ package Fases {
 			_f.y = 0 - _f.height / 2;
 		}
 			
-		public function remocao():void {};
+		public function remocao():void { };
+		
+		public function colisao(C1:AtorBase, C2:AtorBase) {
+			trace("Colidiu" + C1 + " com " + C2);
+		}
 	}
 }
 import flash.display.Sprite;

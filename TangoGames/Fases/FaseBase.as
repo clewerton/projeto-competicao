@@ -16,7 +16,7 @@ package TangoGames.Fases
 	 */
 	public class FaseBase extends MovieClip {
 		
-		private var IN_Nivel:int;
+		private var IN_nivel:int;
 		private var _mainapp:DisplayObjectContainer;
 		private var BO_fimdeJogo:Boolean;
 		private var BO_faseConcluida:Boolean;
@@ -27,12 +27,13 @@ package TangoGames.Fases
 		
 		//controle de atores
 		private var VT_Atores:Vector.<AtorBase>;
-		private var OB_GrupoAtores:Object;
+		private var VT_GrupoClass:Vector.<Class>;
+		private var VT_GrupoAtores:Vector.<Vector.<AtorBase>>;
 		
 		
 		public function FaseBase(_main:DisplayObjectContainer, Nivel:int) 
 		{
-			if (this.toString() == "[object FaseBase]" ) {
+			if (Class(getDefinitionByName(getQualifiedClassName(this))) == FaseBase ) {
 				throw (new Error("FaseBase: Esta classe não pode ser instanciada diretamente"))
 			}
 			if (!(this is FaseInterface)) {
@@ -42,9 +43,10 @@ package TangoGames.Fases
 				throw (new Error("FaseBase: O Parametro main não pode ser nulo"))				
 			}
 			this._mainapp = _main;
-			this.IN_Nivel = Nivel;
+			this.IN_nivel = Nivel;
 			VT_Atores = new Vector.<AtorBase>;
-			OB_GrupoAtores = new Object;
+			VT_GrupoClass =  new Vector.<Class>;
+			VT_GrupoAtores = new Vector.<Vector.<AtorBase>>;
 		}
 		/**
 		 * Inicia a execução da fase
@@ -96,7 +98,10 @@ package TangoGames.Fases
 			var VT_remover:Vector.<AtorBase> =  new Vector.<AtorBase>;
 			for each (ator in VT_Atores) { 
 				if (ator.marcadoRemocao) VT_remover.push(ator);
-				else AtorInterface(ator).update(e);
+				else {
+					AtorInterface(ator).update(e);
+					testaHitGrupos(ator);
+				}
 			}
 			
 			//Remover atores que estao marcados para remoção
@@ -104,6 +109,15 @@ package TangoGames.Fases
 			VT_remover =  new Vector.<AtorBase>;			
 		}
 		
+		private function testaHitGrupos(_ator:AtorBase):void {
+			if (_ator.hitGrupos != null) {
+				var index:int;
+				for each (var c:Class in _ator.hitGrupos) {
+					index = VT_GrupoClass.indexOf(c);
+					for each( var atorColidiu:AtorBase in VT_GrupoAtores[index] ) if (_ator.hitTestObject(atorColidiu.hitObject)) FaseInterface(this).colisao(_ator , atorColidiu);
+				}
+			}
+		}
 		/**
 		 * Metodo chamado para fase parada
 		 */
@@ -166,12 +180,12 @@ package TangoGames.Fases
 		 * @param	_ator
 		 * Ator que será acrescentado na cena da fase
 		 */
-		public function adicionaAtor(_ator:AtorBase)  {
+		public function adicionaAtor(_ator:AtorBase, hitGrupos: Vector.<Class> = null)  {
 			_mainapp.addChild(_ator);
 			AtorInterface(_ator).inicializa();
 			_ator.funcaoTeclas = this.pressTecla;
 			VT_Atores.push(_ator);
-			adicionaGrupoAtor(_ator);
+			adicionaGrupoAtor(_ator , hitGrupos);
 		}
 		public function removeAtor(_ator:AtorBase)  {
 			var i:uint = VT_Atores.indexOf(_ator);
@@ -181,23 +195,22 @@ package TangoGames.Fases
 			_mainapp.removeChild(_ator);
 		}
 		
-		public function adicionaGrupoAtor(_ator:AtorBase)  {
-			//trace(getDefinitionByName(getQualifiedClassName(_ator)));
-			var tipo:String = getQualifiedClassName(_ator);
-			var VT_grupo:Vector.<AtorBase>;
-			if (tipo in OB_GrupoAtores) VT_grupo = OB_GrupoAtores[tipo];
-			else VT_grupo = new Vector.<AtorBase>;
-			VT_grupo.push(_ator);
+		public function adicionaGrupoAtor(_ator:AtorBase, hitGrupos: Vector.<Class> = null)  {
+			var classTipo:Class = Class(getDefinitionByName(getQualifiedClassName(_ator)));
+			var index:int = VT_GrupoClass.indexOf(classTipo);
+			if (index < 0 ) {
+				index = VT_GrupoClass.push(classTipo) - 1;
+				VT_GrupoAtores.push(new Vector.<AtorBase>);
+			}
+			VT_GrupoAtores[index].push(_ator);
+			_ator.hitGrupos = hitGrupos;
 		}
 
 		public function removeGrupoAtor(_ator:AtorBase)  {
-			//trace(getDefinitionByName(getQualifiedClassName(_ator)));
-			var tipo:String = getQualifiedClassName(_ator);
-			if (tipo in OB_GrupoAtores) {
-				var VT_grupo:Vector.<AtorBase> = OB_GrupoAtores[tipo];
-				var i:int = VT_grupo.indexOf(_ator);
-				if (i >= 0) VT_grupo.splice(i, 1);
-			}
+			var classTipo:Class = Class(getDefinitionByName(getQualifiedClassName(_ator)));
+			var index:int = VT_GrupoClass.indexOf(classTipo);
+			var i:int = VT_GrupoAtores[index].indexOf(_ator);
+			if (i >= 0) VT_GrupoAtores[index].splice(i, 1);
 		}
 
 		protected function pressTecla(tecla:uint):Boolean {
@@ -210,19 +223,20 @@ package TangoGames.Fases
 			return BO_fimdeJogo;
 		}
 		
-		public function get faseConcluida():Boolean 
-		{
+		public function get faseConcluida():Boolean {
 			return BO_faseConcluida;
 		}
 		
-		public function get pausa():Boolean 
-		{
+		public function get pausa():Boolean {
 			return BO_pausa;
 		}
 		
-		public function get Atores():Vector.<AtorBase> 
-		{
+		public function get Atores():Vector.<AtorBase> {
 			return VT_Atores;
+		}
+		
+		public function get nivel():int {
+			return IN_nivel;
 		}
 	}
 }
