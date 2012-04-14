@@ -4,6 +4,9 @@ package TangoGames.Fases
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
+	import flash.ui.Mouse;
+	import flash.utils.getDefinitionByName;
+	import flash.utils.getQualifiedClassName;
 	import TangoGames.Menus.MenuBase;
 	import TangoGames.Menus.MenuEvent;
 	/**
@@ -17,7 +20,7 @@ package TangoGames.Fases
 		private var _mainapp:DisplayObjectContainer;
 		public function FaseControle(_main:DisplayObjectContainer) 
 		{
-			if (this.toString() == "[object FaseControle]" ) {
+			if (Class(getDefinitionByName(getQualifiedClassName(this))) == FaseControle ) {
 				throw (new Error("FaseControle: Esta classe não pode ser instanciada diretamente"))
 			}
 			if (_main == null) {
@@ -92,11 +95,13 @@ package TangoGames.Fases
 			mn.adicionaOpcao("Reiniciar", 1);
 			mn.adicionaOpcao("Sair", 2);
 			_mainapp.addChild(mn);
-			mn.addEventListener(MenuEvent.OPCAO_SELECIONADA, manipulaOpcao, false,0, true);
+			mn.addEventListener(MenuEvent.OPCAO_SELECIONADA, manipulaOpcao, false, 0, true);
+			Mouse.show();
 		}
 		
 		private function manipulaOpcao(e:MenuEvent):void 
 		{
+			
 			_mainapp.removeChild(MenuBase(e.currentTarget));
 			switch (e.OpcaoObj.valorRetorno) 
 			{
