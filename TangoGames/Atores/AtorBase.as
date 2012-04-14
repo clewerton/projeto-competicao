@@ -3,7 +3,10 @@ package TangoGames.Atores
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import flash.events.EventDispatcher;
+	import flash.utils.getDefinitionByName;
+	import flash.utils.getQualifiedClassName;
 	import TangoGames.Fases.FaseBase;
 	/**
 	 * ...
@@ -15,8 +18,9 @@ package TangoGames.Atores
 		private var BO_marcadoRemocao:Boolean;
 		private var VT_hitGrupos: Vector.<Class>;
 		private var OB_hitObject:DisplayObject;
+		private var FB_faseAtor:FaseBase;
 		public function AtorBase(_figurino:DisplayObjectContainer) 	{
-			if (this.toString() == "[object AtorBase]" ) {
+			if (Class(getDefinitionByName(getQualifiedClassName(this))) == AtorBase ) {
 				throw (new Error("AtorBase: Esta classe não pode ser instanciada diretamente"))
 			}
 			
@@ -30,7 +34,23 @@ package TangoGames.Atores
 			BO_marcadoRemocao = false;
 			VT_hitGrupos = new Vector.<Class>;
 			OB_hitObject = figurino;
+			FB_faseAtor = null;
+			this.addEventListener(Event.ADDED_TO_STAGE, onAdicionadoStage, false, 0, true);
 		}
+		
+		private function onAdicionadoStage(e:Event):void 
+		{
+			this.removeEventListener(Event.ADDED_TO_STAGE, onAdicionadoStage);
+			if (FB_faseAtor == null) FB_faseAtor = FaseBase(parent)
+			//this.addEventListener(Event.REMOVED_FROM_STAGE, onRemovidoStage, false, 0, true);
+		}
+		
+/*		private function onRemovidoStage(e:Event):void 
+		{
+			this.removeEventListener(Event.REMOVED_FROM_STAGE, onRemovidoStage);
+			this.addEventListener(Event.ADDED_TO_STAGE, onAdicionadoStage, false, 0, true);
+		}
+*/		
 		
 		protected function pressTecla(tecla:uint):Boolean {
 			if (FC_funcaoTeclas != null) { return FC_funcaoTeclas(tecla) };
@@ -75,6 +95,16 @@ package TangoGames.Atores
 		public function set hitObject(value:DisplayObject):void 
 		{
 			OB_hitObject = value;
+		}
+		
+		public function get faseAtor():FaseBase 
+		{
+			return FB_faseAtor;
+		}
+		
+		public function set faseAtor(value:FaseBase):void 
+		{
+			FB_faseAtor = value;
 		}
 	}
 }

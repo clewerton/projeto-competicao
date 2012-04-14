@@ -58,40 +58,22 @@ package TangoGames.Fases
 			}
 		}
 		/**
-		 * Esta função deve ser usada para as inicializações específicas da Classe derivada
-		 * é chamada no metodo iniciaFase;
-		 * @return
-		 * se falso(false) não a fase não será iniciada;
-		 */
-		//protected function inicializacao():Boolean {
-		//	throw (new Error ("A classe derivada deve sobrescrever o metodo inicialiazacao"));
-		//	return false
-		//}
-		
-		/**
-		 * Esta função será executa a cada evento Enter-Frame.
-		 * Todas as atualizações da classe derivada devem ser inseridas nesta função
-		 * @param	e
-		 * parametro do tipo event obrigatório para funções de manipulação de eventos
-		 */
-		//protected function update(e:Event):void {
-		//	throw (new Error ("A classe derivada deve sobrescrever o metodo update"));
-		//}
-		/**
 		 * Metodo reinicia a fase interrompida do ponto de pausa
 		 */
 		public function continuaFase():void {
 			TC_teclas = new TeclasControle(stage);
 			stage.stageFocusRect = false;
-			stage.focus = stage;
+			stage.focus = this;
 			BO_pausa = false;
-			_mainapp.addEventListener(Event.ENTER_FRAME, updateFase, false, 0, true);			
+			this.addEventListener(Event.ENTER_FRAME, updateFase, false, 0, true);			
 		}
 		
 		private function updateFase(e:Event):void {
 			
 			//chama update da fase
 			FaseInterface(this).update(e);
+			
+			if (BO_pausa || BO_fimdeJogo || BO_faseConcluida) return;
 			
 			//chama o update dos atores
 			var ator:AtorBase;
@@ -114,7 +96,7 @@ package TangoGames.Fases
 				var index:int;
 				for each (var c:Class in _ator.hitGrupos) {
 					index = VT_GrupoClass.indexOf(c);
-					for each( var atorColidiu:AtorBase in VT_GrupoAtores[index] ) if (_ator.hitTestObject(atorColidiu.hitObject)) FaseInterface(this).colisao(_ator , atorColidiu);
+					for each( var atorColidiu:AtorBase in VT_GrupoAtores[index] ) if (_ator.hitObject.hitTestObject(atorColidiu.hitObject)) FaseInterface(this).colisao(_ator , atorColidiu);
 				}
 			}
 		}
@@ -125,8 +107,8 @@ package TangoGames.Fases
 			TC_teclas.destroi();
 			TC_teclas = null;
 			BO_pausa = true;
-			_mainapp.removeEventListener(Event.ENTER_FRAME, updateFase);
-			dispatchEvent(new FaseEvent(FaseEvent.FASE_PAUSA))
+			this.removeEventListener(Event.ENTER_FRAME, updateFase);
+			dispatchEvent(new FaseEvent(FaseEvent.FASE_PAUSA));
 		}
 		
 		/**
@@ -134,8 +116,8 @@ package TangoGames.Fases
 		 */
 		protected function terminoFase():void {
 			BO_fimdeJogo = true;
-			_mainapp.removeEventListener(Event.ENTER_FRAME, updateFase);
-			dispatchEvent(new FaseEvent(FaseEvent.FASE_FIMDEJOGO))
+			this.removeEventListener(Event.ENTER_FRAME, updateFase);
+			dispatchEvent(new FaseEvent(FaseEvent.FASE_FIMDEJOGO));
 		}
 
 		/**
@@ -143,7 +125,7 @@ package TangoGames.Fases
 		 */
 		protected function concluidaFase():void {
 			BO_faseConcluida = true;
-			_mainapp.removeEventListener(Event.ENTER_FRAME, updateFase);
+			this.removeEventListener(Event.ENTER_FRAME, updateFase);
 			dispatchEvent(new FaseEvent(FaseEvent.FASE_CONCLUIDA));
 		}
 
@@ -181,18 +163,20 @@ package TangoGames.Fases
 		 * Ator que será acrescentado na cena da fase
 		 */
 		public function adicionaAtor(_ator:AtorBase, hitGrupos: Vector.<Class> = null)  {
-			_mainapp.addChild(_ator);
+			this.addChild(_ator);
 			AtorInterface(_ator).inicializa();
 			_ator.funcaoTeclas = this.pressTecla;
 			VT_Atores.push(_ator);
 			adicionaGrupoAtor(_ator , hitGrupos);
+			dispatchEvent(new FaseEvent(FaseEvent.ATOR_CRIADO, _ator));
 		}
 		public function removeAtor(_ator:AtorBase)  {
 			var i:uint = VT_Atores.indexOf(_ator);
 			VT_Atores.splice(i, 1);
 			removeGrupoAtor(_ator);
 			AtorInterface(_ator).remove();
-			_mainapp.removeChild(_ator);
+			this.removeChild(_ator);
+			dispatchEvent(new FaseEvent(FaseEvent.ATOR_REMOVIDO, _ator));
 		}
 		
 		public function adicionaGrupoAtor(_ator:AtorBase, hitGrupos: Vector.<Class> = null)  {

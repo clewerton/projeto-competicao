@@ -35,11 +35,12 @@ package TangoGames.Menus
 		
 		/**
 		 * MenuBase é uma classe de apoio para construção de Menus
+		 * @param	id_Menu
+		 * Texto usado para identificação do menu
 		 * @param	SPR_Fundo
-		 * Sprite que será colocado como fundo Menu
+		 * Sprite que será colocado como fundo no Menu
 		 */ 
-		public function MenuBase(id_Menu:String,SPR_Fundo:Sprite) 
-		{
+		public function MenuBase(id_Menu:String,SPR_Fundo:Sprite) {
 			this.ID_Menu = id_Menu;
 			this.SPR_Fundo = SPR_Fundo;
 			this.addChildAt (SPR_Fundo, 0);
@@ -60,72 +61,81 @@ package TangoGames.Menus
 			addEventListener(Event.ADDED_TO_STAGE, adicionadoStage, false, 0, true);
 		}
 		
-				/**
+		/**
 		 * Adiciona uma opção de menu
-		 * @param	Titulo
+		 * @param 	Titulo
 		 * Titulo que será apresentado na tela
 		 * @param	valorRetorno
-		 * Valor de retorno do evento quando a opção é selecionada
+		 * Valor de retorno do evento quando a opção é selecionada 
+		 * @param	proximomenu
+		 * Função que constroi/define o próximo menu que será chamado por esta opção 
 		 * @param	displayObj
-		 * Objeto que será apresentado na tela como opção de menu (MovieClip, Sprite, etc)
+		 * Objeto que será apresentado na tela representando a opção do menu (MovieClip, Sprite, etc)
 		 */
 		public function adicionaOpcao(Titulo:String, valorRetorno:uint, proximomenu:Function = null, displayObj: DisplayObject = null ):void {
 			var op:MenuOpcao = new MenuOpcao(Titulo, valorRetorno, proximomenu, displayObj);
 			VET_Opcoes.push(op);
 			op.formato = TF_formatacao;
-			op.opcaoDisplay.filters = [GF_filt, DS_filt_shadow];
 		}
+
 		/**
 		 * fonte utilizado pelas opções do menu
 		 */
-		public function get fonte():Font 
-		{
+		public function get fonte():Font {
 			return FT_fonte;
 		}
+		
 		/**
 		 * fonte utilizado pelas opções do menu
 		 */		
-		public function set fonte(value:Font):void 
-		{
+		public function set fonte(value:Font):void {
 			FT_fonte = value;
 			TF_formatacao.font = FT_fonte.fontName;
 			formatacao = TF_formatacao;
 		}
+
 		/**
 		 * objeto usado para formatação das opções do menu
 		 */
-		public function get formatacao():TextFormat 
-		{
+		public function get formatacao():TextFormat {
 			return TF_formatacao;
 		}
+
 		/**
 		 * objeto usado para formatação das opções do menu
 		 */		
-		public function set formatacao(value:TextFormat):void 
-		{
+		public function set formatacao(value:TextFormat):void {
 			TF_formatacao = value;
 			
 			for each(var op:MenuOpcao in VET_Opcoes) { op.formato = TF_formatacao; }
 			
 		}
 		
-		public function get efeitoMouse():Boolean 
-		{
+		/**
+		 * Flag que controla o efeito visual automático das opções 
+		 */
+		public function get efeitoMouse():Boolean {
 			return BO_efeitoMouse;
 		}
 		
-		public function set efeitoMouse(value:Boolean):void 
-		{
+		/**
+		 * Flag que controla o efeito visual automático das opções 
+		 */		
+		public function set efeitoMouse(value:Boolean):void {
 			BO_efeitoMouse = value;
 		}
 		
-		public function get ID_Menu():String 
-		{
+		/**
+		 * Texto informado como identificador no Menu 
+		 */
+		public function get ID_Menu():String {
 			return ST_ID_Menu;
 		}
 		
-		public function set ID_Menu(value:String):void 
-		{
+		/**
+		 * Texto informado como identificador no Menu 
+		 */
+		public function set ID_Menu(value:String):void {
 			ST_ID_Menu = value;
 		}
 		
@@ -158,13 +168,13 @@ package TangoGames.Menus
 				op.addEventListener(MouseEvent.CLICK, manipulaEventoMouse, false, 0, true);
 				op.addEventListener(MouseEvent.MOUSE_OVER, manipulaEventoMouse, false, 0, true);
 				op.addEventListener(MouseEvent.MOUSE_OUT, manipulaEventoMouse, false, 0, true);
+				if (BO_efeitoMouse) op.opcaoDisplay.filters = [GF_filt, DS_filt_shadow];
 			}
 		}
 			
 		private function destruirMenu():void {
 			
 			for each (var op:MenuOpcao in VET_Opcoes) {
-				
 				op.removeEventListener(MouseEvent.CLICK, manipulaEventoMouse);
 				op.removeEventListener(MouseEvent.MOUSE_OVER,manipulaEventoMouse);
 				op.removeEventListener(MouseEvent.MOUSE_OUT, manipulaEventoMouse);

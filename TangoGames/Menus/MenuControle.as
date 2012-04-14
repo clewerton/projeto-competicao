@@ -4,6 +4,8 @@ package TangoGames.Menus {
 	import flash.display.DisplayObjectContainer;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
+	import flash.utils.getDefinitionByName;
+	import flash.utils.getQualifiedClassName;
 	
 	/**
 	 * Classe realiza o controle de navegação de Menus
@@ -16,7 +18,7 @@ package TangoGames.Menus {
 		private var MenuCorrente:MenuBase;
 
 		public function MenuControle(_main:DisplayObjectContainer) {
-			if (this.toString() == "[object MenuControle]" ) {
+			if (Class(getDefinitionByName(getQualifiedClassName(this))) == MenuControle ) {
 				throw (new Error("MenuControle: Esta classe não pode ser instanciada diretamente"))
 			}
 			if (_main == null) {
@@ -50,7 +52,7 @@ package TangoGames.Menus {
 			}
 			else
 			{
-				if (manipulaOpcaoMenu(MenuCorrente, e.OpcaoObj)) { desativaMenu() }
+				if (manipulaOpcaoMenu(MenuCorrente, e.OpcaoObj)) desativaMenu();
 			}
 		}
 		
