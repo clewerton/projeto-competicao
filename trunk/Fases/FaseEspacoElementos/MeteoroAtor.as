@@ -26,6 +26,7 @@ package Fases.FaseEspacoElementos
 			
 			Tipo = Rnd(1, 3);
 			MC_Meteoro.gotoAndStop(Tipo);
+			
 			//MC_Meteoro.x = stage.stageWidth + MC_Meteoro.width;
 			
 			this.rotation = Rnd(0, 360);
@@ -39,11 +40,11 @@ package Fases.FaseEspacoElementos
 				if (Tipo == 1) {
 					this.x -= 3;
 				}
-				else if (Tipo == 4) {
-					this.x -= 2
+				else if (Tipo == 2) {
+					this.x -= 4;
 				}
-				else if (Tipo == 5) {
-					this.x -= 3;
+				else if (Tipo == 3) {
+					this.x -= 5;
 				}
 			}
 			
@@ -51,11 +52,11 @@ package Fases.FaseEspacoElementos
 				if (Tipo == 1) {
 					this.x -= 4;
 				}
-				else if (Tipo == 7) {
-					this.x -= 3;
+				else if (Tipo == 2) {
+					this.x -= 7;
 				}
-				else if (Tipo == 10) {
-					this.x -= 4;
+				else if (Tipo == 3) {
+					this.x -= 10;
 				}
 			}
 			
