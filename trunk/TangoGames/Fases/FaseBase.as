@@ -67,7 +67,10 @@ package TangoGames.Fases
 			BO_pausa = false;
 			this.addEventListener(Event.ENTER_FRAME, updateFase, false, 0, true);			
 		}
-		
+		/****************************************************************************
+		 *                     Update global da Fase                                *
+		 * @param	e                                                               *  
+		 ****************************************************************************/
 		private function updateFase(e:Event):void {
 			
 			//chama update da fase
@@ -82,6 +85,7 @@ package TangoGames.Fases
 				if (ator.marcadoRemocao) VT_remover.push(ator);
 				else {
 					AtorInterface(ator).update(e);
+					if (ator.gerarEventoStage) ator.geraEventoStage();
 					testaHitGrupos(ator);
 				}
 			}
@@ -96,7 +100,9 @@ package TangoGames.Fases
 				var index:int;
 				for each (var c:Class in _ator.hitGrupos) {
 					index = VT_GrupoClass.indexOf(c);
-					for each( var atorColidiu:AtorBase in VT_GrupoAtores[index] ) if (_ator.hitObject.hitTestObject(atorColidiu.hitObject)) FaseInterface(this).colisao(_ator , atorColidiu);
+					if (index>=0) {
+						for each( var atorColidiu:AtorBase in VT_GrupoAtores[index] ) if (_ator.hitTestAtor(atorColidiu)) FaseInterface(this).colisao(_ator , atorColidiu);
+					}
 				}
 			}
 		}

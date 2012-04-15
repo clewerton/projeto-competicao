@@ -130,13 +130,21 @@ package Fases
 		}
 		
 		public function colisao(C1:AtorBase, C2:AtorBase) {
-			//trace(C1 + " colidiu com " + C2);
 			if (C1 is InimigoAtor && C2 is Castelo )  {
 				 InimigoAtor(C1).baterCastelo();
+				 return;
 			}
 			if (C1 is TiroAtor && C2 is InimigoAtor) {
 				InimigoAtor(C2).foiAtingido(TiroAtor(C1));
+				return;
 			}
+			if (C1 is TiroAtor) {
+				C1.marcadoRemocao = true;
+				return;
+			}
+
+			trace(C1 + " colidiu com " + C2);
+
 		}
 	}
 
