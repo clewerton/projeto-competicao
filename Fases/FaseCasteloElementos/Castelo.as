@@ -76,7 +76,7 @@ package Fases.FaseCasteloElementos
 			//vetor de hitgrupo do tiro do heroi
 			VG_TiroHeroi = new Vector.<Class>;
 			VG_TiroHeroi.push(InimigoAtor);
-			
+			VG_TiroHeroi.push(Castelo);
 			reinicializa();
 		}
 		
@@ -176,7 +176,7 @@ package Fases.FaseCasteloElementos
 					BO_vibra = true;
 					UI_contatreme++;
 				}
-				if ( UI_contatreme > 15 ) {
+				if ( UI_contatreme > 3 ) {
 					UI_contatreme = 0;
 					BO_treme = false;
 					BO_vibra = false;

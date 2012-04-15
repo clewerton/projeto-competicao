@@ -11,8 +11,8 @@ package
 	 */
 	public class Main extends MovieClip implements MenuMainInterface,FaseMainInterface
 	{
-		var menus:MenuControle;
-		var fases:FaseControle;
+		private var menus:MenuControle;
+		private var fases:FaseControle;
 		
 		public function Main() 
 		{

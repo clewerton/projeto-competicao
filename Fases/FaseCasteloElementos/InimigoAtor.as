@@ -5,6 +5,7 @@ package Fases.FaseCasteloElementos
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import TangoGames.Atores.AtorBase;
+	import TangoGames.Atores.AtorEvent;
 	import TangoGames.Atores.AtorInterface;
 	import TangoGames.Fases.FaseBase;
 	import TangoGames.Fases.FaseEvent;
@@ -32,16 +33,24 @@ package Fases.FaseCasteloElementos
 			super(MC_Inimigo);
 			CA_alvo = alvoCastelo;
 			MC_Inimigo.stop();
+			//hitObject = MC_Inimigo.hitbox;
 		}
 		public function inicializa():void {
-			hitObject = MC_Inimigo.hitbox;
+			gerarEventoStage = true;
+			this.addEventListener(AtorEvent.ATOR_SAIU_STAGE, onEntraSaia, false, 0, true);
+			this.addEventListener(AtorEvent.ATOR_TOCOU_STAGE, onEntraSaia, false, 0, true);
+			this.addEventListener(AtorEvent.ATOR_VOLTOU_STAGE, onEntraSaia, false, 0, true);
+			this.addEventListener(AtorEvent.ATOR_VOLTOU_TODO_STAGE, onEntraSaia, false, 0, true);
 			NU_veloc = 2;
 			NU_vida = 100; 
-			FaseBase(parent).addEventListener(FaseEvent.FASE_PAUSA, onFasePausa, false, 0, true);
+			faseAtor.addEventListener(FaseEvent.FASE_PAUSA, onFasePausa, false, 0, true);
 			reinicializa();
 			BO_pausa = false;
 		}
 		
+		private function onEntraSaia(e:AtorEvent):void {
+			trace (e.currentTarget + e.type);
+		}
 		private function onFasePausa(e:Event):void 
 		{
 			BO_pausa = true;
@@ -73,7 +82,9 @@ package Fases.FaseCasteloElementos
 			BO_pausa = false;
 			if (BO_morreu) marcadoRemocao = true;
 		}
-		public function remove():void { };
+		public function remove():void { 
+			faseAtor.removeEventListener(FaseEvent.FASE_PAUSA, onFasePausa);
+		}
 		
 		private function calcularRota():void {
 			var ang:Number = Math.atan2(CA_alvo.y - this.y , CA_alvo.x - this.x);

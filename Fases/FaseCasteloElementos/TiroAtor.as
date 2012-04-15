@@ -5,6 +5,7 @@ package Fases.FaseCasteloElementos
 	import flash.events.Event;
 	import flash.geom.Point;
 	import TangoGames.Atores.AtorBase;
+	import TangoGames.Atores.AtorEvent;
 	import TangoGames.Atores.AtorInterface;
 	
 	/**
@@ -21,6 +22,8 @@ package Fases.FaseCasteloElementos
 		private var PT_direcao:Point;
 		private var NU_dano:Number;
 		private var SP_ponta:Sprite;
+		private var NU_distancia:Number;
+		private var BO_atingeCastelo:Boolean;
 		
 		
 		public function TiroAtor(_ptini:Point, _direcao:Point) 
@@ -30,13 +33,15 @@ package Fases.FaseCasteloElementos
 			SP_tiro = criaFecha();
 			SP_ponta = criaPontaFecha();
 			super(SP_tiro);
-			this.addChild(SP_ponta);
-			SP_ponta.x = 10;
-			SP_ponta.y = -1;
-			hitObject = SP_ponta;
+			//this.addChild(SP_ponta);
+			//SP_ponta.x = 10;
+			//SP_ponta.y = -1;
+			//hitObject = SP_ponta;
 		}
 		
 		public function inicializa():void {
+			BO_atingeCastelo = false;
+			NU_distancia = 0;
 			NU_veloc = 10;
 			NU_dano = 40;
 			this.x = PT_ptini.x;
@@ -44,13 +49,24 @@ package Fases.FaseCasteloElementos
 			calcularRota();
 			reinicializa();
 		}
-
+		
 		public function reinicializa():void {
 		}
 		
 		public function update(e:Event):void {
 			this.x += NU_velX;
 			this.y += NU_velY;
+			NU_distancia += NU_veloc;
+			if (NU_distancia > 900) marcadoRemocao = true;
+		}
+		
+		override public function hitTestAtor(atorAlvo:AtorBase):Boolean {
+			if (hitObject.hitTestObject(atorAlvo.hitObject)) {
+				if (atorAlvo is Castelo && NU_distancia < 50 ) return false;
+				if (testeHitShape(this, atorAlvo)) return true;
+			}
+			return false
+
 		}
 		
 		public function remove():void {
@@ -101,6 +117,11 @@ package Fases.FaseCasteloElementos
 		public function get dano():Number 
 		{
 			return NU_dano;
+		}
+		
+		public function get distancia():Number 
+		{
+			return NU_distancia;
 		}
 	}
 	
