@@ -129,7 +129,7 @@ package Fases
 			this.removeEventListener(FaseEvent.ATOR_REMOVIDO, manipulaAtorRemovido);			
 		}
 		
-		public function colisao(C1:AtorBase, C2:AtorBase) {
+		public function colisao(C1:AtorBase, C2:AtorBase):void {
 			if (C1 is InimigoAtor && C2 is Castelo )  {
 				 InimigoAtor(C1).baterCastelo();
 				 return;

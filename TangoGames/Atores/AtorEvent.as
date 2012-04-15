@@ -8,6 +8,7 @@ package TangoGames.Atores
 	 */
 	public class AtorEvent extends Event 
 	{
+		//constantes estaticas dos nome dos eventos
 		public static const ATOR_SAIU_STAGE:String = "AtorSaiuStage";
 		public static const ATOR_TOCOU_STAGE:String = "AtorTocouStage";
 		public static const ATOR_VOLTOU_STAGE:String = "AtorVoltouStage";

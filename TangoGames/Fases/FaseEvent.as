@@ -9,6 +9,7 @@ package TangoGames.Fases
 	 */
 	public class FaseEvent extends Event 
 	{
+		//constantes estaticas dos nome dos eventos
 		public static const FASE_PAUSA:String = "FasePausa";
 		public static const FASE_FIMDEJOGO:String = "FaseFimdeJogo";
 		public static const FASE_CONCLUIDA:String = "FaseConcluida";

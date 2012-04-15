@@ -9,9 +9,10 @@ package TangoGames.Menus
 	 */
 	public class MenuEvent extends Event 
 	{
-		public static const OPCAO_SELECIONADA = "OpcaoSelecionada"
-		public static const OPCAO_MOUSE_OVER = "OpcaoMouseOver"
-		public static const OPCAO_MOUSE_OUT = "OpcaoMouseOut"
+		//constantes estaticas dos nome dos eventos
+		public static const OPCAO_SELECIONADA:String = "OpcaoSelecionada"
+		public static const OPCAO_MOUSE_OVER:String = "OpcaoMouseOver"
+		public static const OPCAO_MOUSE_OUT:String = "OpcaoMouseOut"
 		
 		private var IN_OpcaoMenu:int;
 		private var MO_OpcaoObj:MenuOpcao ;
@@ -21,8 +22,9 @@ package TangoGames.Menus
 		 * @param	type
 		 * Tipo do Evento
 		 * @param	Opcao
-		 * 
-		 * @param	Obj
+		 * valor de retorno da opção
+		 * @param	OpcaoObj
+		 * referencia do objeto MenuOpcao que foi selecionado
 		 * @param	bubbles
 		 * @param	cancelable
 		 */
@@ -42,16 +44,14 @@ package TangoGames.Menus
 		{
 			return formatToString("MenuEvent", "type", "OpcaoMenu", "OpcaoObj", "bubbles", "cancelable", "eventPhase"); 
 		}
+		/**
+		 * valor de retorno da opção selecionada
+		 */
+		public function get OpcaoMenu():int { return IN_OpcaoMenu;	}
+		/**
+		 * referencia do objeto MenuOpcao que foi selecionado 
+		 */
+		public function get OpcaoObj():MenuOpcao {	return MO_OpcaoObj;	}
 		
-		public function get OpcaoMenu():int 
-		{
-			
-			return IN_OpcaoMenu;			
-		}
-		
-		public function get OpcaoObj():MenuOpcao 
-		{
-			return MO_OpcaoObj;
-		}
 	}
 }

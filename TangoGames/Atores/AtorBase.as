@@ -14,16 +14,25 @@ package TangoGames.Atores
 	import flash.utils.getQualifiedClassName;
 	import TangoGames.Fases.FaseBase;
 	/**
-	 * ...
+	 * Classe AtorBase auxila a controlar o coportamento dos elementos dinamicos do jogos
 	 * @author Arthur Figueirdo
 	 */
 	public class AtorBase extends Sprite {
+		//variaveis de representação visual da classe Ator
 		private var SP_figurino:DisplayObject;
-		private var FC_funcaoTeclas:Function;
+		
+		//variavel para controlar a remoção automática do objeto AtorBase
 		private var BO_marcadoRemocao:Boolean;
+		
+		//variavel para acoplar a funcionalizade de teste de teclado na classe AtorBase
+		private var FC_funcaoTeclas:Function;
+		
+		//variavel para guardar a referencia a classe FaseBase que o AtorBase pertence
+		private var FB_faseAtor:FaseBase;
+		
+		//Variaveis para controle do hittest da classe AtorBase
 		private var VT_hitGrupos: Vector.<Class>;
 		private var DO_hitObject:DisplayObject;
-		private var FB_faseAtor:FaseBase;
 		
 		//Variaveis de controle de entrada e saida do Stage
 		private var RE_Bordas:Rectangle;
@@ -33,6 +42,12 @@ package TangoGames.Atores
 		private var BO_gerarEventoStage:Boolean = false;
 		private var BO_naoGeraPrimeiroEvento:Boolean;
 		
+		/**
+		 * Contrutora da Classe AtorBase 
+		 * @param	_figurino
+		 * objeto que indica a representação visual do Ator na tela.
+		 * será adicionado a display deste objeto Ator.
+		 */
 		public function AtorBase(_figurino:DisplayObjectContainer) 	{
 			if (Class(getDefinitionByName(getQualifiedClassName(this))) == AtorBase ) {
 				throw (new Error("AtorBase: Esta classe não pode ser instanciada diretamente"))
@@ -41,18 +56,51 @@ package TangoGames.Atores
 			if (!(this is AtorInterface)) {
 				throw (new Error("AtorBase: A classe derivada do " + this.toString() + " deve implementar a interface AtorInterface"))				
 			}
-			
+			//Inicializa representação visual do objeto
 			SP_figurino = _figurino;
 			addChild(SP_figurino);
+			
+			//Inicializa variaveis da classe;
 			FC_funcaoTeclas =  null;
-			BO_marcadoRemocao = false;
-			VT_hitGrupos = new Vector.<Class>;
-			//hitTeste 
-			DO_hitObject = SP_figurino;
 			FB_faseAtor = null;
+			BO_marcadoRemocao = false;
+			
+			//Inicializa variaveis para o hitTeste 
+			VT_hitGrupos = new Vector.<Class>;
+			DO_hitObject = SP_figurino;
+			
+			//adiciona evento para detectar quando o ator enta no stage
 			this.addEventListener(Event.ADDED_TO_STAGE, onAdicionadoStage, false, 0, true);
 		}
-		
+		/**************************************************************************************
+		*                           Área das funções privadas da classe
+		************************************************************************************** /
+		/**
+		 * 
+		 * @param	e
+		 */
+		private function onAdicionadoStage(e:Event):void {
+			this.removeEventListener(Event.ADDED_TO_STAGE, onAdicionadoStage);
+			if (FB_faseAtor == null) FB_faseAtor = FaseBase(parent)
+			//this.addEventListener(Event.REMOVED_FROM_STAGE, onRemovidoStage, false, 0, true);
+		}
+/*		private function onRemovidoStage(e:Event):void 
+		{
+			this.removeEventListener(Event.REMOVED_FROM_STAGE, onRemovidoStage);
+			this.addEventListener(Event.ADDED_TO_STAGE, onAdicionadoStage, false, 0, true);
+		}
+*/	
+		/**************************************************************************************
+		 *             Área das funçõe públicas da classe
+		 *************************************************************************************/
+		/**
+		 * Testa o hit entre este objeto e o objeto atorAlvo.
+		 * O teste é feito pela forma gráfica exata do objeto. 
+		 * A FaseBase utiliza esta método automaticamente para teste hit entre os grupos. Pode ser sobrescrita.
+		 * @param	atorAlvo
+		 * Objeto AtorBase para teste do hit.
+		 * @return
+		 */
 		public function hitTestAtor(atorAlvo:AtorBase):Boolean {
 			if (DO_hitObject.hitTestObject(atorAlvo.hitObject)) {
 				if (testeHitShape(this, atorAlvo)) return true;
@@ -60,12 +108,6 @@ package TangoGames.Atores
 			return false
 		}
 		
-		private function onAdicionadoStage(e:Event):void 
-		{
-			this.removeEventListener(Event.ADDED_TO_STAGE, onAdicionadoStage);
-			if (FB_faseAtor == null) FB_faseAtor = FaseBase(parent)
-			//this.addEventListener(Event.REMOVED_FROM_STAGE, onRemovidoStage, false, 0, true);
-		}
 		
 		protected function adcionaClasehitGrupo(hitClasse:Class):void {
 			if (VT_hitGrupos == null) VT_hitGrupos = new  Vector.<Class>;
@@ -79,12 +121,7 @@ package TangoGames.Atores
 		protected function apagahitGrupo(hitClasse:Class):void {
 			VT_hitGrupos =  new  Vector.<Class>;
 		}
-/*		private function onRemovidoStage(e:Event):void 
-		{
-			this.removeEventListener(Event.REMOVED_FROM_STAGE, onRemovidoStage);
-			this.addEventListener(Event.ADDED_TO_STAGE, onAdicionadoStage, false, 0, true);
-		}
-*/		
+	
 		
 		protected function pressTecla(tecla:uint):Boolean {
 			if (FC_funcaoTeclas != null) { return FC_funcaoTeclas(tecla) };
@@ -153,6 +190,21 @@ package TangoGames.Atores
 		{
 			BO_gerarEventoStage = value;
 		}
+		
+		public function get tododentro():Boolean 
+		{
+			return BO_tododentro;
+		}
+		
+		public function get tocandostage():Boolean 
+		{
+			return BO_tocandostage;
+		}
+		
+		public function get todofora():Boolean 
+		{
+			return BO_todofora;
+		}
 		/**
 		 * testa o contato pela forma do objeto
 		 * @param	ob1
@@ -190,6 +242,9 @@ package TangoGames.Atores
 		//***********************************************************************************************
 		//**********              gera evento para os limites do stage                 ******************
 		//***********************************************************************************************
+		/**
+		 * Método para calcular a dinamica do Ator em relação ao stage
+		 */
 		public function geraEventoStage():void {
 			RE_Bordas = this.getBounds(stage);
 			if ( !BO_todofora && !BO_tocandostage && !BO_tododentro ) {
@@ -216,7 +271,11 @@ package TangoGames.Atores
 			if ( BO_tocandostage || BO_todofora ) testeentrouTodoStage();
 			
 		}
-		
+		/**
+		 * Método teste se o Ator tocou o stage
+		 * @param	geraEvento
+		 * se verdadeiro gera evento se falso não gera evento somente atualiza boleanas
+		 */
 		private function testetocouStage(geraEvento:Boolean = true):void { 
 			if ( RE_Bordas.bottom > stage.stageHeight ) {
 				BO_tododentro = false;
@@ -247,7 +306,11 @@ package TangoGames.Atores
 				return;
 			}
 		}
-		
+		/**
+		 * Método para calcular se o ator saiu do stage
+		 * @param	geraEvento
+		 * se verdadeiro gera evento se falso não gera evento somente atualiza boleanas
+		 */
 		private function testesaiuStage(geraEvento:Boolean = true):void {
 			if ( RE_Bordas.top > stage.stageHeight ) {
 				BO_todofora = true;
@@ -278,7 +341,11 @@ package TangoGames.Atores
 				return;
 			}
 		}
-		
+		/**
+		 * Método teste se o Ator entrou no stage
+		 * @param	geraEvento
+		 * se verdadeiro gera evento se falso não gera evento somente atualiza boleanas
+		 * */
 		private function testeentrouStage(geraEvento:Boolean = true):void {
 			if ( ( RE_Bordas.top < stage.stageHeight ) && ( RE_Bordas.top > 0 ) && ( RE_Bordas.left < stage.stageWidth  ) && ( RE_Bordas.right > 0  ) )  {
 				BO_todofora = false;
