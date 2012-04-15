@@ -1,6 +1,5 @@
 package TangoGames.Fases 
 {
-	import Fases.FaseCasteloElementos.Castelo;
 	import flash.utils.getDefinitionByName;
 	import flash.utils.getQualifiedClassName;
 	import TangoGames.Atores.AtorBase;
@@ -30,7 +29,13 @@ package TangoGames.Fases
 		private var VT_GrupoClass:Vector.<Class>;
 		private var VT_GrupoAtores:Vector.<Vector.<AtorBase>>;
 		
-		
+		/**
+		 * construtora da Class FaseBase
+		 * @param	_main
+		 * referencia ao objeto principal do jogo
+		 * @param	Nivel
+		 * Número do nível da fase
+		 */
 		public function FaseBase(_main:DisplayObjectContainer, Nivel:int) 
 		{
 			if (Class(getDefinitionByName(getQualifiedClassName(this))) == FaseBase ) {
@@ -48,29 +53,13 @@ package TangoGames.Fases
 			VT_GrupoClass =  new Vector.<Class>;
 			VT_GrupoAtores = new Vector.<Vector.<AtorBase>>;
 		}
+		/***************************************************************************
+		 *    Área dos métodos privados da classe
+		 * ************************************************************************/
 		/**
-		 * Inicia a execução da fase
+		 *
+		 * @param	e
 		 */
-		public function iniciaFase():void {
-			_mainapp.addChild(this);
-			if (FaseInterface(this).inicializacao()) {
-				continuaFase();
-			}
-		}
-		/**
-		 * Metodo reinicia a fase interrompida do ponto de pausa
-		 */
-		public function continuaFase():void {
-			TC_teclas = new TeclasControle(stage);
-			stage.stageFocusRect = false;
-			stage.focus = this;
-			BO_pausa = false;
-			this.addEventListener(Event.ENTER_FRAME, updateFase, false, 0, true);			
-		}
-		/****************************************************************************
-		 *                     Update global da Fase                                *
-		 * @param	e                                                               *  
-		 ****************************************************************************/
 		private function updateFase(e:Event):void {
 			
 			//chama update da fase
@@ -95,6 +84,41 @@ package TangoGames.Fases
 			VT_remover =  new Vector.<AtorBase>;			
 		}
 		
+
+		/***************************************************************************
+		 *    Área dos métodos protegidos da classe
+		 * ************************************************************************/
+		/***************************************************************************
+		 *    Área dos métodos publicos da classe
+		 * ************************************************************************/
+		/**
+		 * Inicia a execução da fase
+		 */
+		public function iniciaFase():void {
+			_mainapp.addChild(this);
+			if (FaseInterface(this).inicializacao()) {
+				continuaFase();
+			}
+		}
+		
+		/***************************************************************************
+		 *    Propriedade visíveis da Classe
+		 * ************************************************************************/
+		/**
+		 * Metodo reinicia a fase interrompida do ponto de pausa
+		 */
+		public function continuaFase():void {
+			TC_teclas = new TeclasControle(stage);
+			stage.stageFocusRect = false;
+			stage.focus = this;
+			BO_pausa = false;
+			this.addEventListener(Event.ENTER_FRAME, updateFase, false, 0, true);			
+		}
+		
+		/****************************************************************************
+		 *                     Update global da Fase                                *
+		 * @param	e                                                               *  
+		 ****************************************************************************/
 		private function testaHitGrupos(_ator:AtorBase):void {
 			if (_ator.hitGrupos != null) {
 				var index:int;

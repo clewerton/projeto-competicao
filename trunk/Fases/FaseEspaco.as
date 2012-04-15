@@ -123,7 +123,7 @@ package Fases
 		
 		public function remocao():void { };
 		
-		public function colisao(C1:AtorBase, C2:AtorBase) {
+		public function colisao(C1:AtorBase, C2:AtorBase):void {
 			trace(C1 + " colidiu com " + C2);
 			
 			/*if (C1 is InimigoAtor && C2 is Castelo )  {

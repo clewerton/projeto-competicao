@@ -46,7 +46,7 @@ package Fases {
 			
 		public function remocao():void { };
 		
-		public function colisao(C1:AtorBase, C2:AtorBase) {
+		public function colisao(C1:AtorBase, C2:AtorBase):void {
 			trace("Colidiu" + C1 + " com " + C2);
 		}
 	}

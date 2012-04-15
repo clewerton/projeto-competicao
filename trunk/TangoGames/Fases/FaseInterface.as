@@ -13,7 +13,7 @@ package TangoGames.Fases
 		function inicializacao():Boolean;
 		function update(e:Event):void;
 		function remocao():void;
-		function colisao(C1:AtorBase, C2:AtorBase);
+		function colisao(C1:AtorBase, C2:AtorBase):void;
 	}
 	
 }
