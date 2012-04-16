@@ -18,6 +18,9 @@ package TangoGames.Menus
 		private var TF_opcaoTextField: TextField ;
 		private var DO_opcaoDisplay: DisplayObject;
 		private var FU_ProximoMenu: Function;
+		private var BO_ativo:Boolean;
+		private var UI_faseID: uint;
+		private var BO_faseControle:Boolean;
 	
 		/**
 		* Cria uma opção de menu
@@ -28,7 +31,10 @@ package TangoGames.Menus
 		* @param	display
 		* Objeto que será apresentado na tela como opção de menu
 		*/
-		public function MenuOpcao(titulo:String, valoRetorno:uint, prxMenu: Function = null,display: DisplayObject = null) {
+		public function MenuOpcao(titulo:String, valoRetorno:uint, prxMenu: Function = null, display: DisplayObject = null) {
+			UI_faseID = 0;
+			BO_faseControle = false;
+			BO_ativo = true;
 			ST_titulo = titulo;
 			TF_opcaoTextField =  new TextField ;
 			DO_opcaoDisplay = display;
@@ -55,6 +61,14 @@ package TangoGames.Menus
 		public function get valorRetorno():uint {
 			return IN_valorRetorno;
 		}
+		/**
+		* Valor retornado pelo evento quando selecionado
+		*/
+		public function set valorRetorno(value:uint):void 
+		{
+			IN_valorRetorno = value;
+		}
+
 		/**
 		 * TextField usado pala opção de menu
 		*/
@@ -86,7 +100,38 @@ package TangoGames.Menus
 		{
 			return FU_ProximoMenu;
 		}
-	
+		
+		public function get ativo():Boolean 
+		{
+			return BO_ativo;
+		}
+		
+		public function set ativo(value:Boolean):void 
+		{
+			BO_ativo = value;
+		}
+		
+		public function get faseID():uint 
+		{
+			return UI_faseID;
+		}
+		
+		public function set faseID(value:uint):void 
+		{
+			UI_faseID = value;
+		}
+		
+		public function get faseControle():Boolean 
+		{
+			return BO_faseControle;
+		}
+		
+		public function set faseControle(value:Boolean):void 
+		{
+			BO_faseControle = value;
+		}
+		
+			
 		private function criaTextField():void {
 			TF_opcaoTextField.selectable = false;
 			TF_opcaoTextField.autoSize = TextFieldAutoSize.LEFT;

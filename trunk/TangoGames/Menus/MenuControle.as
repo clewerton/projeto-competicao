@@ -2,10 +2,12 @@ package TangoGames.Menus {
 	
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
+	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.utils.getDefinitionByName;
 	import flash.utils.getQualifiedClassName;
+	import TangoGames.Fases.FaseControle;
 	
 	/**
 	 * Classe realiza o controle de navegação de Menus
@@ -14,11 +16,17 @@ package TangoGames.Menus {
 	 */
 	public class MenuControle extends EventDispatcher {
 		
+		public static const MENU_CONTROLE_FASES = "MenuControleFases";
+		
 		//variável de referencia ao objeto principal do jogo
 		private var _mainapp:DisplayObjectContainer;
 		
 		//variável do menu ativo do jogo
 		private var MenuCorrente:MenuBase;
+		
+		//variável do controle de Fase
+		private var FC_controleFase: FaseControle;
+		private var MB_menuControleFase: MenuBase;
 		
 		/**
 		 * contrutora da Classe MenuControle
@@ -53,10 +61,29 @@ package TangoGames.Menus {
 			}
 			else
 			{
+				if (MenuCorrente.ID_Menu == MENU_CONTROLE_FASES && !e.OpcaoObj.faseControle) {
+					if (manipulaOpcaoControleFase(MenuCorrente , e.OpcaoObj)) desativaMenu();
+					return
+				}
 				if (manipulaOpcaoMenu(MenuCorrente, e.OpcaoObj)) desativaMenu();
 			}
 		}
-
+		/**
+		 * cria fundo para o menu de nivel da fase
+		 * @return
+		 */
+		private function criaFundo():Sprite {
+			var sp:Sprite = new Sprite ;
+			sp.graphics.lineStyle(1, 0X000000, 0);
+			sp.graphics.beginFill(0X000000,0.2);
+			sp.graphics.drawRect( 0 , 0 , _mainapp.stage.stageWidth , _mainapp.stage.stageHeight);
+			sp.graphics.endFill();
+			return sp;
+		}
+		
+		private function menuControleFase():MenuBase {
+			return MB_menuControleFase;
+		}
 		/***************************************************************************
 		 *    Área dos métodos protegidos da classe
 		 * ************************************************************************/
@@ -98,10 +125,35 @@ package TangoGames.Menus {
 		 * @return
 		 * se verdadeiro interrompe excução do menu se falso continua.
 		 */
-		protected function manipulaOpcaoMenu(Menu:MenuBase, Opcao: MenuOpcao):Boolean {
-			return MenuMainInterface(_mainapp).manipulaMenuOpcaoSelecionada(Menu,Opcao)
+		protected function manipulaOpcaoMenu(_menu:MenuBase, _opcao: MenuOpcao):Boolean {
+			return MenuMainInterface(_mainapp).manipulaMenuOpcaoSelecionada(_menu,_opcao)
 		}
+		/**
+		 * 
+		 * @param	_menu
+		 * @param	_opcao
+		 * @return
+		 */
+		protected function manipulaOpcaoControleFase(_menu:MenuBase, _opcao:MenuOpcao):Boolean {
+			if (controleFase.faseNives(_opcao.valorRetorno).length <= 1) {
+				_opcao.faseControle = true;
+				_opcao.faseID = _opcao.valorRetorno;
+				_opcao.valorRetorno = 0;
+				return manipulaOpcaoMenu(_menu, _opcao);
+			}
+			MB_menuControleFase = MenuCorrente;
+			desativaMenu();
 
+			var mn:MenuBase = new MenuBase(MENU_CONTROLE_FASES, MB_menucontroleFase.fundo)
+			mn.formatacao = MB_menucontroleFase.formatacao;
+
+			mn.fonte = MB_menucontroleFase.fonte;
+			
+			controleFase.adicionaOpcoesNiveisMenu(_opcao.valorRetorno, mn);
+			mn.adicionaOpcao("Voltar", 99,menuControleFase);
+			ativaMenu(mn);
+			return false;
+		}
 		/***************************************************************************
 		 *    Área dos métodos publicos da classe
 		 * ************************************************************************/
@@ -122,6 +174,16 @@ package TangoGames.Menus {
 		protected function get mainapp():DisplayObjectContainer 
 		{
 			return _mainapp;
+		}
+		
+		public function get controleFase():FaseControle 
+		{
+			return FC_controleFase;
+		}
+		
+		public function set controleFase(value:FaseControle):void 
+		{
+			FC_controleFase = value;
 		}
 	}
 }
