@@ -10,7 +10,10 @@ package
 	 * Menu controle Principal do jogo
 	 * acionamento as opções do jogo e fases
 	 */
-	public class MenuPrincipal extends MenuControle {	
+	public class MenuPrincipal extends MenuControle {
+		//variaveis do menu principal
+		public static const MENU_PRINCIPAL:String =  "MenuPrincipal";
+		
 		private	var TF_txtForm:TextFormat;
 		private var FaseID:int;
 		/**
@@ -66,7 +69,7 @@ package
 		 */
 		override protected function defineMenuInicial():MenuBase 
 		{
-			var mn:MenuBase = new MenuBase("MenuPrincipal", new MenuPrincipalFundo());
+			var mn:MenuBase = new MenuBase(MENU_PRINCIPAL, new MenuPrincipalFundo());
 			mn.adicionaOpcao("Novo Jogo", 1,null , new Iniciar());
 			mn.adicionaOpcao("Opções", 1,defineMenuOpcoes);
 			mn.adicionaOpcao("Selecionar Fase",2,defineMenuFases);
@@ -80,10 +83,8 @@ package
 		 * Retorna uma instancia do Menu do tipo MenuBase
 		 */
 		private function defineMenuFases():MenuBase {
-			var mn:MenuBase = new MenuBase("MenuFases",new MenuPrincipalFundo());
-			mn.adicionaOpcao("Defenda o Castelo", 1);
-			mn.adicionaOpcao("Viajem Espacial", 2);
-			mn.adicionaOpcao("Fase Teste 1", 3);
+			var mn:MenuBase = new MenuBase(MENU_CONTROLE_FASES , new MenuPrincipalFundo());
+			controleFase.adicionaOpcoesMenu(mn);
 			mn.adicionaOpcao("Voltar", 2 , defineMenuInicial);			
 			mn.formatacao = TF_txtForm;
 			return mn;

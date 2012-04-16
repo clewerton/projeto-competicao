@@ -21,21 +21,19 @@ package
 		
 		private function mainmenu():void {
 			menus = new MenuPrincipal(this);
-			menus.inicia();
 			fases = new FasesJogo(this);
+			menus.controleFase = fases;
+			menus.inicia();
 		}
 		
-		public function manipulaMenuOpcaoSelecionada(MenuCor:MenuBase, Opcao: MenuOpcao):Boolean {
-			switch (MenuCor.ID_Menu) 
-			{
-				case "MenuFases": 
-					
-				break;
-			default:
-				fases.iniciaFase(MenuCor.ID_Menu, Opcao.valorRetorno);
-				return true;
-			}
+		public function manipulaMenuOpcaoSelecionada(_menuCor:MenuBase, _opcao: MenuOpcao):Boolean {
 			
+			switch (_menuCor.ID_Menu) {
+				case MenuControle.MENU_CONTROLE_FASES:
+					fases.iniciaFase(_opcao.faseID, _opcao.valorRetorno);
+				break;
+				default:
+			}
 			return false
 		}
 		

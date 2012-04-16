@@ -72,6 +72,7 @@ package TangoGames.Atores
 			//adiciona evento para detectar quando o ator enta no stage
 			this.addEventListener(Event.ADDED_TO_STAGE, onAdicionadoStage, false, 0, true);
 		}
+		
 		/**************************************************************************************
 		*                           Área das funções privadas da classe
 		************************************************************************************** /
@@ -109,11 +110,11 @@ package TangoGames.Atores
 		}
 		
 		
-		protected function adcionaClasehitGrupo(hitClasse:Class):void {
+		protected function adcionaClassehitGrupo(hitClasse:Class):void {
 			if (VT_hitGrupos == null) VT_hitGrupos = new  Vector.<Class>;
 			VT_hitGrupos.push(hitClasse)
 		}
-		protected function removeClasehitGrupo(hitClasse:Class):void {
+		protected function removeClassehitGrupo(hitClasse:Class):void {
 			if (VT_hitGrupos == null) return
 			var i:int = VT_hitGrupos.indexOf(hitClasse);
 			if (i >= 0) VT_hitGrupos.splice(i, 1);			

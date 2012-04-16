@@ -5,6 +5,8 @@ package TangoGames.Menus
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.filters.BitmapFilterQuality;
+	import flash.filters.BlurFilter;
 	import flash.filters.DropShadowFilter;
 	import flash.filters.GlowFilter;
 	import flash.text.Font;
@@ -12,9 +14,11 @@ package TangoGames.Menus
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
 	import flash.ui.Mouse;
+	import flash.ui.MouseCursor;
+	
 	/**
-	 * ...
-	 * @author Diogo Honorato
+	 * Menu básico para construção de opções
+	 * @author Arthur Figueiredo
 	 */
 	public class MenuBase extends MovieClip {
 		
@@ -31,8 +35,8 @@ package TangoGames.Menus
 		private	var GF_filt_select:GlowFilter;
 		private	var DS_filt_shadow:DropShadowFilter;
 		private	var DS_filt_shadow_select:DropShadowFilter;
+		private var BF_filt_blur: BlurFilter;
 
-		
 		/**
 		 * MenuBase é uma classe de apoio para construção de Menus
 		 * @param	id_Menu
@@ -61,117 +65,51 @@ package TangoGames.Menus
 			addEventListener(Event.ADDED_TO_STAGE, adicionadoStage, false, 0, true);
 		}
 		
+		/***************************************************************************
+		 *    Área dos métodos privados da classe
+		 * ************************************************************************/
 		/**
-		 * Adiciona uma opção de menu
-		 * @param 	Titulo
-		 * Titulo que será apresentado na tela
-		 * @param	valorRetorno
-		 * Valor de retorno do evento quando a opção é selecionada 
-		 * @param	proximomenu
-		 * Função que constroi/define o próximo menu que será chamado por esta opção 
-		 * @param	displayObj
-		 * Objeto que será apresentado na tela representando a opção do menu (MovieClip, Sprite, etc)
+		 * manipula evento de adicionado no stage
+		 * @param	e
+		 * referencia do objeto do evento gerado
 		 */
-		public function adicionaOpcao(Titulo:String, valorRetorno:uint, proximomenu:Function = null, displayObj: DisplayObject = null ):void {
-			var op:MenuOpcao = new MenuOpcao(Titulo, valorRetorno, proximomenu, displayObj);
-			VET_Opcoes.push(op);
-			op.formato = TF_formatacao;
-		}
-
-		/**
-		 * fonte utilizado pelas opções do menu
-		 */
-		public function get fonte():Font {
-			return FT_fonte;
-		}
-		
-		/**
-		 * fonte utilizado pelas opções do menu
-		 */		
-		public function set fonte(value:Font):void {
-			FT_fonte = value;
-			TF_formatacao.font = FT_fonte.fontName;
-			formatacao = TF_formatacao;
-		}
-
-		/**
-		 * objeto usado para formatação das opções do menu
-		 */
-		public function get formatacao():TextFormat {
-			return TF_formatacao;
-		}
-
-		/**
-		 * objeto usado para formatação das opções do menu
-		 */		
-		public function set formatacao(value:TextFormat):void {
-			TF_formatacao = value;
-			
-			for each(var op:MenuOpcao in VET_Opcoes) { op.formato = TF_formatacao; }
-			
-		}
-		
-		/**
-		 * Flag que controla o efeito visual automático das opções 
-		 */
-		public function get efeitoMouse():Boolean {
-			return BO_efeitoMouse;
-		}
-		
-		/**
-		 * Flag que controla o efeito visual automático das opções 
-		 */		
-		public function set efeitoMouse(value:Boolean):void {
-			BO_efeitoMouse = value;
-		}
-		
-		/**
-		 * Texto informado como identificador no Menu 
-		 */
-		public function get ID_Menu():String {
-			return ST_ID_Menu;
-		}
-		
-		/**
-		 * Texto informado como identificador no Menu 
-		 */
-		public function set ID_Menu(value:String):void {
-			ST_ID_Menu = value;
-		}
-		
-		//*****************************************************************************************
-		//***                          metodos privados da classe                               ***
-		//*****************************************************************************************
-		
 		private function adicionadoStage(e:Event):void {
 			removeEventListener(Event.ADDED_TO_STAGE, adicionadoStage);
 			construirMenu();
 			addEventListener(Event.REMOVED_FROM_STAGE, removidoStage);
 		}
 		
+		/**
+		 * manipula evento de removido no stage
+		 * @param	e
+		 * referencia do objeto do evento gerado
+		 */		
 		private function removidoStage(e:Event):void {
 			destruirMenu();
 			removeEventListener(Event.REMOVED_FROM_STAGE, removidoStage);
 			addEventListener(Event.ADDED_TO_STAGE, adicionadoStage, false, 0, true);
 		}
 		
+		/**
+		 * metodo auxilia a construção das opções do menu do menu
+		 */
 		private function construirMenu():void {
-			var qtdOpcoes:int = VET_Opcoes.length;
-			var i:uint = 0;
-			
 			for each (var op:MenuOpcao in VET_Opcoes ) {
-				i++;
 				this.addChild( op);
-				op.x = ( stage.stageWidth - width ) / 2;
-				op.x = ( stage.stageWidth - op.width ) / 2;
-				op.y = ( ( stage.stageHeight - op.height ) / (qtdOpcoes + 1) ) * i;
+				posicionaOpcao(op);
 				op.addEventListener(MouseEvent.CLICK, manipulaEventoMouse, false, 0, true);
 				op.addEventListener(MouseEvent.MOUSE_OVER, manipulaEventoMouse, false, 0, true);
 				op.addEventListener(MouseEvent.MOUSE_OUT, manipulaEventoMouse, false, 0, true);
-				if (BO_efeitoMouse) op.opcaoDisplay.filters = [GF_filt, DS_filt_shadow];
+				if (BO_efeitoMouse) {
+					if (op.ativo) op.opcaoDisplay.filters = [GF_filt, DS_filt_shadow];
+					else op.opcaoDisplay.filters = [ GF_filt, DS_filt_shadow,BF_filt_blur ];
+				}
 			}
 		}
-			
+		
+		/**
+		 * metodo auxilia a destruir as opções do menu
+		 */	
 		private function destruirMenu():void {
 			
 			for each (var op:MenuOpcao in VET_Opcoes) {
@@ -182,11 +120,16 @@ package TangoGames.Menus
 			}
 		}
 		
+		/**
+		 * Metodo auxliar para configura os efeitos
+		 */
 		private function configuraEfeitos() {
 			GF_filt = new GlowFilter;  
 			GF_filt_select = new GlowFilter;  
 			DS_filt_shadow = new DropShadowFilter;  
 			DS_filt_shadow_select = new DropShadowFilter;  
+			BF_filt_blur = new BlurFilter;
+
 			
 			GF_filt.color = 0x00000;
 			GF_filt.blurX = 7;  
@@ -203,8 +146,17 @@ package TangoGames.Menus
 			DS_filt_shadow_select.blurX = 2;  
 			DS_filt_shadow_select.blurY = 2;  
 			DS_filt_shadow_select.alpha = .2;  
+			
+			BF_filt_blur.blurX = 2;
+			BF_filt_blur.blurY = 2;
+			BF_filt_blur.quality = BitmapFilterQuality.HIGH;
 		}
 		
+		/**
+		 * manipula eventos do mouse
+		 * @param	e
+		 * referencia do objeto do evento gerado
+		 */
 		private function manipulaEventoMouse(e:MouseEvent):void {
 			var op:MenuOpcao = MenuOpcao(e.currentTarget)
 			switch (e.type) {
@@ -222,6 +174,7 @@ package TangoGames.Menus
 				default:
 			}
 		}
+		
 		/**
 		 * Liga e desliga o efeito do mouse over 
 		 * @param	op
@@ -229,17 +182,145 @@ package TangoGames.Menus
 		 * @param	onoff
 		 * flag que indica se aplica o efeito true = sim / false = nao
 		 */
-		private function aplicaEfeitoMouse(op:MenuOpcao,onoff:Boolean):void {
+		protected function aplicaEfeitoMouse(op:MenuOpcao,onoff:Boolean):void {
 			if (onoff) {
-				op.opcaoDisplay.filters = [GF_filt_select, DS_filt_shadow_select];
-				op.opcaoDisplay.scaleX = 1.05;
-				op.opcaoDisplay..scaleY = 1.05;
+				if ( op.ativo ) {
+					op.opcaoDisplay.filters = [GF_filt_select, DS_filt_shadow_select];
+					op.opcaoDisplay.scaleX = 1.05;
+					op.opcaoDisplay..scaleY = 1.05;
+				}
+				else {
+					Mouse.cursor = MouseCursor.ARROW;
+				}
 			}
 			else {
-				op.opcaoDisplay.filters = [GF_filt, DS_filt_shadow];
-				op.opcaoDisplay.scaleX = 1.0;
-				op.opcaoDisplay.scaleY = 1.0;			
+				if ( op.ativo ) {
+					op.opcaoDisplay.filters = [GF_filt, DS_filt_shadow];
+					op.opcaoDisplay.scaleX = 1.0;
+					op.opcaoDisplay.scaleY = 1.0;
+				}
+				else {
+					Mouse.cursor = MouseCursor.AUTO;
+				}
 			}
+		}
+		 
+		/***************************************************************************
+		 *    Área dos métodos protegidos da classe
+		 * ************************************************************************/
+		/**
+		 * posiciona as opções na tela do menu
+		 * pode ser sobrescrita
+		 * @param	_op
+		 * referencia do objeto MenuOpcao que sera posicionada;
+		 */
+		protected function posicionaOpcao(_op:MenuOpcao):void {
+			var i:uint = VET_Opcoes.indexOf(_op) + 1;
+			_op.x = ( stage.stageWidth - _op.width ) / 2;
+			_op.y = ( ( stage.stageHeight - _op.height ) / (VET_Opcoes.length + 1) ) * i;
+		}
+		
+		/***************************************************************************
+		 *    Área dos métodos publicos da classe
+		 * ************************************************************************/
+		/**
+		 * Adiciona uma opção de menu
+		 * @param 	Titulo
+		 * Titulo que será apresentado na tela
+		 * @param	valorRetorno
+		 * Valor de retorno do evento quando a opção é selecionada 
+		 * @param	proximomenu
+		 * Função que constroi/define o próximo menu que será chamado por esta opção 
+		 * @param	displayObj
+		 * Objeto que será apresentado na tela representando a opção do menu (MovieClip, Sprite, etc)
+		 */
+		public function adicionaOpcao(Titulo:String, valorRetorno:uint, proximomenu:Function = null, displayObj: DisplayObject = null , ativo:Boolean = true):void {
+			var op:MenuOpcao = new MenuOpcao(Titulo, valorRetorno, proximomenu, displayObj);
+			op.ativo = ativo;
+			VET_Opcoes.push(op);
+			op.formato = TF_formatacao;
+		}
+		
+		/**
+		 * Adiciona uma opção de menu representando um nível da uma fase
+		 * @param   faseID
+		 * número do ID da fase
+		 * @param 	Titulo
+		 * Titulo que será apresentado na tela
+		 * @param	valorRetorno
+		 * Valor de retorno do evento quando a opção é selecionada 
+		 * @param	proximomenu
+		 * Função que constroi/define o próximo menu que será chamado por esta opção 
+		 * @param	displayObj
+		 * Objeto que será apresentado na tela representando a opção do menu (MovieClip, Sprite, etc)
+		 */
+		public function adicionaOpcaoNiveisFase(faseID:uint,Titulo:String, valorRetorno:uint, proximomenu:Function = null, displayObj: DisplayObject = null , ativo:Boolean = true):void {
+			var op:MenuOpcao = new MenuOpcao(Titulo, valorRetorno, proximomenu, displayObj);
+			op.faseControle = true;
+			op.faseID = faseID;
+			op.ativo = ativo;
+			VET_Opcoes.push(op);
+			op.formato = TF_formatacao;
+		}
+		
+		public function limpaOpcoes():void {
+			VET_Opcoes = new Vector.<MenuOpcao>;
+		}
+
+		/***************************************************************************
+		 *    Propriedade visíveis da Classe
+		 * ************************************************************************/
+		
+		/**
+		 * fonte utilizado pelas opções do menu
+		 */
+		public function get fonte():Font { return FT_fonte; }
+		
+		/**
+		 * fonte utilizado pelas opções do menu
+		 */		
+		public function set fonte(value:Font):void {
+			FT_fonte = value;
+			TF_formatacao.font = FT_fonte.fontName;
+			formatacao = TF_formatacao;
+		}
+
+		/**
+		 * objeto usado para formatação das opções do menu
+		 */
+		public function get formatacao():TextFormat { return TF_formatacao; }
+
+		/**
+		 * objeto usado para formatação das opções do menu
+		 */		
+		public function set formatacao(value:TextFormat):void {
+			TF_formatacao = value;
+			for each(var op:MenuOpcao in VET_Opcoes) { op.formato = TF_formatacao; }
+		}
+		
+		/**
+		 * Flag que controla o efeito visual automático das opções 
+		 */
+		public function get efeitoMouse():Boolean { return BO_efeitoMouse; }
+		
+		/**
+		 * Flag que controla o efeito visual automático das opções 
+		 */		
+		public function set efeitoMouse(value:Boolean):void { BO_efeitoMouse = value; }
+		
+		/**
+		 * Texto informado como identificador no Menu 
+		 */
+		public function get ID_Menu():String { return ST_ID_Menu; }
+		
+		/**
+		 * Texto informado como identificador no Menu 
+		 */
+		public function set ID_Menu(value:String):void { ST_ID_Menu = value; }
+		
+		public function get fundo():Sprite 
+		{
+			return SPR_Fundo;
 		}
 	}
 }
