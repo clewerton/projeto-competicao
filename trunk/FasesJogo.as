@@ -24,10 +24,12 @@ package
 			adicionaNivel(2, "Normal", 2, false);
 			adicionaNivel(2, "Difícil", 3, false);
 			
-			adicionaFase(3,"Fase de Teste", FaseTeste1);
-			adicionaFase(4, "Fase de Teste2", FaseTeste3);
+			adicionaFase(3,"Caça ao Tesouro", FaseTesouro);
+			adicionaFase(4, "Fase de Teste1", FaseTeste1);
 			
 			faseBloqueada(1, false);
+			faseBloqueada(2, false);
+			faseBloqueada(3, false);
 		}	
 	}
 }

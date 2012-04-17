@@ -144,10 +144,10 @@ package TangoGames.Menus {
 			MB_menuControleFase = MenuCorrente;
 			desativaMenu();
 
-			var mn:MenuBase = new MenuBase(MENU_CONTROLE_FASES, MB_menucontroleFase.fundo)
-			mn.formatacao = MB_menucontroleFase.formatacao;
+			var mn:MenuBase = new MenuBase(MENU_CONTROLE_FASES, MB_menuControleFase.fundo)
+			mn.formatacao = MB_menuControleFase.formatacao;
 
-			mn.fonte = MB_menucontroleFase.fonte;
+			mn.fonte = MB_menuControleFase.fonte;
 			
 			controleFase.adicionaOpcoesNiveisMenu(_opcao.valorRetorno, mn);
 			mn.adicionaOpcao("Voltar", 99,menuControleFase);
