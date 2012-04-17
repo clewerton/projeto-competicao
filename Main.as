@@ -31,6 +31,7 @@ package
 			switch (_menuCor.ID_Menu) {
 				case MenuControle.MENU_CONTROLE_FASES:
 					fases.iniciaFase(_opcao.faseID, _opcao.valorRetorno);
+					return true;
 				break;
 				default:
 			}
