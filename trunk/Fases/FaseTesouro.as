@@ -14,6 +14,7 @@ package Fases
 	import TangoGames.Atores.AtorBase;
 	import TangoGames.Fases.FaseBase;
 	import TangoGames.Fases.FaseInterface;
+	import TangoGames.Utils;
 	
 	/**
 	 * ...
@@ -21,10 +22,15 @@ package Fases
 	 */
 	public class FaseTesouro extends FaseBase implements FaseInterface
 	{
+		public static const PREMIO_TESOURO:uint =  1;
+		
+		public const MAPA_LARGURA:uint = 4000;
+		public const MAPA_ALTURA:uint = 3000;
 		
 		private var AB_barcoHeroi:BarcoHeroiAtor;
 		private var MC_backGround:Sprite;
 		private var RE_limites:Rectangle;
+		private var RE_limGlob:Rectangle;
 		private var BO_limites:Boolean;
 		private var NU_limVX:Number;
 		private var NU_limVY:Number;
@@ -32,25 +38,53 @@ package Fases
 		private var VT_ilhas:Vector.<IlhaAtor>;
 		private var UI_qtdIlhas:uint;
 		
+		private var UI_qtdTesouros:uint;
+		private var UI_contTesouros:uint;
+		
+		private var BO_zoom:Boolean;
+		private var NU_escala:Number;
+		
+		private var wait:uint;
+		
 		public function FaseTesouro(_main:DisplayObjectContainer, Nivel:int) {
 			super(_main, Nivel);
-			MC_backGround = geraMarFundo()
+			MC_backGround = geraMarFundo();
 			this.addChild(MC_backGround);
-			MC_backGround.x = - MC_backGround.width / 2;
-			MC_backGround.y = - MC_backGround.height / 2;			
+			MC_backGround.x = -  MC_backGround.width / 2;
+			MC_backGround.y = -  MC_backGround.height / 2;			
 		}
+
+		public function inicializacao():Boolean
+		{
+			AB_barcoHeroi = new BarcoHeroiAtor;
+			adicionaAtor(AB_barcoHeroi);
+			//limites de deslocamento do barco
+			RE_limites = new Rectangle( 100, 100, stage.stageWidth - 200 , stage.stageHeight - 200);
+			RE_limGlob = new Rectangle( - ( this.width / 2 ) , - ( this.height / 2 ) ,  this.width , this.height);
+			//vetor ilhas
+			UI_qtdIlhas = 15;
+			UI_qtdTesouros = 3;
+			
+			VT_ilhas = new Vector.<IlhaAtor>;
+			NU_escala =  stage.stageWidth / MAPA_LARGURA;
+			reiniciacao();
+			return true
+		}
+
 		
 		public function reiniciacao():void {
 			BO_limites = false;
 			NU_limVX = 0;
 			NU_limVX = 0;
-			this.x = 0;
-			this.y = 0;
+			this.x = stage.stageWidth / 2 ;
+			this.y = stage.stageHeight / 2 ;
+			BO_zoom = false;
 			geraIlhas();
 		}
 		
 		private function geraIlhas():void 
 		{
+			UI_contTesouros = 0;
 			var cont:uint = 0;
 			var ilha:IlhaAtor;
 			while (cont < UI_qtdIlhas) 
@@ -73,28 +107,19 @@ package Fases
 		private function sorteiaIlha():IlhaAtor {
 			var ilha:IlhaAtor = new IlhaAtor();
 			randomizaPosicaoIlha(ilha);
-			//trace("ilha x:", ilha.x);
-			//trace("ilha y:", ilha.y);
+			if (UI_contTesouros < UI_qtdTesouros) {
+				ilha.definiPremio(PREMIO_TESOURO);
+				UI_contTesouros++;
+			}
 			return ilha;
 		}
+		
 		private function randomizaPosicaoIlha(_ilha:IlhaAtor):void
 		{	
-			_ilha.x = (100 + _ilha.width + ( Math.random() * (this.width - 200 - _ilha.width * 2  ) ) ) - ( this.width / 2 )  ;
-			_ilha.y = 100 + _ilha.height + ( Math.random() * (this.height - 200 - _ilha.height * 2  ) ) - ( this.height / 2 );			
+			_ilha.x =  Utils.Rnd( RE_limGlob.left + ( _ilha.width / 2 ) , RE_limGlob.right - (_ilha.width / 2));
+			_ilha.y = Utils.Rnd( RE_limGlob.top + ( _ilha.height / 2 ) , RE_limGlob.bottom - (_ilha.height / 2));			
 		}
 		
-		public function inicializacao():Boolean
-		{
-			AB_barcoHeroi = new BarcoHeroiAtor;
-			adicionaAtor(AB_barcoHeroi);
-			//limites de deslocamento do barco
-			RE_limites = new Rectangle( 100, 100, stage.stageWidth - 200 , stage.stageHeight - 200);
-			//vetor ilhas
-			UI_qtdIlhas = 30;
-			VT_ilhas = new Vector.<IlhaAtor>;
-			reiniciacao();
-			return true
-		}
 		
 		public function update(e:Event):void
 		{
@@ -102,8 +127,43 @@ package Fases
 			{
 				pausaFase();
 			}
-			testaMovimentoHeroi();
+			wait++;
+			if (pressTecla(Keyboard.Z))
+			{
+				if (wait > 10) {
+					if (BO_zoom) {
+						this.scaleX = 1;
+						this.scaleY = 1;
+						BO_zoom = false;
+						this.x = - AB_barcoHeroi.x + ( stage.stageWidth / 2 );
+						this.y = - AB_barcoHeroi.y + ( stage.stageHeight / 2 );
+						testeRetornoZoom();
+						wait = 0;
+					}
+					else {
+						trace(NU_escala);
+						this.scaleX = NU_escala;
+						this.scaleY = NU_escala;
+						this.x = stage.stageWidth / 2  ;
+						this.y = stage.stageHeight / 2;
+						BO_zoom = true;
+						wait = 0;
+					}
+				}
+			}
+
+			if (!BO_zoom) testaMovimentoHeroi();
 			
+		}
+		
+		private function testeRetornoZoom():void 
+		{
+			trace("this.x:", this.x)
+			trace(" RE.RIGTH:", RE_limGlob.right, "RE_limGlob.LEFT", RE_limGlob.left);
+			if ( this.x < RE_limGlob.left + stage.stageWidth) this.x = RE_limGlob.left+stage.stageWidth;
+			else  if ( this.x > RE_limGlob.right - stage.stageWidth) this.x = RE_limGlob.right;
+			if ( this.y < RE_limGlob.top + stage.stageHeight ) this.y = RE_limGlob.top+stage.stageHeight;
+			else if ( this.y > RE_limGlob.bottom) this.y = RE_limGlob.bottom;
 		}
 		
 		private function testaMovimentoHeroi():void {
@@ -148,9 +208,6 @@ package Fases
 			if (C1 is BarcoHeroiAtor && C2 is IlhaAtor) {
 				BarcoHeroiAtor(C1).colidiuIlha(IlhaAtor(C2));
 			}
-			
-			
-			
 		}
 		
 		private function geraMarFundo():Sprite {
@@ -158,12 +215,17 @@ package Fases
 			sp.graphics.lineStyle();
 			//sp.graphics.beginFill(0X0099C, 1);
 			sp.graphics.beginBitmapFill(new seawaterbmp);
-			sp.graphics.drawRect(0, 0, 8000, 6000);
+			sp.graphics.drawRect(0, 0, MAPA_LARGURA, MAPA_ALTURA);
 			sp.graphics.endFill();
 			sp.graphics.beginFill(0X0099C, 0.5);
-			sp.graphics.drawRect(0, 0, 8000, 6000);
+			sp.graphics.drawRect(0, 0, MAPA_LARGURA, MAPA_ALTURA);
 			sp.graphics.endFill();
 			return sp;
+		}
+		
+		public function get limGlob():Rectangle 
+		{
+			return RE_limGlob;
 		}
 		
 	}
