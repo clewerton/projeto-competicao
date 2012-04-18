@@ -1,5 +1,6 @@
 package TangoGames.Fases 
 {
+	import Fases.FaseTesouroElementos.BarcoHeroiAtor;
 	import flash.utils.getDefinitionByName;
 	import flash.utils.getQualifiedClassName;
 	import TangoGames.Atores.AtorBase;
@@ -123,6 +124,7 @@ package TangoGames.Fases
 			if (_ator.hitGrupos != null) {
 				var index:int;
 				for each (var c:Class in _ator.hitGrupos) {
+
 					index = VT_GrupoClass.indexOf(c);
 					if (index>=0) {
 						for each( var atorColidiu:AtorBase in VT_GrupoAtores[index] ) if (_ator.hitTestAtor(atorColidiu)) FaseInterface(this).colisao(_ator , atorColidiu);
@@ -194,10 +196,10 @@ package TangoGames.Fases
 		 */
 		public function adicionaAtor(_ator:AtorBase, hitGrupos: Vector.<Class> = null)  {
 			this.addChild(_ator);
-			AtorInterface(_ator).inicializa();
 			_ator.funcaoTeclas = this.pressTecla;
 			VT_Atores.push(_ator);
 			adicionaGrupoAtor(_ator , hitGrupos);
+			AtorInterface(_ator).inicializa();
 			dispatchEvent(new FaseEvent(FaseEvent.ATOR_CRIADO, _ator));
 		}
 		public function removeAtor(_ator:AtorBase)  {

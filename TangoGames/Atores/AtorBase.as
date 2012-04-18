@@ -239,7 +239,6 @@ package TangoGames.Atores
 			return teste;
 		}
 		
-		
 		//***********************************************************************************************
 		//**********              gera evento para os limites do stage                 ******************
 		//***********************************************************************************************
@@ -386,5 +385,6 @@ package TangoGames.Atores
 				if (geraEvento) dispatchEvent(new AtorEvent( AtorEvent.ATOR_VOLTOU_TODO_STAGE) );
 			}
 		}
+		
 	}
 }
