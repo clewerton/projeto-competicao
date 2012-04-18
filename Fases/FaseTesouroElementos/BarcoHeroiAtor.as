@@ -1,6 +1,7 @@
 ﻿package  Fases.FaseTesouroElementos
 {
 	
+	import Fases.FaseTesouro;
 	import flash.display.MovieClip;
 	import flash.events.Event;
 	import flash.geom.Rectangle;
@@ -46,8 +47,8 @@
 		
 		public function reinicializa():void
 		{
-			this.x = stage.stageWidth / 2;
-			this.y = stage.stageHeight / 2;
+			this.x = 0;
+			this.y = 0;
 			
 			NU_direcao = -90 *Math.PI/180;
 			NU_veloX = 0;
@@ -114,9 +115,20 @@
 			this.x += NU_veloX + NU_impacX;
 			this.y += NU_veloY + NU_impacY;
 			this.rotation = (NU_direcao * 180) / Math.PI + 90;
+			
+			testeLimiteGlobal();
+
 			parent.setChildIndex(this, parent.numChildren - 1);
-			
-			
+
+		}
+		
+		private function testeLimiteGlobal():void 
+		{
+			var r:Rectangle = FaseTesouro(faseAtor).limGlob;
+			if ( this.x  < r.left + 110 ) this.x = r.left + 110;
+			else if ( this.x > r.right - 110  ) this.x = r.right - 110;
+			if ( this.y < r.top + 110 ) this.y = r.top + 110;
+			else if ( this.y > r.bottom - 110 ) this.y = r.bottom - 110;			
 		}
 		
 		private function calculaVelocidade():void
@@ -150,8 +162,6 @@
 		public function colidiuIlha(_ilha:IlhaAtor) {
 			var ret:Rectangle = Utils.colisaoIntersecao(this, _ilha, faseAtor);
 			if (ret == null) return;
-			//trace("this.x=", this.x , "  this.y=", this.y );
-			//trace("ret.left=", ret.left , "  ret.top=", ret.top );
 			var dy:Number = ( ret.top  + ( ret.height / 2 ) ) - this.y;
 			var dx:Number = ( ret.left + ( ret.width  / 2 ) ) - this.x;
 			var ang:Number =  Math.atan2(dy, dx);
@@ -159,23 +169,8 @@
 			NU_impacY += -Math.sin(ang) * impact;
 			NU_impacX += -Math.cos(ang) * impact;
 			NU_veloABS = 0;
-			//NU_veloAng = -NU_veloAng;
-			//this.x = NU_AntX - NU_veloX;
-			//this.y = NU_AntY - NU_veloY;
-			//this.rotation = NU_AntAng;
-			//NU_impacX = ;
-			//NU_impacY = - NU_veloY;
 		}
 		
-		public function get veloY():Number 
-		{
-			return NU_veloY;
-		}
-		
-		public function get veloX():Number 
-		{
-			return NU_veloX;
-		}
 	}
 	
 }

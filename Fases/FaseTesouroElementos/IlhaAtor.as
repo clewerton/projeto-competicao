@@ -1,5 +1,6 @@
 package Fases.FaseTesouroElementos 
 {
+	import Fases.FaseTesouro;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.MovieClip;
 	import flash.events.Event;
@@ -14,6 +15,8 @@ package Fases.FaseTesouroElementos
 	public class IlhaAtor extends AtorBase implements AtorInterface{
 		
 		private var MC_ilha:MovieClip;
+		private var MC_premio: MovieClip;
+		private var UI_premioID: uint;
 		
 		public function IlhaAtor() 
 		{
@@ -40,11 +43,11 @@ package Fases.FaseTesouroElementos
 		}
 		
 		public function reinicializa():void {
-			
+			UI_premioID = 0;
 		}
 		
 		public function inicializa():void {
-			
+			reinicializa()
 		}
 		public function update(e:Event):void {
 			
@@ -52,6 +55,14 @@ package Fases.FaseTesouroElementos
 		
 		public function remove():void {
 			
+		}
+		
+		public function definiPremio(_premio:uint):void {
+			UI_premioID = _premio;
+			if (FaseTesouro.PREMIO_TESOURO ==  _premio) {
+				MC_premio = new Slot01;
+				DisplayObjectContainer(MC_ilha.slot).addChild(MC_premio);
+			}
 		}
 		
 	}
