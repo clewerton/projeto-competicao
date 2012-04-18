@@ -73,12 +73,18 @@ package Fases
 
 		
 		public function reiniciacao():void {
+			for each (var i:IlhaAtor in VT_ilhas) {
+				removeAtor(i);
+			}
+			VT_ilhas = new Vector.<IlhaAtor>;
+			BO_zoom = false;
 			BO_limites = false;
 			NU_limVX = 0;
 			NU_limVX = 0;
+			this.scaleX = 1;
+			this.scaleY = 1;
 			this.x = stage.stageWidth / 2 ;
 			this.y = stage.stageHeight / 2 ;
-			BO_zoom = false;
 			geraIlhas();
 		}
 		
@@ -88,10 +94,11 @@ package Fases
 			var cont:uint = 0;
 			var ilha:IlhaAtor;
 			while (cont < UI_qtdIlhas) 
-			{ 	ilha = sorteiaIlha();
+			{ 	ilha = new IlhaAtor();;
 				adicionaAtor(ilha);
+				sorteiaIlha(ilha);
 				while (!testaIlha(ilha)) randomizaPosicaoIlha(ilha);
-				VT_ilhas.push(ilha);				
+				VT_ilhas.push(ilha);
 				cont++;
 			} 
 		}
@@ -104,14 +111,12 @@ package Fases
 		}
 		
 		
-		private function sorteiaIlha():IlhaAtor {
-			var ilha:IlhaAtor = new IlhaAtor();
-			randomizaPosicaoIlha(ilha);
+		private function sorteiaIlha(_ilha:IlhaAtor):void {
+			randomizaPosicaoIlha(_ilha);
 			if (UI_contTesouros < UI_qtdTesouros) {
-				ilha.definiPremio(PREMIO_TESOURO);
+				_ilha.definiPremio(PREMIO_TESOURO);
 				UI_contTesouros++;
 			}
-			return ilha;
 		}
 		
 		private function randomizaPosicaoIlha(_ilha:IlhaAtor):void
@@ -141,7 +146,6 @@ package Fases
 						wait = 0;
 					}
 					else {
-						trace(NU_escala);
 						this.scaleX = NU_escala;
 						this.scaleY = NU_escala;
 						this.x = stage.stageWidth / 2  ;
@@ -158,8 +162,6 @@ package Fases
 		
 		private function testeRetornoZoom():void 
 		{
-			trace("this.x:", this.x)
-			trace(" RE.RIGTH:", RE_limGlob.right, "RE_limGlob.LEFT", RE_limGlob.left);
 			if ( this.x < RE_limGlob.left + stage.stageWidth) this.x = RE_limGlob.left+stage.stageWidth;
 			else  if ( this.x > RE_limGlob.right - stage.stageWidth) this.x = RE_limGlob.right;
 			if ( this.y < RE_limGlob.top + stage.stageHeight ) this.y = RE_limGlob.top+stage.stageHeight;
@@ -203,11 +205,15 @@ package Fases
 		}
 		
 		public function colisao(C1:AtorBase, C2:AtorBase):void {
-			//trace(C1, " colidiu com ", C2);
-			
 			if (C1 is BarcoHeroiAtor && C2 is IlhaAtor) {
 				BarcoHeroiAtor(C1).colidiuIlha(IlhaAtor(C2));
+				return;
 			}
+			if (C1 is IlhaAtor && C2 is BarcoHeroiAtor) {
+				BarcoHeroiAtor(C2).avisoIlha(IlhaAtor(C1));
+				return;
+			}
+			trace(C1, " colidiu com ", C2);
 		}
 		
 		private function geraMarFundo():Sprite {
