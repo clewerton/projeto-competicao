@@ -6,6 +6,9 @@ package Fases
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.text.TextField;
+	import flash.text.TextFieldAutoSize;
+	import flash.text.TextFormat;
 	import flash.ui.Keyboard;
 	import TangoGames.Atores.AtorBase;
 	import TangoGames.Fases.FaseBase;
@@ -29,16 +32,24 @@ package Fases
 		private var contInimigos:int = 120;
 		private var MC_meteoroInimigo:MeteoroAtor;
 		
+		private var HUD:TextField;
+		private var HUD_Formatacao:TextFormat;
+		
 		public function FaseEspaco(_main:DisplayObjectContainer, Nivel:int) 
 		{
 			super(_main, Nivel);
 			this.addChild(new BackGroundSpaco);
+			
+			HUD = new TextField();
+			HUD_Formatacao = new TextFormat();
 			
 		}
 		public function reiniciacao():void {
 			
 			naveHeroi.x = naveHeroi.width;
 			naveHeroi.y = stage.stageHeight / 2;
+			
+			HUD.text = ("LIFE:" + naveHeroi.NU_Life + "%");
 			
 		//remove inimigos
 			for each ( var ator:AtorBase in Atores) if (ator is MeteoroAtor) ator.marcadoRemocao = true;
@@ -55,6 +66,25 @@ package Fases
 			naveHeroi.y = stage.stageHeight / 2;
 			
 			adicionaAtor(naveHeroi);
+			
+			HUD_Formatacao.color = "0xFFFFFF";
+			HUD_Formatacao.size = 30;
+			HUD_Formatacao.font = "Arial";
+			HUD.defaultTextFormat = HUD_Formatacao;
+			
+			//HUD.text = naveHeroi.NU_Life;
+			HUD.autoSize = TextFieldAutoSize.CENTER;
+			HUD.text = ("LIFE:" + naveHeroi.NU_Life + "%");
+			HUD.width = 100;
+			HUD.x = stage.stageWidth / 2 - HUD.width / 2;
+			HUD.y = 12;
+			HUD.selectable = false;
+			
+			
+			
+			this.addChild(HUD);
+			
+			
 			
 			for (var i:int = 0; i < numStars; i++)
 			{
@@ -74,10 +104,16 @@ package Fases
 				return;
 			}
 			geraInimigos();
+			HUD.text = ("LIFE:" + naveHeroi.NU_Life + "%");
 			
 			for (var i:int; i < AR_estrelas.length; i++) {
 				AR_estrelas[i].update();
 			}
+			
+			
+			
+			
+			
 		}
 		
 		private function geraInimigos():void 
@@ -125,10 +161,12 @@ package Fases
 		
 		public function colisao(C1:AtorBase, C2:AtorBase):void {
 			trace(C1 + " colidiu com " + C2);
-			
-			/*if (C1 is InimigoAtor && C2 is Castelo )  {
-				InimigoAtor(C1).baterCastelo();
-			}*/
+			if (C1 is MeteoroAtor && C2 is HeroiAtor) {
+				var danoValor:Number;
+				danoValor = 10 * (nivel)/2;
+				
+				naveHeroi.foiAtingido(danoValor);
+			}
 			
 		}
 		
