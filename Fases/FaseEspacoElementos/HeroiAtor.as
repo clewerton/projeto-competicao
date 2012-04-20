@@ -16,6 +16,7 @@ package Fases.FaseEspacoElementos
 		private var Vx:Number = 0;
 		private var Vy:Number = 0;
 		private var MC_naveHeroi:MovieClip;
+		public var NU_Life = 100;
 		
 		
 		public function HeroiAtor() 
@@ -94,19 +95,33 @@ package Fases.FaseEspacoElementos
 		}
 		
 		
-		public function inicializa():void {
+		public function foiAtingido(Dano:Number):void {
 			
+			NU_Life -= Dano;
+			this.y += 10;
+			
+			if (NU_Life <= 0) {
+				NU_Life = 0;
+			}
+		}
+		
+		
+		public function inicializa():void {
+			NU_Life = 100;
 		}
 
 		public function reinicializa():void {
 			Vx = 0;
 			Vy = 0;
+			NU_Life = 100;
 		}
 		
 		public function update(e:Event):void {
 			
 			moveHeroi();
 			limiteHeroi();
+			
+			
 			
 		}
 		public function remove():void { }
