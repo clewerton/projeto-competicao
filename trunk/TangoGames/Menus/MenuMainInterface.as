@@ -6,8 +6,19 @@ package TangoGames.Menus
 	 * @author Arthur
 	 */
 	public interface MenuMainInterface 
-	{
-		function manipulaMenuOpcaoSelecionada(Menu:MenuBase, Opcao: MenuOpcao):Boolean
+	{	
+		/**
+		 * metodo para manipução das opções selecionadas do controle de mmenus
+		 * deve ser utilizada para executas as ações do menus pelo controle central
+		 * @param	_menu
+		 * referencia do objeto MenuBase selecionado
+		 * @param	_opcao
+		 * referencia do objeto MenuOpcao selecionado
+		 * @return
+		 * Se verdadeiro remove a tela do menu,
+		 * se falso continua a tela do menu
+		 */
+		function manipulaMenuOpcaoSelecionada( _menu:MenuBase, _opcao: MenuOpcao):Boolean
 	}
 	
 }

@@ -25,6 +25,10 @@ package TangoGames.Fases
 		//referencia ao MovieClip principal do documeno
 		private var DO_mainapp:DisplayObjectContainer;
 		
+		//variavel que indica que concluiu a última fase
+		private var BO_ultimaFaseOK:Boolean;
+		private var UI_ultimaFaseID:uint;
+		
 		/**
 		 * construtora da fase
 		 * @param	_main
@@ -50,6 +54,10 @@ package TangoGames.Fases
 			
 			VT_fasesID = new Vector.<uint>;
 			
+			BO_ultimaFaseOK = false;
+			
+			UI_ultimaFaseID = 0;
+		
 		}
 		
 		/***************************************************************************
@@ -57,10 +65,11 @@ package TangoGames.Fases
 		 * ************************************************************************/
 		/**
 		 * manipula evento de interrupacao da fase pausa, terminada e concluida.
+		 * pode ser sobrescrita para controle das interrupções da Fase
 		 * @param	e
 		 * evento retornado
 		 */
-		private function controleInterrupcaoFase(e:FaseEvent):void 
+		protected function controleInterrupcaoFase(e:FaseEvent):void 
 		{	var mn:MenuBase = new MenuBase("MenuControle", criaFundo());
 			switch (e.type) {
 				case FaseEvent.FASE_PAUSA:
@@ -72,7 +81,13 @@ package TangoGames.Fases
 					mn.adicionaOpcao("Reiniciar", 1);
 					mn.adicionaOpcao("Sair", 2);
 				break;
-				case FaseEvent.FASE_CONCLUIDA:
+			case FaseEvent.FASE_CONCLUIDA:
+					if (FaseBase(e.currentTarget).faseID == ultimaFaseID ) {
+						ultimaFaseOK = true;
+						removeFaseCorrente();
+						FaseMainInterface(DO_mainapp).manipulaSairFases();
+						return;
+					}
 					mn.adicionaOpcao("Joga Novamente", 1);
 					mn.adicionaOpcao("Proxima Fase", 4);
 					mn.adicionaOpcao("Sair", 2);
@@ -136,6 +151,7 @@ package TangoGames.Fases
 		protected function adicionaFase( faseID:uint,  nomeMenu: String, classeFase:Class ):void {
 			VT_fases.push(new FaseDado(faseID, nomeMenu, classeFase));
 			VT_fasesID.push(faseID);
+			UI_ultimaFaseID = faseID;
 		}
 		/**
 		 * adiciona nivel a faae
@@ -170,10 +186,62 @@ package TangoGames.Fases
 			FB_faseCorrente.removeFase();
 			FB_faseCorrente = null;
 		}
+		
+		/**
+		 * desbloqueia fase
+		 * @param	_faseID
+		 */
+		protected function destravaProximaFase(_faseID:uint) {
+			var i:uint = VT_fasesID.indexOf(_faseID);
+			if (i >= VT_fases.length - 1) return;
+			i++;
+			VT_fases[i].bloqueada = false;
+			VT_fases[i].VT_Niveis[0].bloq = false;
+		}
 
 		/***************************************************************************
 		 *    Área dos métodos publicos da classe
 		 * ************************************************************************/
+		/**
+		 * Prossegue na proxima fase
+		 * @param	faseAtual
+		 * ID da fase corrente
+		 * @return
+		 * se verdadeiro terminou o Jogo se falso não concluiu
+		 */
+		public function proximaFase(faseAtual:uint):Boolean {
+			if (FB_faseCorrente != null) removeFaseCorrente();
+			var i:uint = VT_fasesID.indexOf(faseAtual);
+			if (i >= VT_fases.length - 1) {
+				BO_ultimaFaseOK = true;
+				return true;			
+			}
+			i++;
+			VT_fases[i].bloqueada = false;
+			VT_fases[i].VT_Niveis[0].bloq = false;
+			var nivel:uint =  VT_fases[i].VT_Niveis[0].valor
+			FB_faseCorrente = new VT_fases[i].classFase(DO_mainapp, nivel);
+			FB_faseCorrente.faseID = VT_fases[i].ID;
+			FB_faseCorrente.iniciaFase();
+			FB_faseCorrente.addEventListener(FaseEvent.FASE_CONCLUIDA, controleInterrupcaoFase, false, 0, true);
+			FB_faseCorrente.addEventListener(FaseEvent.FASE_FIMDEJOGO, controleInterrupcaoFase, false, 0, true);
+			FB_faseCorrente.addEventListener(FaseEvent.FASE_PAUSA    , controleInterrupcaoFase, false, 0, true);
+			return false;
+		}
+		/**
+		 * Inicia automaticamento a primeira fase ou a última fase salva
+		 */
+		public function inicia():void {
+			if (FB_faseCorrente != null) removeFaseCorrente();
+			var nivel:uint =  VT_fases[0].VT_Niveis[0].valor
+			FB_faseCorrente = new VT_fases[0].classFase(DO_mainapp, nivel);
+			FB_faseCorrente.iniciaFase();
+			FB_faseCorrente.faseID = VT_fases[0].ID;
+			FB_faseCorrente.addEventListener(FaseEvent.FASE_CONCLUIDA, controleInterrupcaoFase, false, 0, true);
+			FB_faseCorrente.addEventListener(FaseEvent.FASE_FIMDEJOGO, controleInterrupcaoFase, false, 0, true);
+			FB_faseCorrente.addEventListener(FaseEvent.FASE_PAUSA    , controleInterrupcaoFase, false, 0, true);
+		}
+
 		/**
 		 * Inicia execução da fase 
 		 * @param	faseID
@@ -186,6 +254,7 @@ package TangoGames.Fases
 			var i:uint = VT_fasesID.indexOf(_faseID);
 			FB_faseCorrente = new VT_fases[i].classFase(DO_mainapp, _nivel);
 			FB_faseCorrente.iniciaFase();
+			FB_faseCorrente.faseID = _faseID;
 			FB_faseCorrente.addEventListener(FaseEvent.FASE_CONCLUIDA, controleInterrupcaoFase, false, 0, true);
 			FB_faseCorrente.addEventListener(FaseEvent.FASE_FIMDEJOGO, controleInterrupcaoFase, false, 0, true);
 			FB_faseCorrente.addEventListener(FaseEvent.FASE_PAUSA    , controleInterrupcaoFase, false, 0, true);
@@ -214,7 +283,6 @@ package TangoGames.Fases
 			}
 		}
 
-		
 		public function faseNives(_faseID:uint):Array {
 			var i:int = VT_fasesID.indexOf(_faseID);
 			return VT_fases[i].VT_Niveis;			
@@ -230,6 +298,26 @@ package TangoGames.Fases
 		{
 			return DO_mainapp;
 		}		
+		
+		public function get faseCorrente():FaseBase 
+		{
+			return FB_faseCorrente;
+		}
+		
+		public function get ultimaFaseID():uint 
+		{
+			return UI_ultimaFaseID;
+		}
+		
+		public function get ultimaFaseOK():Boolean 
+		{
+			return BO_ultimaFaseOK;
+		}
+		
+		public function set ultimaFaseOK(value:Boolean):void 
+		{
+			BO_ultimaFaseOK = value;
+		}
 	}
 }
 internal class FaseDado {

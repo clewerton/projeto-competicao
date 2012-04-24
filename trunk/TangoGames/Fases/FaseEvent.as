@@ -13,6 +13,7 @@ package TangoGames.Fases
 		public static const FASE_PAUSA:String = "FasePausa";
 		public static const FASE_FIMDEJOGO:String = "FaseFimdeJogo";
 		public static const FASE_CONCLUIDA:String = "FaseConcluida";
+		public static const FASE_CONTINUA:String = "FaseContinua";
 		public static const ATOR_CRIADO:String = "AtorCriado";
 		public static const ATOR_REMOVIDO:String = "AtorRemovido";
 		
@@ -31,14 +32,14 @@ package TangoGames.Fases
 		
 		public override function toString():String 
 		{ 
-			return formatToString("FaseEvent", "type", "ator" , "bubbles", "cancelable", "eventPhase"); 
+			return formatToString("FaseEvent", "type", "fase",  "ator", "bubbles", "cancelable", "eventPhase"); 
 		}
 		
 		public function get ator():AtorBase 
 		{
 			return AB_ator;
 		}
-		
+				
 	}
 	
 }
