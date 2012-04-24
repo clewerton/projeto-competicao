@@ -298,6 +298,7 @@ package TangoGames.Fases
 			
 			//chama o update dos atores
 			var ator:AtorBase;
+			for each (ator in VT_Atores) ator.cacheBitmap = false;
 			var VT_remover:Vector.<AtorBase> =  new Vector.<AtorBase>;
 			for each (ator in VT_Atores) { 
 				if (ator.marcadoRemocao) VT_remover.push(ator);
