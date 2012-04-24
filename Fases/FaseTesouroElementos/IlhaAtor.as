@@ -111,12 +111,12 @@ package Fases.FaseTesouroElementos
 			var dx:Number = PT_centroSlot.x - FaseTesouro(faseAtor).barcoHeroi.x;
 			var dy:Number = PT_centroSlot.y - FaseTesouro(faseAtor).barcoHeroi.y;
 			var dist:Number = Math.sqrt( ( dx * dx ) + ( dy * dy ) );
-			if (dist < 1000) {
+			UI_contTiro++;
+			if (dist < 500) {
 				var ang:Number = Math.atan2(dy, dx);
 				var ajuste:Number = corrigeDirecaoAlvo(ang, MC_premio.rotation);
 				if (Math.abs( Math.floor( ajuste * 10 ) ) == 0 ) {
 					//ATIRA
-					UI_contTiro++;
 					if (UI_contTiro > UI_freqTiro) {
 						var tiro:TiroInimigoAtor = new TiroInimigoAtor(ang);
 						tiro.x = PT_centroSlot.x;

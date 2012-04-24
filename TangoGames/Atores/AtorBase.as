@@ -34,6 +34,9 @@ package TangoGames.Atores
 		//Variaveis para controle do hittest da classe AtorBase
 		private var VT_hitGrupos: Vector.<Class>;
 		private var DO_hitObject:DisplayObject;
+		private var BO_cacheBitmap:Boolean;
+		private var BD_clipBitmap:BitmapData;
+		private var RT_clipRectan:Rectangle;
 		
 		//Variaveis de controle de entrada e saida do Stage
 		private var RE_Bordas:Rectangle;
@@ -78,6 +81,7 @@ package TangoGames.Atores
 			//Inicializa variaveis para o hitTeste 
 			VT_hitGrupos = new Vector.<Class>;
 			DO_hitObject = SP_figurino;
+			BO_cacheBitmap =  false;
 			
 			//Inicializa controle de teclas
 			OB_teclas = new Object;
@@ -121,10 +125,11 @@ package TangoGames.Atores
 		 * Objeto AtorBase para teste do hit.
 		 * @return
 		 */
-		public function hitTestAtor(atorAlvo:AtorBase):Boolean {
-			if (this == atorAlvo) return false;
-			if (DO_hitObject.hitTestObject(atorAlvo.hitObject)) {
-				if (testeHitShape(this, atorAlvo)) return true;
+		public function hitTestAtor(_atorAlvo:AtorBase):Boolean {
+			if (this == _atorAlvo) return false;
+			if (DO_hitObject.hitTestObject(_atorAlvo.hitObject)) {
+				//if (testeHitShape(this, atorAlvo)) return true;
+				if (testeHitShapeAtor(_atorAlvo)) return true;
 			}
 			return false
 		}
@@ -335,6 +340,36 @@ package TangoGames.Atores
 		{
 			return ST_animacao;
 		}
+		
+		public function get cacheBitmap():Boolean 
+		{
+			return BO_cacheBitmap;
+		}
+		
+		public function set cacheBitmap(value:Boolean):void 
+		{
+			BO_cacheBitmap = value;
+		}
+		
+		public function get clipBitmap():BitmapData 
+		{
+			return BD_clipBitmap;
+		}
+		
+		public function set clipBitmap(value:BitmapData):void 
+		{
+			BD_clipBitmap = value;
+		}
+		
+		public function get clipRectan():Rectangle 
+		{
+			return RT_clipRectan;
+		}
+		
+		public function set clipRectan(value:Rectangle):void 
+		{
+			RT_clipRectan = value;
+		}
 		/**
 		 * testa o contato pela forma do objeto
 		 * @param	ob1
@@ -367,7 +402,30 @@ package TangoGames.Atores
 			ClipBmpData2.dispose();
 			return teste;
 		}
+
+		protected function testeHitShapeAtor(_ator:AtorBase):Boolean {
+			calculaClipBmpData();
+			
+			_ator.calculaClipBmpData();
+
+			var Loc1:Point = new Point(RT_clipRectan.x, RT_clipRectan.y);
+			var Loc2:Point = new Point(_ator.clipRectan.x, _ator.clipRectan.y);	
+			if (BD_clipBitmap.hitTest(Loc1, 255, _ator.clipBitmap, Loc2,	255	)) return true;
+			return false;
+		}
+
 		
+		protected function calculaClipBmpData():void {
+			if (!BO_cacheBitmap) {
+				BO_cacheBitmap = true;
+				RT_clipRectan = this.getBounds(faseAtor);
+				var Offset:Matrix = this.transform.matrix;
+				Offset.tx = this.x - RT_clipRectan.x;
+				Offset.ty = this.y - RT_clipRectan.y;	
+				BD_clipBitmap = new BitmapData(RT_clipRectan.width, RT_clipRectan.height, true, 0);
+				BD_clipBitmap.draw(this, Offset);
+			}
+		}
 		//***********************************************************************************************
 		//**********              gera evento para os limites do stage                 ******************
 		//***********************************************************************************************
