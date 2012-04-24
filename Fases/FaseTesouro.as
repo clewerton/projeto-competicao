@@ -124,7 +124,7 @@ package Fases
 		{
 			for each (var ator:AtorBase in Atores)
 			{
-				if (ator != _ilha) {if (_ilha.hitTestAtor(ator)) return false}
+				if (ator != _ilha) {if (_ilha.hitTestObject(ator)) return false}
 			}
 			return true;
 		}
@@ -283,6 +283,11 @@ package Fases
 		public function get limGlob():Rectangle 
 		{
 			return RE_limGlob;
+		}
+		
+		public function get barcoHeroi():BarcoHeroiAtor 
+		{
+			return AB_barcoHeroi;
 		}
 		
 	}

@@ -278,12 +278,16 @@ package TangoGames.Atores
 			var BD_hitBitMapData = new BitmapData(Rect.width, Rect.height, true, 0);
 			BD_hitBitMapData.draw(DO_hitObject);
 		}
-		
+		/**
+		 * referencia ao objeto FaseBase que o ator pertence
+		 */
 		public function get faseAtor():FaseBase 
 		{
 			return FB_faseAtor;
 		}
-		
+		/**
+		 * referencia ao objeto FaseBase que o ator pertence
+		 */		
 		public function set faseAtor(value:FaseBase):void 
 		{
 			FB_faseAtor = value;
