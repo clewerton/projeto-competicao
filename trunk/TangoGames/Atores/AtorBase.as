@@ -376,7 +376,7 @@ package TangoGames.Atores
 		 * @param	ob2
 		 * @return
 		 */
-		protected function testeHitShape(ob1:DisplayObject, ob2:DisplayObject):Boolean {
+/*		protected function testeHitShape(ob1:DisplayObject, ob2:DisplayObject):Boolean {
 			var Rect1:Rectangle = ob1.getBounds(faseAtor);
 			var Offset1:Matrix = ob1.transform.matrix;
 			Offset1.tx = ob1.x - Rect1.x;
@@ -401,7 +401,7 @@ package TangoGames.Atores
 			ClipBmpData1.dispose();
 			ClipBmpData2.dispose();
 			return teste;
-		}
+		}*/
 
 		protected function testeHitShapeAtor(_ator:AtorBase):Boolean {
 			calculaClipBmpData();

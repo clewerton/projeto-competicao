@@ -71,7 +71,7 @@ package Fases.FaseCasteloElementos
 		override public function hitTestAtor(atorAlvo:AtorBase):Boolean {
 			if (hitObject.hitTestObject(atorAlvo.hitObject)) {
 				if (atorAlvo is CasteloAtor && NU_distancia < 60 ) return false;
-				if (testeHitShape(this, atorAlvo)) return true;
+				if (testeHitShapeAtor(atorAlvo)) return true;
 			}
 			return false
 
