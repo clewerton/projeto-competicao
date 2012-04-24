@@ -136,9 +136,11 @@ package TangoGames.Menus {
 		 */
 		protected function manipulaOpcaoControleFase(_menu:MenuBase, _opcao:MenuOpcao):Boolean {
 			if (controleFase.faseNives(_opcao.valorRetorno).length <= 1) {
+				var nivel:int = 0;
+				if (controleFase.faseNives(_opcao.valorRetorno).length == 1) nivel = controleFase.faseNives(_opcao.valorRetorno)[0].valor;
 				_opcao.faseControle = true;
 				_opcao.faseID = _opcao.valorRetorno;
-				_opcao.valorRetorno = 0;
+				_opcao.valorRetorno = nivel;
 				return manipulaOpcaoMenu(_menu, _opcao);
 			}
 			MB_menuControleFase = MenuCorrente;

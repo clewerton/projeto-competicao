@@ -4,6 +4,7 @@ package TangoGames.Atores
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
+	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
@@ -42,6 +43,15 @@ package TangoGames.Atores
 		private var BO_gerarEventoStage:Boolean = false;
 		private var BO_naoGeraPrimeiroEvento:Boolean;
 		
+		//controle de pausa
+		private var BO_pausaAnimacao:Boolean;
+		private var ST_animacao:String;
+		private var ST_animacaofim:String;
+		private var MC_animacao:MovieClip;
+		
+		//controle de teclas 1
+		private var OB_teclas:Object;
+		
 		/**
 		 * Contrutora da Classe AtorBase 
 		 * @param	_figurino
@@ -69,6 +79,15 @@ package TangoGames.Atores
 			VT_hitGrupos = new Vector.<Class>;
 			DO_hitObject = SP_figurino;
 			
+			//Inicializa controle de teclas
+			OB_teclas = new Object;
+			
+			//controle de animacao
+			BO_pausaAnimacao = false;
+			ST_animacao = "";
+			ST_animacaofim= "fim";
+			MC_animacao = null;
+			
 			//adiciona evento para detectar quando o ator enta no stage
 			this.addEventListener(Event.ADDED_TO_STAGE, onAdicionadoStage, false, 0, true);
 		}
@@ -77,7 +96,7 @@ package TangoGames.Atores
 		*                           Área das funções privadas da classe
 		************************************************************************************** /
 		/**
-		 * 
+		 * manipula evento quando o ator é adicionado no stage
 		 * @param	e
 		 */
 		private function onAdicionadoStage(e:Event):void {
@@ -103,18 +122,28 @@ package TangoGames.Atores
 		 * @return
 		 */
 		public function hitTestAtor(atorAlvo:AtorBase):Boolean {
+			if (this == atorAlvo) return false;
 			if (DO_hitObject.hitTestObject(atorAlvo.hitObject)) {
 				if (testeHitShape(this, atorAlvo)) return true;
 			}
 			return false
 		}
 		
-		
-		protected function adcionaClassehitGrupo(hitClasse:Class):void {
+		/**
+		 * adiciona uma classe hitGrupo do Ator
+		 * a FaseBase testa o hit contra todos atores deste tipo classe
+		 * @param	hitClasse
+		 */
+		public function adcionaClassehitGrupo(hitClasse:Class):void {
 			if (VT_hitGrupos == null) VT_hitGrupos = new  Vector.<Class>;
 			VT_hitGrupos.push(hitClasse)
 		}
-		protected function removeClassehitGrupo(hitClasse:Class):void {
+		/**
+		 * remove uma classe do hitGrupo do ator
+		 * a FaseBase não testa o hit com atores desta classe
+		 * @param	hitClasse
+		 */
+		public function removeClassehitGrupo(hitClasse:Class):void {
 			if (VT_hitGrupos == null) return
 			var i:int = VT_hitGrupos.indexOf(hitClasse);
 			if (i >= 0) VT_hitGrupos.splice(i, 1);			
@@ -123,20 +152,98 @@ package TangoGames.Atores
 			VT_hitGrupos =  new  Vector.<Class>;
 		}
 	
-		
-		protected function pressTecla(tecla:uint):Boolean {
-			if (FC_funcaoTeclas != null) { return FC_funcaoTeclas(tecla) };
+		/**
+		 * informa se uma tecla foi precionada uma vez e foi solta solta
+		 * se a tecla ficar pressionada não gera true duas vezes
+		 * @param	tecla
+		 * tecla para testar
+		 * @return
+		 * se verdadeiro a tecla foi precionada uma vez, se falso a tecla não foi liberada
+		 */
+		protected function pressTecla1( tecla:uint ):Boolean {
+			if (FC_funcaoTeclas == null) return false;
+			var bo:Boolean = FC_funcaoTeclas(tecla);
+			if (bo) {
+				var p:Boolean = false;
+				if (tecla in OB_teclas) p = OB_teclas[tecla];
+				OB_teclas[tecla] = true;
+				if (p) return false;
+				else return true;
+			}
+			else {
+				OB_teclas[tecla] = false;
+				return false;
+			}
 			return false;
 		}
+
+		/**
+		 * informa se uma tecla esta pressionada
+		 * @param	tecla
+		 * tecla para testar
+		 * @return
+		 * se verdadeiro a tecla esta precionada, se falso a tecla não esta precionada
+		 */
+		protected function pressTecla( tecla:uint):Boolean {
+			if (FC_funcaoTeclas != null) return FC_funcaoTeclas(tecla);
+			return false;
+		}
+		/**
+		 * para animacão do ator
+		 */
+		public function paraAnimacaoAtor():void {
+			paraAnimacao(this);
+		}
+		/**
+		 * Para Animacao
+		 * @param	content
+		 * 
+		 */
+		protected function paraAnimacao(content:DisplayObjectContainer):void {
+			if (content is MovieClip) (content as MovieClip).stop();
+			if (content.numChildren) {
+				var child:DisplayObjectContainer;
+				for (var i:int, n:int = content.numChildren; i < n; ++i)
+				{
+					if (content.getChildAt(i) is DisplayObjectContainer)
+					{
+						child = content.getChildAt(i) as DisplayObjectContainer;
+               
+						if (child.numChildren) paraAnimacao(child);
+						else if (child is MovieClip) (child as MovieClip).stop();
+					}
+				}
+			}
+		}
+		
+		/**
+		 * Inicia animacao deve ser chamada o controleAnimacao no update 
+		 * @param	_mc
+		 * @param	_nome
+		 */
+		protected function iniciaAnima(_mc:MovieClip, _nome:String) {
+			MC_animacao = _mc;
+			ST_animacao= _nome;
+			ST_animacaofim = _nome + "fim";
+			MC_animacao.gotoAndPlay(ST_animacao);
+		}
+		
+		protected function controleAnima() {
+			if (ST_animacao != "") {
+				if (MC_animacao.currentFrameLabel == ST_animacaofim) MC_animacao.gotoAndPlay(ST_animacao);
+			}
+		}
+		
+		protected function paraAnima(pose:String)
+		{
+			MC_animacao.gotoAndStop("pose");
+			ST_animacao = ""
+		}
+		
 		
 		public function set funcaoTeclas(value:Function):void 
 		{
 			FC_funcaoTeclas = value;
-		}
-		
-		public function get figurino():DisplayObject 
-		{
-			return SP_figurino;
 		}
 		
 		public function get marcadoRemocao():Boolean 
@@ -205,6 +312,24 @@ package TangoGames.Atores
 		public function get todofora():Boolean 
 		{
 			return BO_todofora;
+		}
+		
+		protected function get figurino():DisplayObject 
+		{
+			return SP_figurino;
+		}
+		
+		protected function set figurino(value:DisplayObject):void 
+		{
+			this.removeChild(SP_figurino);
+			SP_figurino = value;
+			this.addChildAt(SP_figurino, 0);
+			DO_hitObject = SP_figurino;
+		}
+		
+		public function get animacao():String 
+		{
+			return ST_animacao;
 		}
 		/**
 		 * testa o contato pela forma do objeto
@@ -376,7 +501,11 @@ package TangoGames.Atores
 				return;
 			}			
 		}
-		
+		/**
+		 * funcao detecta se entrou todo no stage
+		 * @param	geraEvento
+		 * se verdadeiro gera evento se falso não gera evento somente atualiza boleanas
+		 */
 		private function testeentrouTodoStage(geraEvento:Boolean = true):void {
 			if ( ( RE_Bordas.bottom < stage.stageHeight ) && ( RE_Bordas.top > 0 ) && ( RE_Bordas.right < stage.stageWidth  ) && ( RE_Bordas.left > 0  ) ) {
 				BO_todofora = false;

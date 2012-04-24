@@ -39,16 +39,14 @@ package TangoGames.Menus
 
 		/**
 		 * MenuBase é uma classe de apoio para construção de Menus
-		 * @param	id_Menu
+		 * @param	_idMenu
 		 * Texto usado para identificação do menu
-		 * @param	SPR_Fundo
+		 * @param	_fundo
 		 * Sprite que será colocado como fundo no Menu
 		 */ 
-		public function MenuBase(id_Menu:String,SPR_Fundo:Sprite) {
-			this.ID_Menu = id_Menu;
-			this.SPR_Fundo = SPR_Fundo;
-			this.addChildAt (SPR_Fundo, 0);
-			
+		public function MenuBase(_idMenu:String,_fundo:Sprite=null) {
+			this.ID_Menu = _idMenu;
+			this.SPR_Fundo = _fundo;			
 			TF_formatacao = new TextFormat;
 			TF_formatacao.size = 50;
 			TF_formatacao.bold = true;
@@ -75,6 +73,8 @@ package TangoGames.Menus
 		 */
 		private function adicionadoStage(e:Event):void {
 			removeEventListener(Event.ADDED_TO_STAGE, adicionadoStage);
+			if (SPR_Fundo == null) SPR_Fundo =  geraSprite(stage.stageWidth, stage.stageHeight, 0X0000FF, 1);
+			this.addChildAt (SPR_Fundo, 0);
 			construirMenu();
 			addEventListener(Event.REMOVED_FROM_STAGE, removidoStage);
 		}
@@ -86,6 +86,7 @@ package TangoGames.Menus
 		 */		
 		private function removidoStage(e:Event):void {
 			destruirMenu();
+			this.removeChild(SPR_Fundo);
 			removeEventListener(Event.REMOVED_FROM_STAGE, removidoStage);
 			addEventListener(Event.ADDED_TO_STAGE, adicionadoStage, false, 0, true);
 		}
@@ -205,6 +206,15 @@ package TangoGames.Menus
 			}
 		}
 		 
+		private function geraSprite(_largura:uint,_altura:uint,_cor:uint,_alpha:Number):Sprite {
+			var sp:Sprite = new Sprite();
+			sp.graphics.lineStyle();
+			sp.graphics.beginFill(_cor, _alpha)
+			sp.graphics.drawRect(0, 0, _largura, _altura);
+			sp.graphics.endFill();
+			return sp;
+		}
+		
 		/***************************************************************************
 		 *    Área dos métodos protegidos da classe
 		 * ************************************************************************/

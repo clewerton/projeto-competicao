@@ -23,9 +23,12 @@ package Fases
 	public class FaseTesouro extends FaseBase implements FaseInterface
 	{
 		public static const PREMIO_TESOURO:uint =  1;
+		public static const PREMIO_BALA:uint =  2;
+		public static const PREMIO_BARCO:uint =  3;
+		public static const PREMIO_PIRATAS:uint =  4;
 		
-		public const MAPA_LARGURA:uint = 4000;
-		public const MAPA_ALTURA:uint = 3000;
+		public const MAPA_LARGURA:uint = 5000;
+		public const MAPA_ALTURA:uint = 3750;
 		
 		private var AB_barcoHeroi:BarcoHeroiAtor;
 		private var MC_backGround:Sprite;
@@ -40,6 +43,12 @@ package Fases
 		
 		private var UI_qtdTesouros:uint;
 		private var UI_contTesouros:uint;
+		private var UI_qtdBala:uint;
+		private var UI_contBala:uint;
+		private var UI_qtdBarco:uint;
+		private var UI_contBarco:uint;
+		private var UI_qtdPiratas:uint;
+		private var UI_contPiratas:uint;
 		
 		private var BO_zoom:Boolean;
 		private var NU_escala:Number;
@@ -64,6 +73,9 @@ package Fases
 			//vetor ilhas
 			UI_qtdIlhas = 15;
 			UI_qtdTesouros = 3;
+			UI_qtdBala = 4;
+			UI_qtdBarco = 4
+			UI_qtdPiratas = 4;
 			
 			VT_ilhas = new Vector.<IlhaAtor>;
 			NU_escala =  stage.stageWidth / MAPA_LARGURA;
@@ -72,8 +84,10 @@ package Fases
 		}
 
 		
-		public function reiniciacao():void {
-			for each (var i:IlhaAtor in VT_ilhas) {
+		public function reiniciacao():void
+		{
+			for each (var i:IlhaAtor in VT_ilhas)
+			{
 				removeAtor(i);
 			}
 			VT_ilhas = new Vector.<IlhaAtor>;
@@ -91,6 +105,9 @@ package Fases
 		private function geraIlhas():void 
 		{
 			UI_contTesouros = 0;
+			UI_contBala = 0;
+			UI_contBarco = 0;
+			UI_contPiratas = 0;
 			var cont:uint = 0;
 			var ilha:IlhaAtor;
 			while (cont < UI_qtdIlhas) 
@@ -103,19 +120,38 @@ package Fases
 			} 
 		}
 		
-		private function testaIlha(_ilha:IlhaAtor):Boolean {
-			for each (var ator:AtorBase in Atores) {
+		private function testaIlha(_ilha:IlhaAtor):Boolean
+		{
+			for each (var ator:AtorBase in Atores)
+			{
 				if (ator != _ilha) {if (_ilha.hitTestAtor(ator)) return false}
 			}
 			return true;
 		}
 		
 		
-		private function sorteiaIlha(_ilha:IlhaAtor):void {
+		private function sorteiaIlha(_ilha:IlhaAtor):void
+		{
 			randomizaPosicaoIlha(_ilha);
-			if (UI_contTesouros < UI_qtdTesouros) {
+			if (UI_contTesouros < UI_qtdTesouros)
+			{
 				_ilha.definiPremio(PREMIO_TESOURO);
 				UI_contTesouros++;
+			}
+			else if (UI_contBarco < UI_qtdBarco)
+			{
+				_ilha.definiPremio(PREMIO_BARCO);
+				UI_contBarco++;
+			}
+			else if (UI_contBala < UI_qtdBala)
+			{
+				_ilha.definiPremio(PREMIO_BALA);
+				UI_contBala++;
+			}
+			else if (UI_contPiratas < UI_qtdPiratas)
+			{
+				_ilha.definiPremio(PREMIO_PIRATAS);
+				UI_contPiratas++;
 			}
 		}
 		
@@ -135,8 +171,10 @@ package Fases
 			wait++;
 			if (pressTecla(Keyboard.Z))
 			{
-				if (wait > 10) {
-					if (BO_zoom) {
+				if (wait > 10)
+				{
+					if (BO_zoom)
+					{
 						this.scaleX = 1;
 						this.scaleY = 1;
 						BO_zoom = false;
@@ -145,7 +183,8 @@ package Fases
 						testeRetornoZoom();
 						wait = 0;
 					}
-					else {
+					else
+					{
 						this.scaleX = NU_escala;
 						this.scaleY = NU_escala;
 						this.x = stage.stageWidth / 2  ;
@@ -168,55 +207,67 @@ package Fases
 			else if ( this.y > RE_limGlob.bottom) this.y = RE_limGlob.bottom;
 		}
 		
-		private function testaMovimentoHeroi():void {
-			if (testaLimites()) {
+		private function testaMovimentoHeroi():void
+		{
+			if (testaLimites())
+			{
 				this.x += NU_limVX ;
 				this.y += NU_limVY ;
 			}
 		}
 		
-		private function testaLimites():Boolean {
+		private function testaLimites():Boolean
+		{
 			var retHeroi:Rectangle = AB_barcoHeroi.getBounds(stage);
 			var cX:Number =  retHeroi.left + ( retHeroi.width / 2 );
 			var cY:Number =  retHeroi.top + ( retHeroi.height / 2);
 			var teste:Boolean = false;
 			NU_limVX = 0;
 			NU_limVY = 0;
-			if ( cY < RE_limites.top) {
+			if ( cY < RE_limites.top)
+			{
 				NU_limVY = RE_limites.top - cY;
 				teste = true;
 			}
-			else if ( cY > RE_limites.bottom )  {
+			else if ( cY > RE_limites.bottom )
+			{
 				NU_limVY = RE_limites.bottom - cY;
 				teste = true;
 			}
-			if ( cX > RE_limites.right ) {
+			if ( cX > RE_limites.right )
+			{
 				NU_limVX = RE_limites.right -cX;
 				teste = true;
 			}
-			else if ( cX < RE_limites.left ) {
+			else if ( cX < RE_limites.left )
+			{
 				NU_limVX = RE_limites.left - cX;
 				teste = true;
 			}
 			return teste
 		}
 		
-		public function remocao():void {
+		public function remocao():void
+		{
 		}
 		
-		public function colisao(C1:AtorBase, C2:AtorBase):void {
-			if (C1 is BarcoHeroiAtor && C2 is IlhaAtor) {
+		public function colisao(C1:AtorBase, C2:AtorBase):void
+		{
+			if (C1 is BarcoHeroiAtor && C2 is IlhaAtor)
+			{
 				BarcoHeroiAtor(C1).colidiuIlha(IlhaAtor(C2));
 				return;
 			}
-			if (C1 is IlhaAtor && C2 is BarcoHeroiAtor) {
+			if (C1 is IlhaAtor && C2 is BarcoHeroiAtor)
+			{
 				BarcoHeroiAtor(C2).avisoIlha(IlhaAtor(C1));
 				return;
 			}
 			trace(C1, " colidiu com ", C2);
 		}
 		
-		private function geraMarFundo():Sprite {
+		private function geraMarFundo():Sprite
+		{
 			var sp:Sprite = new Sprite;
 			sp.graphics.lineStyle();
 			//sp.graphics.beginFill(0X0099C, 1);

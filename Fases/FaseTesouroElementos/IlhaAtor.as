@@ -5,6 +5,8 @@ package Fases.FaseTesouroElementos
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	import TangoGames.Atores.AtorBase;
 	import TangoGames.Atores.AtorInterface;
 	import TangoGames.Utils;
@@ -22,6 +24,7 @@ package Fases.FaseTesouroElementos
 		private var UI_raioSlot: uint; 
 		private var MC_nevoa:MovieClip;
 		private var BO_revelada:Boolean;
+		private var PT_posicao:Point;
 		
 		public function IlhaAtor() 
 		{
@@ -47,37 +50,75 @@ package Fases.FaseTesouroElementos
 			SP_slot = MC_ilha.slot;
 			super(MC_ilha);
 			MC_nevoa = new NevoaSlot;
+			PT_posicao = new Point(9999999, 9999999);
 		}
 		
-		public function reinicializa():void {
+		public function reinicializa():void
+		{
 			UI_raioSlot = 200;
 			UI_premioID = 0;
 			BO_revelada = false;
-			SP_slot.addChild(MC_nevoa);
+			faseAtor.addChild(MC_nevoa);
 		}
 		
-		public function inicializa():void {
+		public function inicializa():void
+		{
 			this.hitGrupos = new Vector.<Class>;
 			this.hitGrupos.push(BarcoHeroiAtor);
 			reinicializa()
 		}
-		public function update(e:Event):void {
+		public function update(e:Event):void
+		{	if (PT_posicao.x != this.x || PT_posicao.y != this.y) reposicionouIlha();
+			faseAtor.setChildIndex(MC_nevoa, faseAtor.numChildren - 1);
 		}
 		
-		public function remove():void {
-			
-		}
-		
-		public function definiPremio(_premio:uint):void {
-			UI_premioID = _premio;
-			if (FaseTesouro.PREMIO_TESOURO ==  _premio) {
-				MC_premio = new Slot01;
-				SP_slot.addChildAt(MC_premio,0);
+		private function reposicionouIlha():void 
+		{
+			PT_posicao.x = this.x;
+			PT_posicao.y = this.y;
+			if (!BO_revelada) {
+				var rt:Rectangle = SP_slot.getBounds(faseAtor);
+				MC_nevoa.x = rt.left + ( rt.width / 2 );
+				MC_nevoa.y = rt.top + (rt.height / 2);	
 			}
 		}
 		
+		public function remove():void
+		{
+			
+		}
+		
+		public function definiPremio(_premio:uint):void
+		{
+			UI_premioID = _premio;
+			
+			switch (_premio) 
+			{
+				case FaseTesouro.PREMIO_TESOURO:
+					MC_premio = new Slot01;
+				break;
+				
+				case FaseTesouro.PREMIO_BARCO:
+					MC_premio = new Slot02;
+				break;
+				
+				case FaseTesouro.PREMIO_BALA:
+					MC_premio = new Slot03;
+				break;
+				
+				case FaseTesouro.PREMIO_PIRATAS:
+					MC_premio = new Slot04;
+				break;
+				default:
+			}
+			SP_slot.addChildAt(MC_premio, 0);
+			MC_premio.rotation = - MC_ilha.rotation;
+
+		}
+		
 		override public function hitTestAtor(_atorAlvo:AtorBase):Boolean 
-		{	if (_atorAlvo is BarcoHeroiAtor) {
+		{	if (_atorAlvo is BarcoHeroiAtor)
+		{
 				var dist:Number = calculaDistanciaSlot(_atorAlvo);
 				if ( dist < UI_raioSlot) return true;
 				else return false;
@@ -85,14 +126,16 @@ package Fases.FaseTesouroElementos
 			return super.hitTestAtor(_atorAlvo);
 		}
 		
-		public function calculaDistanciaSlot(_atorAlvo:AtorBase):Number {
+		public function calculaDistanciaSlot(_atorAlvo:AtorBase):Number
+		{
 			var dy:Number = (this.y + SP_slot.y) - _atorAlvo.y ;
 			var dx:Number = (this.x + SP_slot.x) - _atorAlvo.x ;
 			var dist:Number = Math.sqrt( (dy * dy) + (dx * dx) );
 			return dist;
 		}
 		
-		public function interageIlha(_heroi:BarcoHeroiAtor):void {
+		public function interageIlha(_heroi:BarcoHeroiAtor):void
+		{
 			revelaIlha();
 		}
 		
@@ -100,7 +143,7 @@ package Fases.FaseTesouroElementos
 		{
 			if (!BO_revelada) {
 				BO_revelada = true;
-				SP_slot.removeChild(MC_nevoa);
+				faseAtor.removeChild(MC_nevoa);
 			}
 		}
 		
