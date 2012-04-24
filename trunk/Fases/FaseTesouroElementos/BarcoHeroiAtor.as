@@ -40,10 +40,8 @@
 		private var NU_AntAng:Number;
 		
 		private var IA_IlhaProxima:IlhaAtor;
-		private var wait:uint;
-		
-		public function BarcoHeroiAtor()
-		{
+
+		public function BarcoHeroiAtor() {
 			super(new BarcoHeroi);
 		}
 		
@@ -65,7 +63,6 @@
 			
 			IA_IlhaProxima = null;
 			
-			wait = 0;
 		}
 		public function inicializa():void
 		{
@@ -86,15 +83,11 @@
 		}
 		public function update(e:Event):void
 		{
-			wait ++;
 			NU_AntX = this.x;
 			NU_AntY = this.y;
 			NU_AntAng = this.rotation;
 			
-			if (pressTecla(Keyboard.E) && wait > 10 ) {
-				wait = 0;
-				interageIlhaProxima();
-			}
+			if (pressTecla(Keyboard.E)) interageIlhaProxima();
 
 			if (pressTecla(Keyboard.W))
 			{
@@ -136,9 +129,7 @@
 		
 		private function interageIlhaProxima():void 
 		{
-			if (testaDistanciaIlhaProxima()) {
-				IA_IlhaProxima.interageIlha(this);
-			}
+			if (testaIlhaProxima()) IA_IlhaProxima.interageIlha(this);
 		}
 		
 		private function testeLimiteGlobal():void 
@@ -190,8 +181,12 @@
 			NU_veloABS = 0;
 		}
 		
-		private function testaDistanciaIlhaProxima():Boolean {
+		private function testaIlhaProxima():Boolean {
 			if (IA_IlhaProxima != null) {
+				if (IA_IlhaProxima.revelada) {
+					IA_IlhaProxima = null;
+					return false;
+				}
 				var dist:Number = IA_IlhaProxima.calculaDistanciaSlot(this);
 				if ( dist < IA_IlhaProxima.raioSlot) {
 					return true
@@ -205,6 +200,7 @@
 		}
 
 		public function avisoIlha(_ilha:IlhaAtor) {
+			if (_ilha.revelada) return;
 			IA_IlhaProxima = _ilha;
 		}
 	}
