@@ -138,9 +138,8 @@ package Fases
 			SD_ataque = new SomAtaque;
 
 			//SOM
-			SC_canalMusica = SD_musica.play(0, int.MAX_VALUE);
-			ST_musicaTr = new SoundTransform(0.05);
-			SC_canalMusica.soundTransform = ST_musicaTr;
+
+
 
 			this.addEventListener(FaseEvent.FASE_CONTINUA, manipulaContinuaFase, false,0, true)
 			
@@ -157,12 +156,6 @@ package Fases
 			for each ( var ator:AtorBase in Atores) if (ator is InimigoAtor) ator.marcadoRemocao = true;
 			//controle de pontuação
 			OB_pontuacao = new Pontuacao();	
-			
-			//SOM
-			SC_canalMusica = SD_musica.play(0, int.MAX_VALUE);
-			ST_musicaTr = new SoundTransform(0.05);
-			SC_canalMusica.soundTransform = ST_musicaTr;
-			
 		}
 		
 		private function manipulaAtorRemovido(e:FaseEvent):void 
@@ -193,10 +186,12 @@ package Fases
 				return;
 			}
 			if (pressTecla(Keyboard.P)) {
+				SC_canalMusica.stop();
 				pausaFase();
 				return;
 			}
 			if (FH_pontosHUD.pause) {
+				SC_canalMusica.stop();
 				FH_pontosHUD.pause = false;
 				pausaFase();
 				return;				
@@ -306,8 +301,9 @@ package Fases
 		}
 		
 		private function manipulaContinuaFase(e:FaseEvent):void 
-		{
-			
+		{	SC_canalMusica = SD_musica.play(0, int.MAX_VALUE);
+			ST_musicaTr = new SoundTransform(0.05);
+			SC_canalMusica.soundTransform = ST_musicaTr;
 		}
 
 		
