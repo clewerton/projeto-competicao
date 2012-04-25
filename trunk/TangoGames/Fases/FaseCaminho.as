@@ -1,6 +1,9 @@
 package TangoGames.Fases 
 {
 	import Fases.FaseCasteloElementos.PontuacaoHUD;
+	import fl.motion.AnimatorBase;
+	import flash.display.BitmapData;
+	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import TangoGames.Atores.AtorBase;
@@ -23,8 +26,6 @@ package TangoGames.Fases
 		private var UI_dimY: uint;
 		private var BO_diagonal:Boolean;
 		
-		
-		
 		public function FaseCaminho( _fase:FaseBase,_quadDim:Point) 
 		{
 			FB_fase = _fase;
@@ -43,6 +44,10 @@ package TangoGames.Fases
 			var rect:Rectangle;
 			var _dimX:uint = 0;
 			var _dimY:uint = 0;
+			
+			//avisa aos atores para recalcular o cache do bitmap
+			for each (var ator:AtorBase in FB_fase.Atores) ator.cacheBitmap = false;
+			
 			while ( pX <= RT_fase.right ) {
 				_dimY = 0;
 				pY = RT_fase.top;
@@ -67,15 +72,43 @@ package TangoGames.Fases
 			for each (var c:Class in _vg) {
 				index = FB_fase.GrupoClass.indexOf(c);
 				if (index>=0) {
-					for each( var ator:AtorBase in FB_fase.GrupoAtores[index] ) {
-						ra = ator.getBounds(FB_fase);
-						if (ra.intersects(_r)) return true;
-					}
+					for each( var ator:AtorBase in FB_fase.GrupoAtores[index] ) if (testaIntersecaoBitMap(_r, ator)) return true;
 				}
 			}
 			return false;
 		}
 		
+		private function testaIntersecaoBitMap ( _r:Rectangle , ator:AtorBase ):Boolean {
+			ator.calculaClipBmpData()
+			if (!ator.clipRectan.intersects(_r)) return false;
+			
+			var inter:Rectangle =  ator.clipRectan.intersection(_r);
+			trace("inter: ",inter.left, inter.top, inter.right, inter.bottom);
+			
+			var bounds:Rectangle = new Rectangle();
+			bounds.left   = Math.max(ator.clipRectan.left  , _r.left  );
+			bounds.right  = Math.min(ator.clipRectan.right , _r.right );
+			bounds.top    = Math.max(ator.clipRectan.top   , _r.top   );
+			bounds.bottom = Math.min(ator.clipRectan.bottom, _r.bottom);
+
+			trace("bounds: ",bounds.left, bounds.top, bounds.right, bounds.bottom);
+			
+			
+			var img:BitmapData = new BitmapData(inter.width,inter.height, true, 0);
+			var mat:Matrix = ator.transform.matrix;
+			mat.tx = ator.x - inter.left;
+			mat.ty = ator.y - inter.top;
+			img.draw(ator, mat);
+			var intersec:Rectangle = img.getColorBoundsRect(0xFF000000, 0x00000000);
+			
+			img.dispose();
+		
+			if (intersec.width == 0) return false;
+			
+			return true;
+	
+		}
+				
 		public function get dimX():uint 
 		{
 			return UI_dimX;

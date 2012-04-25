@@ -178,7 +178,6 @@ package Fases.FaseTesouroElementos
 			for ( i = 0; i < VT_TEMP.length; i++) faseAtor.removeChild(VT_TEMP[i]);
 			VT_TEMP = new Vector.<MovieClip>;
 			for (i = 0 ; i < caminho.length ; i++) {
-				//trace( "PONTO ", i, " ( x=", caminho[i].x, ";y=", caminho[i].y, ")");
 				m = new hitboxClass;
 				VT_TEMP.push(m);
 				faseAtor.addChild(m);
@@ -186,7 +185,6 @@ package Fases.FaseTesouroElementos
 				m.x = p.x;
 				m.y = p.y;
 			}
-			//trace("PONTO X:", PT_objetivo.x, " y:", PT_objetivo.y);
 			
 		}
 		
