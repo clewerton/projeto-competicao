@@ -119,6 +119,8 @@ package TangoGames.Fases
 				  removeFaseCorrente();
 				  FaseMainInterface(DO_mainapp).manipulaSairFases()
 				  break;
+				case 4:
+				  if (proximaFase(FB_faseCorrente.faseID)) FaseMainInterface(DO_mainapp).manipulaSairFases();
 				default:
 			} 
 		}

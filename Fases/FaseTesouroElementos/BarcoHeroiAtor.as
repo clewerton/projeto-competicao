@@ -124,7 +124,7 @@
 			testeLimiteGlobal();
 
 			parent.setChildIndex(this, parent.numChildren - 1);
-
+			
 		}
 		
 		private function interageIlhaProxima():void 
