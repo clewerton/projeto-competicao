@@ -311,8 +311,14 @@ package TangoGames.Fases
 			
 			//chama o update dos atores
 			var ator:AtorBase;
+			
+			//avisa aos atores para recalcular o cache do bitmap
 			for each (ator in VT_Atores) ator.cacheBitmap = false;
+			
+			//reinica vetor de remocao de Atores
 			var VT_remover:Vector.<AtorBase> =  new Vector.<AtorBase>;
+			
+			//loop de ação dos atores
 			for each (ator in VT_Atores) { 
 				if (ator.marcadoRemocao) VT_remover.push(ator);
 				else {
@@ -327,7 +333,8 @@ package TangoGames.Fases
 			
 			//Remover atores que estao marcados para remoção
 			for each (ator in VT_remover) removeAtor(ator); 
-			VT_remover =  new Vector.<AtorBase>;			
+			VT_remover =  new Vector.<AtorBase>;	
+			
 		}
 		/**
 		 * Testa o hit com entre os grupos de hit.

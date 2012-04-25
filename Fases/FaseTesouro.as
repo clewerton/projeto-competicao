@@ -105,7 +105,7 @@ package Fases
 			//monta mapas
 			var vg:Vector.<Class> = new Vector.<Class>
 			vg.push(IlhaAtor);
-			montaMapa(new Point(50, 50), vg);
+			montaMapa(new Point(100, 100), vg);
 			
 			//pinta mapa
 			var m:MovieClip;
@@ -115,20 +115,15 @@ package Fases
 			for (k=0 ; k < mapa.dimX ; k++) {
 				for (j = 0 ; j < mapa.dimY ; j++) {
 					p = new Point(k, j);
-					//trace("ponto", p.x, " / ", p.y);
 					if ( mapa.mapaArray[k][j] == 1 ) {
 						m = new hitboxClass2;
-						//VT_TEMP.push(m);
 						this.addChild(m);
 						p = mapa.convertePontoMapa(p);
-						//trace("ponto conv", p.x, " / ", p.y);
 						m.x = p.x;
 						m.y = p.y;
 					}
 				}
 			}
-			//trace("dim x", mapa.dimX);
-			//trace("dim Y", mapa.dimY);
 			
 			
 			geraBarcoInimigo();

@@ -417,7 +417,7 @@ package TangoGames.Atores
 		}
 
 		
-		protected function calculaClipBmpData():void {
+		public function calculaClipBmpData():void {
 			if (!BO_cacheBitmap) {
 				BO_cacheBitmap = true;
 				RT_clipRectan = this.getBounds(faseAtor);
