@@ -11,6 +11,8 @@ package TangoGames
 	 */
 	public class Utils
 	{
+		public static const RADIANOS_TO_GRAUS:Number = 57.29577951308232;
+		public static const GRAUS_TO_RADIANOS:Number = 0.017453292519943295;
 		
 		public function Utils() { }
 		

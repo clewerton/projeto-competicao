@@ -1,6 +1,7 @@
 package Fases 
 {
 	import Fases.FaseTesouroElementos.BarcoHeroiAtor;
+	import Fases.FaseTesouroElementos.BarcoInimigoAtor;
 	import Fases.FaseTesouroElementos.IlhaAtor;
 	import flash.display.BitmapData;
 	import flash.display.DisplayObjectContainer;
@@ -100,6 +101,48 @@ package Fases
 			this.x = stage.stageWidth / 2 ;
 			this.y = stage.stageHeight / 2 ;
 			geraIlhas();
+			
+			//monta mapas
+			var vg:Vector.<Class> = new Vector.<Class>
+			vg.push(IlhaAtor);
+			montaMapa(new Point(50, 50), vg);
+			
+			//pinta mapa
+			var m:MovieClip;
+			var p:Point;
+			var k:uint;
+			var j:uint;
+			for (k=0 ; k < mapa.dimX ; k++) {
+				for (j = 0 ; j < mapa.dimY ; j++) {
+					p = new Point(k, j);
+					//trace("ponto", p.x, " / ", p.y);
+					if ( mapa.mapaArray[k][j] == 1 ) {
+						m = new hitboxClass2;
+						//VT_TEMP.push(m);
+						this.addChild(m);
+						p = mapa.convertePontoMapa(p);
+						//trace("ponto conv", p.x, " / ", p.y);
+						m.x = p.x;
+						m.y = p.y;
+					}
+				}
+			}
+			//trace("dim x", mapa.dimX);
+			//trace("dim Y", mapa.dimY);
+			
+			
+			geraBarcoInimigo();
+		}
+		
+		private function geraBarcoInimigo():void 
+		{
+			var barcoIni:BarcoInimigoAtor = new BarcoInimigoAtor();
+			barcoIni.x = - (MAPA_LARGURA / 2) + 50;
+			barcoIni.y = - (MAPA_ALTURA / 2) + 50;
+			//barcoIni.x = barcoHeroi.x - 200;
+			//barcoIni.y = barcoHeroi.y - 200;
+			
+			adicionaAtor(barcoIni);
 		}
 		
 		private function geraIlhas():void 
@@ -263,6 +306,15 @@ package Fases
 				BarcoHeroiAtor(C2).avisoIlha(IlhaAtor(C1));
 				return;
 			}
+			if (C1 is BarcoInimigoAtor && C2 is IlhaAtor) {
+				BarcoInimigoAtor(C1).colidiuIlha(IlhaAtor(C2));
+				return;
+			}
+			if (C1 is BarcoInimigoAtor && C2 is BarcoHeroiAtor) {
+				BarcoInimigoAtor(C1).colidiuBarcoHeroi(BarcoHeroiAtor(C2));
+				return;
+			}
+			
 			trace(C1, " colidiu com ", C2);
 		}
 		

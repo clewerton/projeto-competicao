@@ -1,5 +1,7 @@
 package TangoGames.Fases 
 {
+	import Fases.FaseEspacoElementos.HeroiAtor;
+	import flash.geom.Point;
 	import flash.utils.getDefinitionByName;
 	import flash.utils.getQualifiedClassName;
 	import TangoGames.Atores.AtorBase;
@@ -35,6 +37,9 @@ package TangoGames.Fases
 
 		//Controle de HUD
 		private var VT_HUDS:Vector.<FaseHUD>;
+		
+		//Fase Caminho
+		private var FC_mapa:FaseCaminho;
 		
 		/**
 		 * construtora da Class FaseBase
@@ -277,7 +282,15 @@ package TangoGames.Fases
 			for each( var ator:AtorBase in VT_Atores) ator.paraAnimacaoAtor()
 			dispatchEvent(new FaseEvent(FaseEvent.FASE_CONCLUIDA));
 		}
-
+		
+		/**
+		 * inicia Mapa
+		 */
+		protected function montaMapa( _quadDim:Point, _vg:Vector.<Class>):void {
+			FC_mapa =  new FaseCaminho(this, _quadDim);
+			FC_mapa.montaMapa(_vg);
+		}
+		 
 		/***************************************************************************
 		 *    Área dos métodos privados da classe
 		 * ************************************************************************/
@@ -380,6 +393,21 @@ package TangoGames.Fases
 		public function set faseID(value:int):void 
 		{
 			IN_faseID = value;
+		}
+		
+		public function get GrupoClass():Vector.<Class> 
+		{
+			return VT_GrupoClass;
+		}
+		
+		public function get GrupoAtores():Vector.<Vector.<AtorBase>> 
+		{
+			return VT_GrupoAtores;
+		}
+		
+		public function get mapa():FaseCaminho 
+		{
+			return FC_mapa;
 		}
 	}
 }

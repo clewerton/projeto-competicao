@@ -1,5 +1,7 @@
 package TangoGames.Atores 
 {
+	import Fases.FaseCasteloElementos.InimigoAtor;
+	import Fases.FaseTesouroElementos.BarcoHeroiAtor;
 	import fl.motion.AnimatorBase;
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
@@ -426,6 +428,22 @@ package TangoGames.Atores
 				BD_clipBitmap.draw(this, Offset);
 			}
 		}
+		
+		protected function calculaClipBmpData2():void {
+			if (!BO_cacheBitmap) {
+				BO_cacheBitmap = true;
+				RT_clipRectan = DO_hitObject.getBounds(faseAtor);
+				var Offset:Matrix = DO_hitObject.transform.matrix;
+				Offset.tx = DO_hitObject.x - RT_clipRectan.x;
+				Offset.ty = DO_hitObject.y - RT_clipRectan.y;
+				var Offset1:Matrix = this.transform.matrix;
+				Offset1.tx = this.x - DO_hitObject.x ;
+				Offset1.ty = this.y - DO_hitObject.y ;
+				BD_clipBitmap = new BitmapData(RT_clipRectan.width, RT_clipRectan.height, true, 0);
+				BD_clipBitmap.draw(DO_hitObject, Offset);
+			}
+		}
+
 		//***********************************************************************************************
 		//**********              gera evento para os limites do stage                 ******************
 		//***********************************************************************************************
