@@ -145,8 +145,6 @@ package Fases.FaseTesouroElementos
 			
 			NU_veloABS *= NU_friccaoVel;
 			
-			trace(UI_estado);
-			
 		}
 		
 		
@@ -161,7 +159,7 @@ package Fases.FaseTesouroElementos
 			var dy:Number = ( ret.top  + ( ret.height / 2 ) ) - this.y;
 			var dx:Number = ( ret.left + ( ret.width  / 2 ) ) - this.x;
 			var ang:Number =  Math.atan2(dy, dx);
-			var impact:Number = NU_veloABS * 1.1;
+			var impact:Number = Math.max(NU_veloABS * 1.1,1);
 			NU_impacY -= ( Math.sin(ang) * impact ) ;
 			NU_impacX -= ( Math.cos(ang) * impact ) ;
 			BO_bateuIlha = true;
@@ -173,9 +171,12 @@ package Fases.FaseTesouroElementos
 			var dy:Number = ( ret.top  + ( ret.height / 2 ) ) - this.y;
 			var dx:Number = ( ret.left + ( ret.width  / 2 ) ) - this.x;
 			var ang:Number =  Math.atan2(dy, dx);
-			var impact:Number = NU_veloABS * 1.1;
-			NU_impacY += -Math.sin(ang) * impact;
-			NU_impacX += -Math.cos(ang) * impact;
+			var impact:Number = Math.max(NU_veloABS * 1.1,1);
+			var impacX:Number = - Math.cos(ang) * impact;		
+			var impacY:Number = - Math.sin(ang) * impact;
+			NU_impacX += impacX;
+			NU_impacY += impacY;
+			_barcoHeroi.geraImpacto( -impacX, -impacY);
 		}
 		
 		public function colidiuBarcoInimigo(_barcoInimigo:BarcoInimigoAtor) {
@@ -184,11 +185,18 @@ package Fases.FaseTesouroElementos
 			var dy:Number = ( ret.top  + ( ret.height / 2 ) ) - this.y;
 			var dx:Number = ( ret.left + ( ret.width  / 2 ) ) - this.x;
 			var ang:Number =  Math.atan2(dy, dx);
-			var impact:Number = NU_veloABS * 1.1;
-			NU_impacY += -Math.sin(ang) * impact;
-			NU_impacX += -Math.cos(ang) * impact;
+			var impact:Number = Math.max(NU_veloABS * 1.1,1);
+			var impacX:Number = - Math.cos(ang) * impact;		
+			var impacY:Number = - Math.sin(ang) * impact;
+			NU_impacX += impacX;
+			NU_impacY += impacY;
+			_barcoInimigo.geraImpacto( -impacX, -impacY);
 		}
 		
+		public function geraImpacto(_impacX:Number, _impacY:Number) {
+			NU_impacX += _impacX;
+			NU_impacY += _impacY;
+		}
 		
 		private function voltandoOrigem():void 
 		{

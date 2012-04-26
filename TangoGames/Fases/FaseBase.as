@@ -1,6 +1,7 @@
 package TangoGames.Fases 
 {
 	import Fases.FaseEspacoElementos.HeroiAtor;
+	import flash.display.Sprite;
 	import flash.geom.Point;
 	import flash.utils.getDefinitionByName;
 	import flash.utils.getQualifiedClassName;
@@ -36,6 +37,7 @@ package TangoGames.Fases
 		private var OB_teclas:Object;
 
 		//Controle de HUD
+		private var SP_camadaSup:Sprite;
 		private var VT_HUDS:Vector.<FaseHUD>;
 		
 		//Fase Caminho
@@ -68,6 +70,9 @@ package TangoGames.Fases
 			VT_GrupoAtores = new Vector.<Vector.<AtorBase>>;
 			VT_HUDS = new Vector.<FaseHUD>;
 			OB_teclas = new Object;
+			
+			//Cria camada superior 
+			SP_camadaSup = new Sprite();			
 		}
 
 		
@@ -80,9 +85,18 @@ package TangoGames.Fases
 		 */
 		public function iniciaFase():void {
 			_mainapp.addChild(this);
+			//CAMADA Suior
+			_mainapp.addChild(SP_camadaSup);
+			
 			if (FaseInterface(this).inicializacao()) {
+				
+				//Adiciona camada superior
+				
 				continuaFase();
+				
 			}
+			
+			
 		}
 		/**
 		 * Metodo reinicia a fase interrompida do ponto de pausa
@@ -190,6 +204,8 @@ package TangoGames.Fases
 			
 			VT_HUDS = new Vector.<FaseHUD>;
 			
+			_mainapp.removeChild(SP_camadaSup);
+			
 			_mainapp.removeChild(this);
 			
 		}
@@ -199,7 +215,7 @@ package TangoGames.Fases
 		 * referencia do objeto FaseHUD
 		 */
 		public function adicionaHUD(_hud:FaseHUD):void {
-			this.addChild(_hud);
+			SP_camadaSup.addChild(_hud);
 			VT_HUDS.push(_hud);
 			FaseHUDInterface(_hud).inicializa();
 		}
@@ -212,7 +228,7 @@ package TangoGames.Fases
 			var i:uint = VT_HUDS.indexOf(_hud);
 			VT_HUDS.splice(i, 1);
 			FaseHUDInterface(_hud).remove();
-			this.removeChild(_hud);
+			SP_camadaSup.removeChild(_hud);
 		}
 		/***************************************************************************
 		 *    Área dos métodos protegidos da classe

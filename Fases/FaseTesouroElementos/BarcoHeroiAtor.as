@@ -175,7 +175,7 @@
 			var dy:Number = ( ret.top  + ( ret.height / 2 ) ) - this.y;
 			var dx:Number = ( ret.left + ( ret.width  / 2 ) ) - this.x;
 			var ang:Number =  Math.atan2(dy, dx);
-			var impact:Number = NU_veloABS;
+			var impact:Number = Math.max(NU_veloABS * 1.1 , 1);
 			NU_impacY += -Math.sin(ang) * impact;
 			NU_impacX += -Math.cos(ang) * impact;
 			NU_veloABS = 0;
@@ -203,6 +203,27 @@
 			if (_ilha.revelada) return;
 			IA_IlhaProxima = _ilha;
 		}
+		
+		public function geraImpacto(_impacX:Number, _impacY:Number) {
+			NU_impacX += _impacX;
+			NU_impacY += _impacY;
+		}
+		
+		public function colidiuBarcoInimigo(_barcoInimigo:BarcoInimigoAtor) {
+			var ret:Rectangle = Utils.colisaoIntersecao(this, _barcoInimigo, faseAtor);
+			if (ret == null) return;
+			var dy:Number = ( ret.top  + ( ret.height / 2 ) ) - this.y;
+			var dx:Number = ( ret.left + ( ret.width  / 2 ) ) - this.x;
+			var ang:Number =  Math.atan2(dy, dx);
+			var impact:Number = Math.max(NU_veloABS * 1.1 , 1);
+			var impacX:Number = - Math.cos(ang) * impact;		
+			var impacY:Number = - Math.sin(ang) * impact;
+			NU_impacX += impacX;
+			NU_impacY += impacY;
+			_barcoInimigo.geraImpacto( -impacX, -impacY);
+		}
+
+		
 	}
 	
 }
