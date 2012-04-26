@@ -3,6 +3,7 @@ package TangoGames.Fases
 	import Fases.FaseCasteloElementos.PontuacaoHUD;
 	import fl.motion.AnimatorBase;
 	import flash.display.BitmapData;
+	import flash.display.Sprite;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
@@ -26,6 +27,8 @@ package TangoGames.Fases
 		private var UI_dimY: uint;
 		private var BO_diagonal:Boolean;
 		
+		private var NU_areaMaxHit:Number;
+		
 		public function FaseCaminho( _fase:FaseBase,_quadDim:Point) 
 		{
 			FB_fase = _fase;
@@ -35,6 +38,7 @@ package TangoGames.Fases
 			UI_dimY = 0;
 			AR_mapa = new Array;
 			AR_caminhoArr = new Array;
+			NU_areaMaxHit = ( PT_quadrado.x * PT_quadrado.y ) * 0.30;
 		}
 		
 		public function montaMapa( _vetGrupo:Vector.<Class>) {
@@ -83,30 +87,35 @@ package TangoGames.Fases
 			if (!ator.clipRectan.intersects(_r)) return false;
 			
 			var inter:Rectangle =  ator.clipRectan.intersection(_r);
-			trace("inter: ",inter.left, inter.top, inter.right, inter.bottom);
 			
-			var bounds:Rectangle = new Rectangle();
-			bounds.left   = Math.max(ator.clipRectan.left  , _r.left  );
-			bounds.right  = Math.min(ator.clipRectan.right , _r.right );
-			bounds.top    = Math.max(ator.clipRectan.top   , _r.top   );
-			bounds.bottom = Math.min(ator.clipRectan.bottom, _r.bottom);
-
-			trace("bounds: ",bounds.left, bounds.top, bounds.right, bounds.bottom);
+			if ( inter.width < 2 || inter.height < 2 ) return false; 
 			
+			var corte:Rectangle = new Rectangle();
+			corte.left   = inter.left - ator.clipRectan.left;
+			corte.top    = inter.top - ator.clipRectan.top;
+			corte.width  = inter.width;
+			corte.height = inter.height;
+		
 			
-			var img:BitmapData = new BitmapData(inter.width,inter.height, true, 0);
-			var mat:Matrix = ator.transform.matrix;
-			mat.tx = ator.x - inter.left;
-			mat.ty = ator.y - inter.top;
-			img.draw(ator, mat);
-			var intersec:Rectangle = img.getColorBoundsRect(0xFF000000, 0x00000000);
+			var rt:Rectangle = ator.clipBitmap.rect
+			
+			if (rt.left > corte.left) corte.left = rt.left;
+			if (rt.top > corte.top) corte.top = rt.top;
+			if (rt.right < corte.right) corte.right = rt.right;
+			if (rt.bottom < corte.bottom) corte.bottom = rt.bottom;
+						
+			var img:BitmapData = new BitmapData(corte.width, corte.height, true, 0);
+			
+			img.copyPixels( ator.clipBitmap, corte, new Point(0,0));
+			
+			var result:Rectangle =  img.getColorBoundsRect(0xFF000000, 0x00000000, false);
 			
 			img.dispose();
-		
-			if (intersec.width == 0) return false;
+			
+			if ( ( result.width * result.height ) < NU_areaMaxHit ) return false;
 			
 			return true;
-	
+			
 		}
 				
 		public function get dimX():uint 
@@ -124,6 +133,18 @@ package TangoGames.Fases
 			return AR_mapa;
 		}
 		
+		public function geraSprite(cor:uint):Sprite {
+			var sp:Sprite =  new Sprite;
+			sp.graphics.lineStyle(0.2, cor, 1);
+			sp.graphics.beginFill(cor, 0.4);
+			sp.graphics.drawRect( -PT_quadrado.x / 2, -PT_quadrado.y / 2, PT_quadrado.x, PT_quadrado.y);
+			sp.graphics.endFill();
+			return sp;
+		}
+		
+		/*****************************************************************************************
+		 *                              CALCULO DE CAMINHO
+		 * **************************************************************************************/
 		/**
 		 * Retorna o caminho entre dois pontos; 
 		 * @param	_origem
