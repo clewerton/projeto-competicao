@@ -174,13 +174,19 @@ package Fases
 				BarcoHeroiAtor(C2).avisoIlha(IlhaAtor(C1));
 				return;
 			}
-			if (C1 is BarcoInimigoAtor && C2 is IlhaAtor) {
-				BarcoInimigoAtor(C1).colidiuIlha(IlhaAtor(C2));
-				return;
-			}
-			if (C1 is BarcoInimigoAtor && C2 is BarcoHeroiAtor) {
+			if (C1 is BarcoInimigoAtor) {
+				if ( C2 is BarcoInimigoAtor ) {
+					BarcoInimigoAtor(C1).colidiuBarcoInimigo(BarcoInimigoAtor(C2));
+					return;
+				}
+				else if ( C2 is IlhaAtor) {
+					BarcoInimigoAtor(C1).colidiuIlha(IlhaAtor(C2));
+					return;
+				}
+				else if (C2 is BarcoHeroiAtor) {
 				BarcoInimigoAtor(C1).colidiuBarcoHeroi(BarcoHeroiAtor(C2));
 				return;
+				}
 			}
 			
 			trace(C1, " colidiu com ", C2);

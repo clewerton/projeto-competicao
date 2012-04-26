@@ -106,6 +106,7 @@ package Fases.FaseTesouroElementos
 		
 			adcionaClassehitGrupo(IlhaAtor);
 			adcionaClassehitGrupo(BarcoHeroiAtor);
+			adcionaClassehitGrupo(BarcoInimigoAtor);
 			
 			VT_TEMP = new Vector.<Sprite>;
 			
@@ -126,7 +127,7 @@ package Fases.FaseTesouroElementos
 			switch (UI_estado) 
 			{
 				case ESTADO_AGUARDANDO:
-					if (NU_distancia > 500) UI_estado = ESTADO_PERSEGUINDO_HEROI; 
+					if (NU_distancia < 500) UI_estado = ESTADO_PERSEGUINDO_HEROI; 
 				break;
 				case ESTADO_PERSEGUINDO_HEROI:				
 					perseguindoAlvo();
@@ -143,6 +144,8 @@ package Fases.FaseTesouroElementos
 			NU_impacY = 0;
 			
 			NU_veloABS *= NU_friccaoVel;
+			
+			trace(UI_estado);
 			
 		}
 		
@@ -170,10 +173,20 @@ package Fases.FaseTesouroElementos
 			var dy:Number = ( ret.top  + ( ret.height / 2 ) ) - this.y;
 			var dx:Number = ( ret.left + ( ret.width  / 2 ) ) - this.x;
 			var ang:Number =  Math.atan2(dy, dx);
-			var impact:Number = NU_veloABS * 1.5;
+			var impact:Number = NU_veloABS * 1.1;
 			NU_impacY += -Math.sin(ang) * impact;
 			NU_impacX += -Math.cos(ang) * impact;
-			NU_veloABS = 0;
+		}
+		
+		public function colidiuBarcoInimigo(_barcoInimigo:BarcoInimigoAtor) {
+			var ret:Rectangle = Utils.colisaoIntersecao(this, _barcoInimigo, faseAtor);
+			if (ret == null) return;
+			var dy:Number = ( ret.top  + ( ret.height / 2 ) ) - this.y;
+			var dx:Number = ( ret.left + ( ret.width  / 2 ) ) - this.x;
+			var ang:Number =  Math.atan2(dy, dx);
+			var impact:Number = NU_veloABS * 1.1;
+			NU_impacY += -Math.sin(ang) * impact;
+			NU_impacX += -Math.cos(ang) * impact;
 		}
 		
 		
