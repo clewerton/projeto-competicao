@@ -71,6 +71,8 @@ package Fases.FaseTesouroElementos
 			MC_ilha.rotation = Utils.Rnd(0, 359);
 			SP_slot = MC_ilha.slot;
 			super(MC_ilha);
+			
+			//nevoa da ilha
 			MC_nevoa = new NevoaSlot;
 			MC_nevoa.gotoAndStop("inativo");
 		}
@@ -92,6 +94,7 @@ package Fases.FaseTesouroElementos
 			
 			//Inicializa variaveis dos pirtas
 			UI_freqTiro = 24;
+			
 			reinicializa()
 		}
 		public function update(e:Event):void
@@ -160,6 +163,9 @@ package Fases.FaseTesouroElementos
 			
 			SP_slot.addChildAt(MC_premio, 0);
 			MC_premio.rotation = - MC_ilha.rotation;
+			
+			this.cacheAsBitmap = true;
+			
 		}
 		
 		private function reposicionouIlha():void 

@@ -15,6 +15,8 @@ package Fases
 	import flash.ui.Keyboard;
 	import TangoGames.Atores.AtorBase;
 	import TangoGames.Fases.FaseBase;
+	import TangoGames.Fases.FaseFPS;
+	import TangoGames.Fases.FaseHUD;
 	import TangoGames.Fases.FaseInterface;
 	import TangoGames.Utils;
 	
@@ -60,6 +62,9 @@ package Fases
 		//controle de soom do mapa
 		private var BO_zoom:Boolean;
 		private var NU_escala:Number;
+		
+		//DISPLAY FPS
+		private var FH_FPS:FaseHUD;
 			
 		public function FaseTesouro(_main:DisplayObjectContainer, Nivel:int) {
 			super(_main, Nivel);
@@ -71,6 +76,10 @@ package Fases
 
 		public function inicializacao():Boolean
 		{
+			//coloca medidor de FPS
+			FH_FPS = new FaseFPS()
+			adicionaHUD(FH_FPS);
+			
 			//cria barco Heroi;
 			AB_barcoHeroi = new BarcoHeroiAtor;
 			adicionaAtor(AB_barcoHeroi);
@@ -164,6 +173,9 @@ package Fases
 		
 		public function colisao(C1:AtorBase, C2:AtorBase):void
 		{
+			
+			trace(C1, " colidiu com ", C2);
+			
 			if (C1 is BarcoHeroiAtor && C2 is IlhaAtor)
 			{
 				BarcoHeroiAtor(C1).colidiuIlha(IlhaAtor(C2));
@@ -189,7 +201,7 @@ package Fases
 				}
 			}
 			
-			trace(C1, " colidiu com ", C2);
+
 		}
 		
 		/***********************************************************
