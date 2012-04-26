@@ -61,11 +61,10 @@ package Fases.FaseTesouroElementos
 		
 		public function BarcoInimigoAtor() 
 		{
-			MC_barco =  new BarcoHeroi;
+			MC_barco =  new BarcoPirataCasco;
 			super(MC_barco);
+			addChild(new BarcoPirataVelas);
 			
-			//retirar se colocar virado pra direita originalmente
-			MC_barco.rotation =  90;
 		}
 		
 		/* INTERFACE TangoGames.Atores.AtorInterface */

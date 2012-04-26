@@ -164,7 +164,7 @@ package Fases.FaseTesouroElementos
 			SP_slot.addChildAt(MC_premio, 0);
 			MC_premio.rotation = - MC_ilha.rotation;
 			
-			this.cacheAsBitmap = true;
+			//this.cacheAsBitmap = true;
 			
 		}
 		

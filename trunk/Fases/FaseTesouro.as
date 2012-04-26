@@ -71,7 +71,7 @@ package Fases
 			MC_backGround = geraMarFundo();
 			this.addChild(MC_backGround);
 			MC_backGround.x = -  MC_backGround.width / 2;
-			MC_backGround.y = -  MC_backGround.height / 2;			
+			MC_backGround.y = -  MC_backGround.height / 2;
 		}
 
 		public function inicializacao():Boolean
