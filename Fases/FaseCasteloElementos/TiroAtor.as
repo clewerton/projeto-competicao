@@ -47,6 +47,7 @@ package Fases.FaseCasteloElementos
 		}
 		
 		public function inicializa():void {
+
 			NU_distancia = 0;
 			NU_veloc = 10;
 			NU_danoMax = 100;

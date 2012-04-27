@@ -4,6 +4,7 @@
 	import Fases.FaseTesouro;
 	import flash.display.MovieClip;
 	import flash.events.Event;
+	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.ui.Keyboard;
 	import TangoGames.Atores.AtorBase;
@@ -39,6 +40,8 @@
 		private var NU_impacY:Number;
 		private var NU_impacFric:Number;
 		
+		private var VT_efeitoAtingido	:Vector.<MovieClip>;
+		
 		//ilha para ação
 		private var IA_IlhaProxima:IlhaAtor;
 
@@ -67,6 +70,8 @@
 			NU_friccaoAnc = 0.75;
 			NU_impacFric = 0.75;
 			
+			VT_efeitoAtingido = new Vector.<MovieClip>;
+			
 			reinicializa();
 		
 		}
@@ -92,6 +97,7 @@
 		
 		public function update(e:Event):void
 		{
+			controleEfeitos();
 			
 			if (pressTecla(Keyboard.E)) interageIlhaProxima();
 
@@ -132,6 +138,7 @@
 			parent.setChildIndex(this, parent.numChildren - 1);
 			
 		}
+		
 		
 		private function interageIlhaProxima():void 
 		{
@@ -229,7 +236,29 @@
 			_barcoInimigo.geraImpacto( -impacX, -impacY);
 		}
 
+		public function foiAtingido( _tiro: TiroInimigoAtor) {
+			//var ret:Rectangle = Utils.colisaoIntersecao(this, _tiro, faseAtor);
+			//if (ret == null) return;
+			var mcEfeito:MovieClip = new DanoBarcoHeroi;
+			this.addChild(mcEfeito);
+			var p:Point = this.globalToLocal (faseAtor.localToGlobal(new Point(_tiro.x, _tiro.y)));  
+			mcEfeito.x = p.x;
+			mcEfeito.y = p.y;
+			mcEfeito.rotation = _tiro.direcao * Utils.RADIANOS_TO_GRAUS;
+			VT_efeitoAtingido.push(mcEfeito);
+			mcEfeito.gotoAndPlay("explosao");
+			_tiro.marcadoRemocao = true;
+		}
 		
+		private function controleEfeitos():void 
+		{
+			var VT_DEL:Vector.<uint> =  new Vector.<uint>; 
+			var i:uint;
+			for ( i = 0 ; i < VT_efeitoAtingido.length ; i++ ) if ( VT_efeitoAtingido[i].currentFrameLabel == "explosaofim" ) VT_DEL.push(i);
+			for each ( var index:uint in VT_DEL) {
+				this.removeChild(VT_efeitoAtingido[index]);
+				VT_efeitoAtingido.splice(index, 1);
+			}
+		}
 	}
-	
 }
