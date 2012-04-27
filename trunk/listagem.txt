@@ -9,20 +9,20 @@ em algum momento aparecerá um mercador, onde o jogador poderá trocar seu dinheir
 os upgrades podem ser:
 	
 	+-----------------------------------------------------------------------+
-	| QUANTIDADE DE CANHÕES																|
+	| QUANTIDADE DE CANHÕES													|
 	+-------------------+---------------------------------------------------+
-	|NIVEL 1 (INICIO)	| 2 (DOIS) CANHÕES UM PARA CADA LADO				|						
+	|NIVEL 0 (INICIO)	| 2 (DOIS) CANHÕES UM PARA CADA LADO				|						
 	+-------------------+---------------------------------------------------+
-	|NIVEL 2 			| 4 QUATRO CANHÕES DOIS PARA CADA LADO			    +						
+	|NIVEL 1 			| 4 QUATRO CANHÕES DOIS PARA CADA LADO			    +						
 	+-------------------+---------------------------------------------------+
-	|NIVEL 3			| 6 (SEIS) CANHÕES TRES PARA CADA LADO				|						
+	|NIVEL 2			| 6 (SEIS) CANHÕES TRES PARA CADA LADO				|						
 	+-------------------+---------------------------------------------------+
 	
 	
 	+-----------------------------------------------------------------------+
-	| MELHORAS PARA O CANHÃO														|
+	| MELHORAS PARA O CANHÃO												|
 	+-------------------+---------------------------------------------------+
-	| ALCANCE DO TIRO														|						
+	| ALCANCE DO TIRO	|													|						
 	+-------------------+---------------------------------------------------+
 	| DANO CAUSADO PELO TIRO											    +						
 	+-------------------+---------------------------------------------------+

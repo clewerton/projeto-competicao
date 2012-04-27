@@ -62,10 +62,7 @@ package Fases.FaseTesouroElementos
 		private var UI_tiroTempo2		:uint;
 		private var UI_tiroSeque		:uint;
 		private var VT_efeitoExplosao	:Vector.<MovieClip>;
-		private var SC_canalCanhao1		:SoundChannel;
-		private var SC_canalCanhao2		:SoundChannel;
-		private var SC_canalCanhao3		:SoundChannel;
-		private var SD_somCanhao		:Sound;
+		
 
 				
 		//controle de impacto com a ilha
@@ -75,6 +72,7 @@ package Fases.FaseTesouroElementos
 		private var UI_naoBateuIlha		:Number;
 		
 		private var VT_TEMP				:Vector.<Sprite>
+		private var VT_efeitoAtingido	:Vector.<MovieClip>;
 		
 		public function BarcoInimigoAtor() 
 		{
@@ -108,11 +106,8 @@ package Fases.FaseTesouroElementos
 			UI_tiroTempo = 0;
 			UI_tiroTempo2 = 0;
 			UI_tiroSeque = 0;
-			VT_efeitoExplosao = new Vector.<MovieClip>;
-			SD_somCanhao = new somCanhao;
-			SC_canalCanhao1 = new SoundChannel;
-			SC_canalCanhao2 = new SoundChannel;
-			SC_canalCanhao3 = new SoundChannel;
+			VT_efeitoExplosao = new Vector.<MovieClip>;			
+			VT_efeitoAtingido = new Vector.<MovieClip>;
 			
 			//estado do inimigo
 			UI_estado = ESTADO_AGUARDANDO;
@@ -362,18 +357,6 @@ package Fases.FaseTesouroElementos
 			mcExp.x = mcCanhao.x;
 			mcExp.y = mcCanhao.y;
 			mcExp.gotoAndPlay("explosao");
-			
-			switch (UI_tiroSeque) {
-				case 0:
-					SC_canalCanhao1 = SD_somCanhao.play(0);
-				break;
-				case 1:
-					SC_canalCanhao2 = SD_somCanhao.play(0);
-				break;
-				case 2:
-					SC_canalCanhao3 = SD_somCanhao.play(0);
-				break;
-			}
 		}
 		
 		private function calculaAjusteMiraLateral(_anguloRadiano:Number):Number {
@@ -395,13 +378,20 @@ package Fases.FaseTesouroElementos
 		{
 			var VT_DEL:Vector.<uint> =  new Vector.<uint>; 
 			var i:uint;
+			var index:uint;
 			for ( i = 0 ; i < VT_efeitoExplosao.length ; i++ ) if ( VT_efeitoExplosao[i].currentFrameLabel == "explosaofim" ) VT_DEL.push(i);
-			for each ( var index:uint in VT_DEL) {
+			for each ( index in VT_DEL) {
 				this.removeChild(VT_efeitoExplosao[index]);
 				VT_efeitoExplosao.splice(index, 1);
 			}
 			VT_DEL =  new Vector.<uint>; 
+			for ( i = 0 ; i < VT_efeitoAtingido.length ; i++ ) if ( VT_efeitoAtingido[i].currentFrameLabel == "explosaofim" ) VT_DEL.push(i);
+			for each ( index in VT_DEL) {
+				this.removeChild(VT_efeitoAtingido[index]);
+				VT_efeitoAtingido.splice(index, 1);
+			}
 		}
+		
 		/******************************************************************************
 		 * voltando para o ponto de origem
 		 * ****************************************************************************/
@@ -499,6 +489,27 @@ package Fases.FaseTesouroElementos
 				m.y = p.y;
 			}
 		}
+		
+		/**
+		 * Trata a colisão do tiro com barcoHeroi
+		 * @param	_tiro
+		 * tiro que atingiu o barco
+		 */
+		public function foiAtingido( _tiro: TiroHeroiAtor) {
+			//var ret:Rectangle = Utils.colisaoIntersecao(this, _tiro, faseAtor);
+			//if (ret == null) return;
+			var mcEfeito:MovieClip = new DanoBarcoPirata;
+			this.addChild(mcEfeito);
+			var p:Point = this.globalToLocal (faseAtor.localToGlobal(new Point(_tiro.x, _tiro.y)));  
+			mcEfeito.x = p.x;
+			mcEfeito.y = p.y;
+			mcEfeito.rotation = _tiro.direcao * Utils.RADIANOS_TO_GRAUS;
+			VT_efeitoAtingido.push(mcEfeito);
+			mcEfeito.gotoAndPlay("explosao");
+			_tiro.atingiuAtor( this );
+		}		
+
+		
 
 	}
 
