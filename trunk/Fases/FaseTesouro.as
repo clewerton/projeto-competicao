@@ -1,10 +1,11 @@
 package Fases 
 {
 	import adobe.utils.ProductManager;
-	import Fases.FaseCasteloElementos.InimigoAtor;
 	import Fases.FaseTesouroElementos.BarcoHeroiAtor;
 	import Fases.FaseTesouroElementos.BarcoInimigoAtor;
 	import Fases.FaseTesouroElementos.IlhaAtor;
+	import Fases.FaseTesouroElementos.TesouroHUD;
+	import Fases.FaseTesouroElementos.TiroInimigoAtor;
 	import flash.display.BitmapData;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.MovieClip;
@@ -46,8 +47,6 @@ package Fases
 		//Variaveis das Ilhas
 		private var VT_ilhas:Vector.<IlhaAtor>;
 		private var UI_qtdIlhas:uint;
-		private var UI_qtdTesouros:uint;
-		private var UI_contTesouros:uint;
 		private var UI_qtdBala:uint;
 		private var UI_contBala:uint;
 		private var UI_qtdBarco:uint;
@@ -67,6 +66,13 @@ package Fases
 		
 		//DISPLAY FPS
 		private var FH_FPS:FaseHUD;
+		
+		//Controle de Tesouros
+		private var UI_qtdTesouros:uint;
+		private var UI_contTesouros:uint;
+		private var UI_tesourosPegos:uint;
+		private var FH_tesouroHUD: TesouroHUD;
+		
 			
 		public function FaseTesouro(_main:DisplayObjectContainer, Nivel:int) {
 			super(_main, Nivel);
@@ -79,7 +85,7 @@ package Fases
 		public function inicializacao():Boolean
 		{
 			//coloca medidor de FPS
-			FH_FPS = new FaseFPS()
+			FH_FPS = new FaseFPS();
 			adicionaHUD(FH_FPS);
 			
 			//cria barco Heroi;
@@ -106,6 +112,10 @@ package Fases
 			NU_escala =  stage.stageWidth / MAPA_LARGURA;
 			BO_centralizado = true;
 			
+			//hud de Tesouros
+			FH_tesouroHUD = new TesouroHUD(this);
+			adicionaHUD(FH_tesouroHUD);
+			
 			reiniciacao();
 			
 			return true
@@ -116,8 +126,11 @@ package Fases
 			for each (var ilha:IlhaAtor in VT_ilhas) removeAtor(ilha);
 			VT_ilhas = new Vector.<IlhaAtor>;
 
-			for each (var ini:InimigoAtor in VT_Inimigos) removeAtor(ini);
+			for each (var ini:BarcoInimigoAtor in VT_Inimigos) removeAtor(ini);
 			VT_Inimigos = new Vector.<BarcoInimigoAtor>;
+			
+			//controle de tesouros
+			UI_tesourosPegos = 0;
 			
 			BO_zoom = false;
 			BO_limites = false;
@@ -161,6 +174,7 @@ package Fases
 			//Pressionado ZOOM IN / ZOOM OUT
 			if (pressTecla1(Keyboard.Z))
 			{
+				var ini:BarcoInimigoAtor;
 				if (BO_zoom)
 				{
 					BO_zoom = false;
@@ -169,6 +183,7 @@ package Fases
 					this.x = - AB_barcoHeroi.x + ( stage.stageWidth / 2 );
 					this.y = - AB_barcoHeroi.y + ( stage.stageHeight / 2 );
 					testeRetornoZoom();
+					for each (ini in VT_Inimigos) ini.visible =true
 				}
 				else
 				{
@@ -177,6 +192,7 @@ package Fases
 					this.x = stage.stageWidth  / 2 ;
 					this.y = stage.stageHeight / 2 ;
 					BO_zoom = true;
+					for each (ini in VT_Inimigos) ini.visible =false
 				}
 			}
 			
@@ -217,6 +233,10 @@ package Fases
 				BarcoInimigoAtor(C1).colidiuBarcoHeroi(BarcoHeroiAtor(C2));
 				return;
 				}
+			}
+			if (C1 is TiroInimigoAtor && C2 is BarcoHeroiAtor) {
+				BarcoHeroiAtor(C2).foiAtingido(TiroInimigoAtor(C1));
+				return
 			}
 			
 
@@ -401,6 +421,21 @@ package Fases
 		public function get barcoHeroi():BarcoHeroiAtor 
 		{
 			return AB_barcoHeroi;
+		}
+		
+		public function get tesourosPegos():uint 
+		{
+			return UI_tesourosPegos;
+		}
+		
+		public function set tesourosPegos(value:uint):void 
+		{
+			UI_tesourosPegos = value;
+		}
+		
+		public function get qtdTesouros():uint 
+		{
+			return UI_qtdTesouros;
 		}
 	
 		private function pintaQuadradosDebugMapa() {

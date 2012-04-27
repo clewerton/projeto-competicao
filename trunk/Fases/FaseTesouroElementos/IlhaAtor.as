@@ -124,10 +124,7 @@ package Fases.FaseTesouroElementos
 				if (Math.abs( Math.floor( ajuste * 10 ) ) == 0 ) {
 					//ATIRA
 					if (UI_contTiro > UI_freqTiro) {
-						var tiro:TiroInimigoAtor = new TiroInimigoAtor(ang);
-						tiro.x = PT_centroSlot.x;
-						tiro.y = PT_centroSlot.y;
-						faseAtor.adicionaAtor(tiro);
+						faseAtor.adicionaAtor(new TiroInimigoAtor(TiroInimigoAtor.TTRO_CANHAO_ILHA, PT_centroSlot, ang));
 						UI_contTiro = 0;
 					}
 				}
@@ -226,6 +223,10 @@ package Fases.FaseTesouroElementos
 			{
 				BO_revelada = true;
 				faseAtor.removeChild(MC_nevoa);
+				if (UI_premioID == FaseTesouro.PREMIO_TESOURO)
+				{
+					FaseTesouro(faseAtor).tesourosPegos ++;
+				}
 			}
 		}
 				
