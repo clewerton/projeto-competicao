@@ -21,7 +21,8 @@ package Fases.FaseTesouroElementos
 	{
 		public const ESTADO_AGUARDANDO        :uint = 1; 
 		public const ESTADO_PERSEGUINDO_HEROI :uint = 2; 
-		public const ESTADO_VOLTANDO_ORIGEM   :uint = 3; 
+		public const ESTADO_ATIRANDO_HEROI    :uint = 3; 
+		public const ESTADO_VOLTANDO_ORIGEM   :uint = 4; 
 		
 		private var MC_barco:MovieClip;
 		private var FB_faseRef:FaseTesouro;
@@ -50,7 +51,9 @@ package Fases.FaseTesouroElementos
 		private var NU_impacY:Number;
 		private var NU_impacX:Number;
 		
-		
+		//Controle de Ataque
+		private var UI_alcanceTiro:uint;
+				
 		//controle de impacto com a ilha
 		//private var UI_travouIlha:uint;
 		private var BO_bateuIlha:Boolean;
@@ -100,6 +103,9 @@ package Fases.FaseTesouroElementos
 			NU_friccaoVel = 0.98;
 			NU_veloMax = 5;
 			
+			//ALCANCE DO TIRO
+			UI_alcanceTiro = 300;
+			
 			//define alvo
 			FB_faseRef = FaseTesouro(faseAtor);
 		
@@ -131,6 +137,9 @@ package Fases.FaseTesouroElementos
 				case ESTADO_PERSEGUINDO_HEROI:				
 					perseguindoAlvo();
 				break;
+				case ESTADO_ATIRANDO_HEROI:				
+					atirandoAlvo();
+				break;
 				case ESTADO_VOLTANDO_ORIGEM:
 					voltandoOrigem();
 				break;
@@ -146,11 +155,207 @@ package Fases.FaseTesouroElementos
 			
 		}
 		
-		
 		public function remove():void 
 		{
 			
 		}
+		
+		/*******************************************************************************
+		 *   Perseguindo o Barco Heroi
+		 ******************************************************************************/
+		/**
+		 * Perseguindo o Heroi
+		 */
+		private function perseguindoAlvo() {
+			
+			//ESCAPOU
+			if (NU_distancia > 1000) {
+				UI_estado = ESTADO_VOLTANDO_ORIGEM;
+				return;
+			}
+
+			//dentro do alcançe do tiro
+			if ( NU_distancia < UI_alcanceTiro * 0.8 ) {
+				UI_estado = ESTADO_ATIRANDO_HEROI;
+				return;
+			}
+			
+			
+			verificaPontos();
+			
+			calculaRotaAlvo()
+			
+			NU_veloABS += 0.1;
+			if ( NU_veloABS > NU_veloMax ) NU_veloABS = NU_veloMax;
+			var ajuste:Number = corrigeDirecao(NU_direAlvo);
+			this.rotation += ajuste;
+			NU_direcao = this.rotation *  Utils.GRAUS_TO_RADIANOS;
+			NU_direY = Math.sin(NU_direcao);
+			NU_direX = Math.cos(NU_direcao);
+			
+			
+			if (BO_bateuIlha) {
+				BO_bateuIlha = false;
+				UI_bateuIlha++;
+				UI_naoBateuIlha = 0;
+			}
+			else {
+				UI_naoBateuIlha++;
+				UI_bateuIlha = 0;
+			}
+			
+			if (UI_naoBateuIlha > 100) {
+				
+			}
+		}
+		
+		/**
+		 * calcula distancia do Barco Herio
+		 */
+		private function calculaDistanciaBarco() {	
+			PT_alvo.x = FB_faseRef.barcoHeroi.x;
+			PT_alvo.y = FB_faseRef.barcoHeroi.y;
+			var dx:Number = FB_faseRef.barcoHeroi.x - this.x;
+			var dy:Number = FB_faseRef.barcoHeroi.y - this.y;
+			NU_distancia = Math.sqrt( ( dx * dx ) + ( dy * dy ) );
+		}
+
+		private function calculaRotaAlvo() {
+			var dx:Number = PT_objetivo.x - this.x;
+			var dy:Number = PT_objetivo.y - this.y;		
+			NU_direAlvo =  Math.atan2 ( dy, dx);
+		}
+		
+		private function verificaPontos():void {
+			var caminho:Array =  faseAtor.mapa.caminho( new Point (this.x, this.y),  PT_alvo , true);
+			if (caminho.length < 3) {
+				PT_objetivo = new Point( PT_alvo.x, PT_alvo.y);
+			}
+			else {
+				PT_objetivo = faseAtor.mapa.convertePontoMapa(caminho[1]);
+			}			
+			//geraQuadradosDebugCaminho(caminho);
+		}
+		
+		/**
+		 * Corrige a direcao
+		 * @param	_anguloRadiano
+		 * angulo objetivo
+		 * @param	_rotacaoAtual
+		 * rotacao atual
+		 * @return
+		 * ajuste rotacao a ser apliacada
+		 */ 
+		private function corrigeDirecao(_anguloRadiano:Number):Number {
+			
+			var anguloGraus:Number = Math.round(_anguloRadiano * Utils.RADIANOS_TO_GRAUS);
+		
+			var ajusteMax:Number = 3;
+			
+			var diferenca:Number = this.rotation -  anguloGraus ;
+			
+			if (diferenca > 180) anguloGraus += 360;
+			else if (diferenca < -180) anguloGraus -= 360;
+			
+			var ajusteAngulo = anguloGraus - this.rotation;
+			
+			if (ajusteAngulo > ajusteMax) ajusteAngulo = ajusteMax;
+			
+			if (ajusteAngulo < -ajusteMax) ajusteAngulo = -ajusteMax;
+							
+			return ajusteAngulo;
+			
+		}
+
+		/*******************************************************************************
+		 *   Atirando no Barco Heroi
+		 ******************************************************************************/
+		private function atirandoAlvo():void 
+		{	
+			if ( NU_distancia > UI_alcanceTiro ) {
+				UI_estado = ESTADO_PERSEGUINDO_HEROI;
+				return;
+			}
+			
+			var dx:Number = FB_faseRef.barcoHeroi.x - this.x;
+			var dy:Number = FB_faseRef.barcoHeroi.y - this.y;
+			
+			var angulo:Number =  Math.atan2(dy, dx);
+			
+			var viraEsqueda:Number = angulo + ( Math.PI / 2 );
+			var anguloTiro:Number = angulo - ( Math.PI / 2 )
+			
+			//verifica se vira pra esquerda ou direita
+			if (Math.abs(calculaAjusteMiraLateral(viraEsqueda)) <  Math.abs(calculaAjusteMiraLateral(anguloTiro))) {
+				anguloTiro = viraEsqueda;
+			}
+			
+			//var direcaoAlvo:Number =  angulo * Utils.RADIANOS_TO_GRAUS; 
+			
+			var ajuste:Number = corrigeDirecao(anguloTiro);
+			this.rotation += ajuste;
+			NU_direcao = this.rotation *  Utils.GRAUS_TO_RADIANOS;
+			NU_direY = Math.sin(NU_direcao);
+			NU_direX = Math.cos(NU_direcao);
+			
+			//verifica se é para atirar
+			if ( Math.abs( Math.floor(ajuste) ) < 1 ) {
+				//trace("tiro inimigo");
+			}
+			
+		}
+		
+		private function calculaAjusteMiraLateral(_anguloRadiano:Number):Number {
+			
+			var anguloGraus:Number = Math.round(_anguloRadiano * Utils.RADIANOS_TO_GRAUS);
+		
+			var diferenca:Number = this.rotation -  anguloGraus ;
+			
+			if (diferenca > 180) anguloGraus += 360;
+			else if (diferenca < -180) anguloGraus -= 360;
+			
+			var ajusteAngulo = anguloGraus - this.rotation;
+			
+			return ajusteAngulo;
+		}
+
+
+		/******************************************************************************
+		 * voltando para o ponto de origem
+		 * ****************************************************************************/
+		
+		private function voltandoOrigem():void 
+		{
+			var dx:Number = PT_origem.x - this.x;
+			var dy:Number = PT_origem.y - this.y;
+			if ( Math.sqrt( ( dx * dx ) + ( dy * dy ) ) < 50 ) {
+				UI_estado = ESTADO_AGUARDANDO;
+				return
+			}
+
+			var caminho:Array =  faseAtor.mapa.caminho( new Point (this.x, this.y),  PT_origem , true);
+			if (caminho.length < 3) {
+				PT_objetivo = PT_origem;
+			}
+			else {
+				PT_objetivo = faseAtor.mapa.convertePontoMapa(caminho[1]);
+			}	
+			
+			calculaRotaAlvo()
+			
+			NU_veloABS += 0.1;
+			if ( NU_veloABS > NU_veloMax ) NU_veloABS = NU_veloMax;
+
+			var ajuste:Number = corrigeDirecao(NU_direAlvo);
+			this.rotation += ajuste;
+			NU_direcao = this.rotation *  Utils.GRAUS_TO_RADIANOS;
+			NU_direY = Math.sin(NU_direcao);
+			NU_direX = Math.cos(NU_direcao);
+		}
+	
+		/************************************************************************************
+		 * trata colisões
+		 * **********************************************************************************/
 		
 		public function colidiuIlha(_ilha:IlhaAtor) {
 			var ret:Rectangle = Utils.colisaoIntersecao(this, _ilha, faseAtor);
@@ -196,136 +401,6 @@ package Fases.FaseTesouroElementos
 			NU_impacX += _impacX;
 			NU_impacY += _impacY;
 		}
-		
-		private function voltandoOrigem():void 
-		{
-			var dx:Number = PT_origem.x - this.x;
-			var dy:Number = PT_origem.y - this.y;
-			if ( Math.sqrt( ( dx * dx ) + ( dy * dy ) ) < 50 ) {
-				UI_estado = ESTADO_AGUARDANDO;
-				return
-			}
-
-			var caminho:Array =  faseAtor.mapa.caminho( new Point (this.x, this.y),  PT_origem , true);
-			if (caminho.length < 3) {
-				PT_objetivo = PT_origem;
-			}
-			else {
-				PT_objetivo = faseAtor.mapa.convertePontoMapa(caminho[1]);
-			}	
-			
-			calculaRotaAlvo()
-			
-			NU_veloABS += 0.1;
-			if ( NU_veloABS > NU_veloMax ) NU_veloABS = NU_veloMax;
-
-			var ajuste:Number = corrigeDirecao(NU_direAlvo);
-			this.rotation += ajuste;
-			NU_direcao = this.rotation *  Utils.GRAUS_TO_RADIANOS;
-			NU_direY = Math.sin(NU_direcao);
-			NU_direX = Math.cos(NU_direcao);
-		}
-	
-		
-		/**
-		 * Perseguindo alvo
-		 */
-		private function perseguindoAlvo() {
-			
-			verificaPontos();
-			
-			calculaRotaAlvo()
-			
-			if (NU_distancia > 150) {
-				NU_veloABS += 0.1;
-				if ( NU_veloABS > NU_veloMax ) NU_veloABS = NU_veloMax;
-				var ajuste:Number = corrigeDirecao(NU_direAlvo);
-				this.rotation += ajuste;
-				NU_direcao = this.rotation *  Utils.GRAUS_TO_RADIANOS;
-				NU_direY = Math.sin(NU_direcao);
-				NU_direX = Math.cos(NU_direcao);
-				
-			}
-			
-			//ESCAPOU
-			if (NU_distancia > 1000) {
-				UI_estado = ESTADO_VOLTANDO_ORIGEM;
-				return
-			}
-			
-			if (BO_bateuIlha) {
-				BO_bateuIlha = false;
-				UI_bateuIlha++;
-				UI_naoBateuIlha = 0;
-			}
-			else {
-				UI_naoBateuIlha++;
-				UI_bateuIlha = 0;
-			}
-			
-			if (UI_naoBateuIlha > 100) {
-				
-			}
-		}
-		
-		/**
-		 * calcula distancia do Barco Herio
-		 */
-		private function calculaDistanciaBarco() {	
-			PT_alvo.x = FB_faseRef.barcoHeroi.x;
-			PT_alvo.y = FB_faseRef.barcoHeroi.y;
-			var dx:Number = FB_faseRef.barcoHeroi.x - this.x;
-			var dy:Number = FB_faseRef.barcoHeroi.y - this.y;
-			NU_distancia = Math.sqrt( ( dx * dx ) + ( dy * dy ) );
-		}
-
-		private function calculaRotaAlvo() {
-			var dx:Number = PT_objetivo.x - this.x;
-			var dy:Number = PT_objetivo.y - this.y;		
-			NU_direAlvo =  Math.atan2 ( dy, dx);
-		}
-		
-		private function verificaPontos():void {
-			var caminho:Array =  faseAtor.mapa.caminho( new Point (this.x, this.y),  PT_alvo , true);
-			if (caminho.length < 3) {
-				PT_objetivo = new Point( PT_alvo.x, PT_alvo.y);
-			}
-			else {
-				PT_objetivo = faseAtor.mapa.convertePontoMapa(caminho[1]);
-			}			
-			//geraQuadradosDebugCaminho(caminho);
-		}
-		
-		
-		/**
-		 * Corrige a direcao
-		 * @param	_anguloRadiano
-		 * angulo objetivo
-		 * @param	_rotacaoAtual
-		 * rotacao atual
-		 * @return
-		 * ajuste rotacao a ser apliacada
-		 */ 
-		private function corrigeDirecao(_anguloRadiano:Number):Number {
-			
-			var anguloGraus:Number = Math.round(_anguloRadiano * Utils.RADIANOS_TO_GRAUS);
-		
-			var ajusteMax:Number = 3;
-			
-			var diferenca:Number = this.rotation -  anguloGraus ;
-			
-			if (diferenca > 180) anguloGraus += 360;
-			else if (diferenca < -180) anguloGraus -= 360;
-			
-			var ajusteAngulo = anguloGraus - this.rotation;
-			
-			if (ajusteAngulo > ajusteMax) ajusteAngulo = ajusteMax;
-			
-			if (ajusteAngulo < -ajusteMax) ajusteAngulo = -ajusteMax;
-							
-			return ajusteAngulo;
-		}
-	
 		
 		private function geraQuadradosDebugCaminho(_caminho:Array) {
 			var m:Sprite;

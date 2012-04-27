@@ -1,5 +1,6 @@
 package Fases 
 {
+	import adobe.utils.ProductManager;
 	import Fases.FaseCasteloElementos.InimigoAtor;
 	import Fases.FaseTesouroElementos.BarcoHeroiAtor;
 	import Fases.FaseTesouroElementos.BarcoInimigoAtor;
@@ -21,7 +22,7 @@ package Fases
 	import TangoGames.Utils;
 	
 	/**
-	 * ...
+	 * 
 	 * @author ...
 	 */
 	public class FaseTesouro extends FaseBase implements FaseInterface
@@ -62,6 +63,7 @@ package Fases
 		//controle de soom do mapa
 		private var BO_zoom:Boolean;
 		private var NU_escala:Number;
+		private var BO_centralizado:Boolean;
 		
 		//DISPLAY FPS
 		private var FH_FPS:FaseHUD;
@@ -100,14 +102,14 @@ package Fases
 			VT_Inimigos = new Vector.<BarcoInimigoAtor>;
 			UI_qtdMaxInimigos = 5;
 			
-			//cpntrole de ZOOM
+			//cpntrole de ZOOM e VISÃO
 			NU_escala =  stage.stageWidth / MAPA_LARGURA;
+			BO_centralizado = true;
 			
 			reiniciacao();
 			
 			return true
 		}
-
 		
 		public function reiniciacao():void
 		{
@@ -139,17 +141,31 @@ package Fases
 		
 		public function update(e:Event):void
 		{
+			//Pressionado pausa do Jogo
 			if (pressTecla1(Keyboard.P))
 			{
 				pausaFase();
 			}
+			
+			//troca camera
+			if (pressTecla1(Keyboard.C)) BO_centralizado = !BO_centralizado;
+
+			
+			//Centraliza visão do heroi
+			if (!BO_zoom && BO_centralizado) {
+				if (!limiteCentral()) {
+					mudafocoMapa(new Point(AB_barcoHeroi.x, AB_barcoHeroi.y));
+				}
+			}
+			
+			//Pressionado ZOOM IN / ZOOM OUT
 			if (pressTecla1(Keyboard.Z))
 			{
 				if (BO_zoom)
 				{
+					BO_zoom = false;
 					this.scaleX = 1;
 					this.scaleY = 1;
-					BO_zoom = false;
 					this.x = - AB_barcoHeroi.x + ( stage.stageWidth / 2 );
 					this.y = - AB_barcoHeroi.y + ( stage.stageHeight / 2 );
 					testeRetornoZoom();
@@ -158,14 +174,16 @@ package Fases
 				{
 					this.scaleX = NU_escala;
 					this.scaleY = NU_escala;
-					this.x = stage.stageWidth / 2  ;
-					this.y = stage.stageHeight / 2;
+					this.x = stage.stageWidth  / 2 ;
+					this.y = stage.stageHeight / 2 ;
 					BO_zoom = true;
 				}
 			}
+			
+			//Testa os Limites do Mapa para o Heroi
 			if (!BO_zoom) testaMovimentoHeroi();
+			
 		}
-		
 		
 		public function remocao():void
 		{
@@ -258,7 +276,6 @@ package Fases
 			return true;
 		}
 		
-		
 		private function sorteiaIlha(_ilha:IlhaAtor):void
 		{
 			randomizaPosicaoIlha(_ilha);
@@ -308,10 +325,25 @@ package Fases
 			return sp;
 		}
 		
+		private function mudafocoMapa(_ponto:Point) {
+			this.x = - _ponto.x + ( stage.stageWidth  / 2 );
+			this.y = - _ponto.y + ( stage.stageHeight / 2 );
+		}
+		
+		private function limiteCentral():Boolean
+		{
+			if ( ( (  stage.stageWidth  / 2 ) - AB_barcoHeroi.x) < RE_limGlob.left + stage.stageWidth) return true;
+			else  if ( ( (  stage.stageWidth  / 2 ) - AB_barcoHeroi.x) > RE_limGlob.right) return true;
+			if ( ( ( stage.stageHeight / 2 ) - AB_barcoHeroi.y) < RE_limGlob.top + stage.stageHeight ) return true;
+			else if ( ( ( stage.stageHeight / 2 ) - AB_barcoHeroi.y) > RE_limGlob.bottom) return true;
+			return false;
+		}
+		
+		
 		private function testeRetornoZoom():void 
 		{
 			if ( this.x < RE_limGlob.left + stage.stageWidth) this.x = RE_limGlob.left+stage.stageWidth;
-			else  if ( this.x > RE_limGlob.right - stage.stageWidth) this.x = RE_limGlob.right;
+			else  if ( this.x > RE_limGlob.right) this.x = RE_limGlob.right;
 			if ( this.y < RE_limGlob.top + stage.stageHeight ) this.y = RE_limGlob.top+stage.stageHeight;
 			else if ( this.y > RE_limGlob.bottom) this.y = RE_limGlob.bottom;
 		}
@@ -389,11 +421,6 @@ package Fases
 					}
 				}
 			}
-			
 		}
-
-		
 	}
-
-	
 }

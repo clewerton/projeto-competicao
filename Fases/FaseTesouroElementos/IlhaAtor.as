@@ -75,6 +75,9 @@ package Fases.FaseTesouroElementos
 			//nevoa da ilha
 			MC_nevoa = new NevoaSlot;
 			MC_nevoa.gotoAndStop("inativo");
+			
+			this.cacheAsBitmap = true;
+			hitObject = this;
 		}
 		
 		public function reinicializa():void
@@ -163,8 +166,6 @@ package Fases.FaseTesouroElementos
 			
 			SP_slot.addChildAt(MC_premio, 0);
 			MC_premio.rotation = - MC_ilha.rotation;
-			
-			//this.cacheAsBitmap = true;
 			
 		}
 		
