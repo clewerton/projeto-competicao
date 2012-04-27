@@ -14,32 +14,33 @@ package Fases.FaseTesouroElementos
 	 * ...
 	 * @author Arthur Figueirdo
 	 */
-	public class TiroInimigoAtor extends AtorBase implements AtorInterface 
+	public class TiroHeroiAtor extends AtorBase implements AtorInterface 
 	{
 		//tipos de tiro
-		public static const TTRO_CANHAO_ILHA	:uint  = 1;
-		public static const TTRO_CANHAO_BARCO:	uint = 2;
+		public static const TTRO_HEROI_NIVEL0:uint  = 0;
+		public static const TTRO_HEROI_NIVEL1:uint  = 1;
+		public static const TTRO_HEROI_NIVEL2:uint  = 2;
 
 		//tipo de tiro
-		private var UI_tipo			:uint;
+		var UI_tipo			:uint;
 
 		//imagem do tiro
-		private var MC_Tiro			:MovieClip;
+		var MC_Tiro:MovieClip;
 		
-		//controle de velocidade e direcao
-		private var NU_VeloX		:Number;
-		private var NU_VeloY		:Number;
-		private var NU_VelABS		:Number;
-		private var NU_direcao		:Number
+		//controle de velocidade e direção
+		var NU_VeloX		:Number;
+		var NU_VeloY		:Number;
+		var NU_VelABS		:Number;
+		var NU_direcao		:Number
 		
 		//pontos de dano do tiro
-		private var NU_dano 		:Number;
+		var NU_dano 		:Number;
 		
 		//distancia percorrida pelo tiro
-		private var UI_distancia	:Number;
+		var UI_distancia	:Number;
 		
 		//alcance maximo do tiro
-		private var UI_alcance		:uint;
+		var UI_alcance		:uint;
 		
 		//efeito de som do tiro
 		private var SC_canal		:SoundChannel;
@@ -50,6 +51,7 @@ package Fases.FaseTesouroElementos
 		//ator atingido
 		private var AB_atorAtingido: AtorBase;
 		
+		//
 		/**
 		 * Cria novo tiro
 		 * @param	_tiro
@@ -58,17 +60,18 @@ package Fases.FaseTesouroElementos
 		 * ponto inicia que o diro será criado
 		 * @param	_direcao
 		 * direcao que do tiro
+		 * @param   _deslocX  
+		 * componente X de velocidade de delocamento
+		 * @param   _deslocY  
+		 * componente Y de velocidade de delocamento
 		 */
-		public function TiroInimigoAtor(  _tiro:uint, _pontoIni:Point, _direcao:Number ) 
+		public function TiroHeroiAtor(  _tiro:uint, _pontoIni:Point, _direcao:Number, _deslocX:Number = 0, _deslocY:Number = 0 ) 
 		{
 			//inverte
 			NU_direcao = _direcao + Math.PI;
 			
 			//tipo do tiro
 			UI_tipo = _tiro;
-			
-			//pontos de dano
-			NU_dano = 10;
 
 			//coloca no ponto inicial
 			this.x = _pontoIni.x;
@@ -77,26 +80,32 @@ package Fases.FaseTesouroElementos
 			//cria o movie clip do tiro
 			switch (UI_tipo) 
 			{
-				case TTRO_CANHAO_ILHA:
-					MC_Tiro =  new TiroCanhao;
-					NU_VelABS = 5;
-					UI_alcance = 500;
+				case TTRO_HEROI_NIVEL0:
+					MC_Tiro =  new BolaCanhaoBarco;;
+					NU_VelABS = 8;
+					UI_alcance = Utils.Rnd( 200, 250 );
 				break;
-				case TTRO_CANHAO_BARCO:
-					MC_Tiro =  new BolaCanhaoBarco;
+				case TTRO_HEROI_NIVEL1:
+					MC_Tiro =  new BolaCanhaoBarco;;
 					NU_VelABS = 10;
-					UI_alcance = Utils.Rnd( 250, 350 );
+					UI_alcance = Utils.Rnd( 250, 300 );
+				break;
+				case TTRO_HEROI_NIVEL2:
+					MC_Tiro =  new BolaCanhaoBarco;;
+					NU_VelABS = 12;
+					UI_alcance = Utils.Rnd( 300, 400 );
 				break;
 				default:
 			}
 			
-			//registro imagem do tiro
+			//imagem do tiro
 			MC_Tiro.rotation = NU_direcao * Utils.RADIANOS_TO_GRAUS;
 			super(MC_Tiro);
 			
+			
 			//calcula os compenentes de velocidade
-			NU_VeloX = Math.cos(direcao) * NU_VelABS;
-		    NU_VeloY = Math.sin(direcao) * NU_VelABS;
+			NU_VeloX = ( Math.cos(direcao) * NU_VelABS ) + _deslocX;
+		    NU_VeloY = ( Math.sin(direcao) * NU_VelABS ) + _deslocY;
 			
 			//controle de som
 			SD_somTiro = new somCanhao;
@@ -117,7 +126,7 @@ package Fases.FaseTesouroElementos
 		
 		public function inicializa():void 
 		{			
-			adcionaClassehitGrupo(BarcoHeroiAtor);
+			adcionaClassehitGrupo(BarcoInimigoAtor);
 			UI_distancia = 0;
 			iniciaAnima(MC_Tiro, "andar");
 			SC_canal = SD_somTiro.play(0);
@@ -135,7 +144,7 @@ package Fases.FaseTesouroElementos
 			UI_distancia += NU_VelABS;
 			if (UI_distancia > UI_alcance) {
 				SC_canal = SD_splash.play(0);
-				removeClassehitGrupo(BarcoHeroiAtor);
+				removeClassehitGrupo(BarcoInimigoAtor);
 				iniciaAnima(MC_Tiro, "splash");
 			}
 		}

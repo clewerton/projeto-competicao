@@ -5,6 +5,7 @@ package Fases
 	import Fases.FaseTesouroElementos.BarcoInimigoAtor;
 	import Fases.FaseTesouroElementos.IlhaAtor;
 	import Fases.FaseTesouroElementos.TesouroHUD;
+	import Fases.FaseTesouroElementos.TiroHeroiAtor;
 	import Fases.FaseTesouroElementos.TiroInimigoAtor;
 	import flash.display.BitmapData;
 	import flash.display.DisplayObjectContainer;
@@ -236,6 +237,10 @@ package Fases
 			}
 			if (C1 is TiroInimigoAtor && C2 is BarcoHeroiAtor) {
 				BarcoHeroiAtor(C2).foiAtingido(TiroInimigoAtor(C1));
+				return
+			}
+			if (C1 is TiroHeroiAtor && C2 is BarcoInimigoAtor) {
+				BarcoInimigoAtor(C2).foiAtingido(TiroHeroiAtor(C1));
 				return
 			}
 			
