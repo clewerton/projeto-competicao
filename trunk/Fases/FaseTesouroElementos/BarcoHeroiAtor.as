@@ -15,7 +15,11 @@
 	{
 		
 		//Barco
+		private var MC_Barco:MovieClip;
+		private var MC_velas:MovieClip
+		
 		//Direcao do barco em radianos
+		
 		private var NU_direcao:Number;
 		private var NU_veloX:Number;
 		private var NU_veloY:Number;
@@ -35,35 +39,20 @@
 		private var NU_impacY:Number;
 		private var NU_impacFric:Number;
 		
-		private var NU_AntX:Number;
-		private var NU_AntY:Number;
-		private var NU_AntAng:Number;
-		
+		//ilha para ação
 		private var IA_IlhaProxima:IlhaAtor;
 
 		public function BarcoHeroiAtor() {
-			super(new BarcoHeroi);
+			
+			MC_Barco = new BarcoHeroiCasco;
+			super(MC_Barco);
+			
+			MC_velas = new BarcoHeroiVelas;
+			this.addChild(MC_velas)
+			MC_velas.x = MC_Barco.slotVela.x;
+			MC_velas.y = MC_Barco.slotVela.y;
 		}
 		
-		public function reinicializa():void
-		{
-			this.x = 0;
-			this.y = 0;
-			
-			NU_direcao = -90 *Math.PI/180;
-			NU_veloX = 0;
-			NU_veloY = 0;
-			NU_veloABS = 0;
-			NU_veloAng = 0;
-			
-			NU_impacY = 0;
-			NU_impacX = 0;
-			
-			this.rotation = 0;
-			
-			IA_IlhaProxima = null;
-			
-		}
 		public function inicializa():void
 		{
 			this.hitGrupos = new Vector.<Class>;
@@ -81,11 +70,28 @@
 			reinicializa();
 		
 		}
+		
+		public function reinicializa():void
+		{
+			this.x = 0;
+			this.y = 0;
+			
+			NU_direcao = -90 * Utils.GRAUS_TO_RADIANOS;
+			NU_veloX = 0;
+			NU_veloY = 0;
+			NU_veloABS = 0;
+			NU_veloAng = 0;
+			
+			NU_impacY = 0;
+			NU_impacX = 0;
+			
+			IA_IlhaProxima = null;
+			
+		}
+
+		
 		public function update(e:Event):void
 		{
-			NU_AntX = this.x;
-			NU_AntY = this.y;
-			NU_AntAng = this.rotation;
 			
 			if (pressTecla(Keyboard.E)) interageIlhaProxima();
 
@@ -119,7 +125,7 @@
 			
 			this.x += NU_veloX + NU_impacX;
 			this.y += NU_veloY + NU_impacY;
-			this.rotation = (NU_direcao * 180) / Math.PI + 90;
+			this.rotation = NU_direcao * Utils.RADIANOS_TO_GRAUS;
 			
 			testeLimiteGlobal();
 
