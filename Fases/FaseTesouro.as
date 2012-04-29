@@ -3,6 +3,7 @@ package Fases
 	import adobe.utils.ProductManager;
 	import Fases.FaseTesouroElementos.BarcoHeroiAtor;
 	import Fases.FaseTesouroElementos.BarcoInimigoAtor;
+	import Fases.FaseTesouroElementos.BoteFugaAtor;
 	import Fases.FaseTesouroElementos.IlhaAtor;
 	import Fases.FaseTesouroElementos.TesouroHUD;
 	import Fases.FaseTesouroElementos.TiroHeroiAtor;
@@ -209,8 +210,15 @@ package Fases
 		public function colisao(C1:AtorBase, C2:AtorBase):void
 		{
 			
-			trace(C1, " colidiu com ", C2);
 			
+			if (C1 is TiroHeroiAtor && C2 is BarcoInimigoAtor) {
+				BarcoInimigoAtor(C2).foiAtingido(TiroHeroiAtor(C1));
+				return
+			}
+			if (C1 is TiroInimigoAtor && C2 is BarcoHeroiAtor) {
+				BarcoHeroiAtor(C2).foiAtingido(TiroInimigoAtor(C1));
+				return
+			}			
 			if (C1 is BarcoHeroiAtor && C2 is IlhaAtor)
 			{
 				BarcoHeroiAtor(C1).colidiuIlha(IlhaAtor(C2));
@@ -235,15 +243,9 @@ package Fases
 				return;
 				}
 			}
-			if (C1 is TiroInimigoAtor && C2 is BarcoHeroiAtor) {
-				BarcoHeroiAtor(C2).foiAtingido(TiroInimigoAtor(C1));
-				return
-			}
-			if (C1 is TiroHeroiAtor && C2 is BarcoInimigoAtor) {
-				BarcoInimigoAtor(C2).foiAtingido(TiroHeroiAtor(C1));
-				return
-			}
-			
+			if (C1 is BoteFugaAtor) BoteFugaAtor(C1).colisaoPadrao(C2);
+
+			trace(C1, " colidiu com ", C2);
 
 		}
 		

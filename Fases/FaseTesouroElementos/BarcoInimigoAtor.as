@@ -1,8 +1,8 @@
 package Fases.FaseTesouroElementos 
 {
+	import Fases.Efeitos.DanoBarcoInimigo;
+	import Fases.Efeitos.ExplosaoCanhao;
 	import Fases.FaseTesouro;
-	import fl.motion.AnimatorBase;
-	import fl.motion.Source;
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.MovieClip;
@@ -61,18 +61,24 @@ package Fases.FaseTesouroElementos
 		private var UI_tiroTempo		:uint;
 		private var UI_tiroTempo2		:uint;
 		private var UI_tiroSeque		:uint;
-		private var VT_efeitoExplosao	:Vector.<MovieClip>;
-		
 
-				
 		//controle de impacto com a ilha
 		//private var UI_travouIlha:uint;
 		private var BO_bateuIlha		:Boolean;
 		private var UI_bateuIlha		:Number;
 		private var UI_naoBateuIlha		:Number;
 		
-		private var VT_TEMP				:Vector.<Sprite>
-		private var VT_efeitoAtingido	:Vector.<MovieClip>;
+		//variavel de Vida Inimigo
+		private var NU_vidaAtual		:Number;
+		private var NU_vidaMaxima		:Number;
+		private var NU_vidaBarra		:Number;	
+	
+		//mini barra de vida barco
+		private var SP_barraVida		:Sprite;
+		private var SP_barraInterna		:Sprite;
+		
+		private var VT_TEMP				:Vector.<Sprite>;
+	
 		
 		public function BarcoInimigoAtor() 
 		{
@@ -82,6 +88,42 @@ package Fases.FaseTesouroElementos
 		}
 		
 		/* INTERFACE TangoGames.Atores.AtorInterface */
+
+		public function inicializa():void 
+		{
+			//fricao
+			NU_friccaoVel = 0.98;
+			NU_veloMax = 5;
+			
+			//valor de vida
+			NU_vidaMaxima = 100;
+			
+			
+			//ALCANCE DO TIRO
+			UI_alcanceTiro = 300;
+			
+			//define alvo
+			FB_faseRef = FaseTesouro(faseAtor);
+		
+			adcionaClassehitGrupo(IlhaAtor);
+			adcionaClassehitGrupo(BarcoHeroiAtor);
+			adcionaClassehitGrupo(BarcoInimigoAtor);
+			
+			VT_TEMP = new Vector.<Sprite>;
+			
+			PT_origem = new Point (this.x, this.y) ;
+			
+			//mini barra de vida
+			SP_barraVida = geraSprite(0XFF0000, new Rectangle(0, 0, 50, 5), true);
+			faseAtor.addChild(SP_barraVida);
+			SP_barraInterna = geraSprite(0XFF0000, new Rectangle(0, 0, 50, 5), false);
+			SP_barraVida.addChild(SP_barraInterna);
+
+			//reinicia variaveis
+			reinicializa();
+
+		}
+
 		
 		public function reinicializa():void 
 		{
@@ -101,51 +143,39 @@ package Fases.FaseTesouroElementos
 			//PONTO DE ORIGEM
 			BO_origem = false;
 			
+			//vida atual
+			NU_vidaAtual = NU_vidaMaxima;
+			NU_vidaBarra = 0;
+
+			
 			//alvo
 			PT_alvo = new Point;
 			UI_tiroTempo = 0;
 			UI_tiroTempo2 = 0;
 			UI_tiroSeque = 0;
-			VT_efeitoExplosao = new Vector.<MovieClip>;			
-			VT_efeitoAtingido = new Vector.<MovieClip>;
 			
 			//estado do inimigo
 			UI_estado = ESTADO_AGUARDANDO;
+			
 		}
 		
-		public function inicializa():void 
-		{
-			//fricao
-			NU_friccaoVel = 0.98;
-			NU_veloMax = 5;
-			
-			//ALCANCE DO TIRO
-			UI_alcanceTiro = 300;
-			
-			//define alvo
-			FB_faseRef = FaseTesouro(faseAtor);
-		
-			adcionaClassehitGrupo(IlhaAtor);
-			adcionaClassehitGrupo(BarcoHeroiAtor);
-			adcionaClassehitGrupo(BarcoInimigoAtor);
-			
-			VT_TEMP = new Vector.<Sprite>;
-			
-			PT_origem = new Point (this.x, this.y) ;
-			
-			reinicializa();
-		}
 		
 		public function update(e:Event):void 
-		{
+		{	
+			
+			if ( NU_vidaAtual <= 0 ) { 
+				barcoDestruido();
+				return;
+			}
+			
+			atualizaBarradeVida();
+			
 			if (!BO_origem) {
 				BO_origem = true;
 				PT_origem = new Point(this.x, this.y);
 			}
 			
 			calculaDistanciaBarco();
-			
-			efeitoExplosao();
 			
 			switch (UI_estado) 
 			{
@@ -157,6 +187,9 @@ package Fases.FaseTesouroElementos
 				break;
 				case ESTADO_ATIRANDO_HEROI:				
 					atirandoAlvo();
+				break;
+				case ESTADO_VOLTANDO_ORIGEM:
+					voltandoOrigem();
 				break;
 				case ESTADO_VOLTANDO_ORIGEM:
 					voltandoOrigem();
@@ -173,9 +206,38 @@ package Fases.FaseTesouroElementos
 			
 		}
 		
+		private function barcoDestruido():void 
+		{
+			var bote:BoteFugaAtor = new BoteFugaAtor();
+			faseAtor.adicionaAtor(bote);
+			bote.x = this.x - 20;
+			bote.y = this.y;
+			
+			bote = new BoteFugaAtor();
+			faseAtor.adicionaAtor(bote);
+			bote.x = this.x ;
+			bote.y = this.y + 20;
+			
+			bote = new BoteFugaAtor();
+			faseAtor.adicionaAtor(bote);
+			bote.x = this.x + 20;
+			bote.y = this.y - 20;
+			
+			marcadoRemocao = true;
+			
+			var clonemorte:BarcoInimigoNaufragioAtor = new BarcoInimigoNaufragioAtor();
+			
+			faseAtor.adicionaAtor(clonemorte);
+			
+			clonemorte.x = this.x;
+			clonemorte.y = this.y;
+			clonemorte.rotation = this.rotation;
+		}
+		
+		
 		public function remove():void 
 		{
-			
+			faseAtor.removeChild(SP_barraVida);
 		}
 		
 		/*******************************************************************************
@@ -352,11 +414,9 @@ package Fases.FaseTesouroElementos
 			faseAtor.adicionaAtor(new TiroInimigoAtor(TiroInimigoAtor.TTRO_CANHAO_BARCO, new Point( rt.x , rt.y ) , ang));
 			
 			var mcExp:MovieClip =  new ExplosaoCanhao;
-			VT_efeitoExplosao.push(mcExp)
 			this.addChild(mcExp);
 			mcExp.x = mcCanhao.x;
 			mcExp.y = mcCanhao.y;
-			mcExp.gotoAndPlay("explosao");
 		}
 		
 		private function calculaAjusteMiraLateral(_anguloRadiano:Number):Number {
@@ -371,25 +431,6 @@ package Fases.FaseTesouroElementos
 			var ajusteAngulo = anguloGraus - this.rotation;
 			
 			return ajusteAngulo;
-		}
-
-		
-		private function efeitoExplosao():void 
-		{
-			var VT_DEL:Vector.<uint> =  new Vector.<uint>; 
-			var i:uint;
-			var index:uint;
-			for ( i = 0 ; i < VT_efeitoExplosao.length ; i++ ) if ( VT_efeitoExplosao[i].currentFrameLabel == "explosaofim" ) VT_DEL.push(i);
-			for each ( index in VT_DEL) {
-				this.removeChild(VT_efeitoExplosao[index]);
-				VT_efeitoExplosao.splice(index, 1);
-			}
-			VT_DEL =  new Vector.<uint>; 
-			for ( i = 0 ; i < VT_efeitoAtingido.length ; i++ ) if ( VT_efeitoAtingido[i].currentFrameLabel == "explosaofim" ) VT_DEL.push(i);
-			for each ( index in VT_DEL) {
-				this.removeChild(VT_efeitoAtingido[index]);
-				VT_efeitoAtingido.splice(index, 1);
-			}
 		}
 		
 		/******************************************************************************
@@ -498,19 +539,43 @@ package Fases.FaseTesouroElementos
 		public function foiAtingido( _tiro: TiroHeroiAtor) {
 			//var ret:Rectangle = Utils.colisaoIntersecao(this, _tiro, faseAtor);
 			//if (ret == null) return;
-			var mcEfeito:MovieClip = new DanoBarcoPirata;
+			var mcEfeito:MovieClip = new DanoBarcoInimigo;
 			this.addChild(mcEfeito);
 			var p:Point = this.globalToLocal (faseAtor.localToGlobal(new Point(_tiro.x, _tiro.y)));  
 			mcEfeito.x = p.x;
 			mcEfeito.y = p.y;
-			mcEfeito.rotation = _tiro.direcao * Utils.RADIANOS_TO_GRAUS;
-			VT_efeitoAtingido.push(mcEfeito);
-			mcEfeito.gotoAndPlay("explosao");
+			mcEfeito.rotation = (_tiro.direcao * Utils.RADIANOS_TO_GRAUS) ;
 			_tiro.atingiuAtor( this );
-		}		
-
+			NU_vidaAtual -= _tiro.dano;
+		}
 		
+		/*************************************************************************************
+		 * Mini HUD de vida
+		 ************************************************************************************/
+		
+		private function atualizaBarradeVida():void 
+		{
+			SP_barraVida.x = this.x - 25 ;
+			SP_barraVida.y = this.y - 80; 
+			faseAtor.setChildIndex(SP_barraVida, faseAtor.numChildren - 1);
+			if ( NU_vidaBarra != NU_vidaAtual) {
+				NU_vidaBarra = NU_vidaAtual
+		    	var tam:Number =  SP_barraVida.width * ( NU_vidaAtual / NU_vidaMaxima );
+				SP_barraInterna.scrollRect = new Rectangle(0,0, tam ,SP_barraInterna.height)
+			}
+			parent.setChildIndex(this, parent.numChildren - 1);
+			
+		}
 
+		public function geraSprite(cor:uint, _ret:Rectangle, _contormo:Boolean ):Sprite {
+			var sp:Sprite =  new Sprite;
+			if (_contormo) sp.graphics.lineStyle(0.1, cor, 1);
+			else sp.graphics.lineStyle();
+			if (_contormo) sp.graphics.beginFill( 0X000000, 0);
+			else sp.graphics.beginFill(cor, 0.75);
+			sp.graphics.drawRect(_ret.left, _ret.left, _ret.width, _ret.height);
+			sp.graphics.endFill();
+			return sp;
+		}
 	}
-
 }

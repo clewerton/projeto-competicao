@@ -1,5 +1,6 @@
 package Fases.FaseTesouroElementos 
 {
+	import Fases.Efeitos.ExplosaoTiroCanhaoGr;
 	import Fases.FaseCasteloElementos.PontuacaoHUD;
 	import Fases.FaseTesouro;
 	import flash.display.DisplayObjectContainer;
@@ -8,6 +9,7 @@ package Fases.FaseTesouroElementos
 	import flash.events.Event;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import TangoGames.Atores.AtorAnimacao;
 	import TangoGames.Atores.AtorBase;
 	import TangoGames.Atores.AtorInterface;
 	import TangoGames.Utils;
@@ -79,6 +81,19 @@ package Fases.FaseTesouroElementos
 			this.cacheAsBitmap = true;
 			hitObject = this;
 		}
+		/**********************************************************************************
+		 *  métodos da interface AtorBase
+		 * *******************************************************************************/
+		
+		public function inicializa():void
+		{
+			adcionaClassehitGrupo(BarcoHeroiAtor);
+			
+			//Inicializa variaveis dos pirtas
+			UI_freqTiro = 24;
+			
+			reinicializa()
+		}
 		
 		public function reinicializa():void
 		{
@@ -91,15 +106,6 @@ package Fases.FaseTesouroElementos
 			PT_centroSlot = new Point(Number.MAX_VALUE,Number.MAX_VALUE);
 		}
 		
-		public function inicializa():void
-		{
-			adcionaClassehitGrupo(BarcoHeroiAtor);
-			
-			//Inicializa variaveis dos pirtas
-			UI_freqTiro = 24;
-			
-			reinicializa()
-		}
 		public function update(e:Event):void
 		{			
 			if (PT_posicao.x != this.x || PT_posicao.y != this.y) reposicionouIlha();
@@ -112,33 +118,19 @@ package Fases.FaseTesouroElementos
 				faseAtor.setChildIndex(MC_nevoa, faseAtor.numChildren - 1);
 			}
 		}
-		
-		private function updatePiratas() {
-			var dx:Number = PT_centroSlot.x - FaseTesouro(faseAtor).barcoHeroi.x;
-			var dy:Number = PT_centroSlot.y - FaseTesouro(faseAtor).barcoHeroi.y;
-			var dist:Number = Math.sqrt( ( dx * dx ) + ( dy * dy ) );
-			UI_contTiro++;
-			if (dist < 500) {
-				var ang:Number = Math.atan2(dy, dx);
-				var ajuste:Number = corrigeDirecaoAlvo(ang, MC_premio.rotation);
-				if (Math.abs( Math.floor( ajuste * 10 ) ) == 0 ) {
-					//ATIRA
-					if (UI_contTiro > UI_freqTiro) {
-						faseAtor.adicionaAtor(new TiroInimigoAtor(TiroInimigoAtor.TTRO_CANHAO_ILHA, PT_centroSlot, ang));
-						UI_contTiro = 0;
-					}
-				}
-				else {
-					MC_premio.rotation += ajuste;
-				}
-			}
-		}
-		
+				
 		public function remove():void
 		{
 			if (!BO_revelada) faseAtor.removeChild(MC_nevoa);
 		}
 		
+		/*******************************************************************************
+		 *  Premios da ilha e interface
+		 * ****************************************************************************/
+		/**
+		 * Defeine Premiacao da ilha
+		 * @param	_premio
+		 */
 		public function definiPremio(_premio:uint):void
 		{
 			UI_premioID = _premio;
@@ -165,7 +157,9 @@ package Fases.FaseTesouroElementos
 			MC_premio.rotation = - MC_ilha.rotation;
 			
 		}
-		
+		/**
+		 * reposicionou Ilha
+		 */
 		private function reposicionouIlha():void 
 		{
 			PT_posicao.x = this.x;
@@ -178,7 +172,78 @@ package Fases.FaseTesouroElementos
 				MC_nevoa.y = PT_centroSlot.y; 
 			}	
 		}
+
+		/******************************************************************
+		 * Canhão pirata 
+		 * ***************************************************************/
+		/**
+		 * Trata o canhão dos piratas na ilha
+		 */
+		private function updatePiratas() {
+			var dx:Number = PT_centroSlot.x - FaseTesouro(faseAtor).barcoHeroi.x ;
+			var dy:Number = PT_centroSlot.y - FaseTesouro(faseAtor).barcoHeroi.y;
+			
+			//antecipa a mira para o futuro
+			dx -= FaseTesouro(faseAtor).barcoHeroi.veloX * 20; 
+			dy -= FaseTesouro(faseAtor).barcoHeroi.veloY * 20; 
+			
+			var dist:Number = Math.sqrt( ( dx * dx ) + ( dy * dy ) );
+			UI_contTiro++;
+			if (dist < 500) {
+				var ang:Number = Math.atan2(dy, dx);
+				var ajuste:Number = corrigeDirecaoAlvo(ang, MC_premio.rotation);
+				if (Math.abs( ajuste ) < 3 ) {
+					//ATIRA
+					if (UI_contTiro > UI_freqTiro) {
+						var rt:Rectangle = MovieClip(MC_premio.canhaoponta).getBounds(faseAtor);
+						faseAtor.adicionaAtor(new TiroInimigoAtor(TiroInimigoAtor.TTRO_CANHAO_ILHA, new Point(rt.x,rt.y), ang));
+						var efeito:AtorAnimacao = new ExplosaoTiroCanhaoGr();
+						MC_premio.addChild(efeito);
+						efeito.x = MC_premio.canhaoponta.x;
+						efeito.y = MC_premio.canhaoponta.y;
+						UI_contTiro = 0;
+					}
+				}
+				else {
+					MC_premio.rotation += ajuste;
+				}
+			}
+		}
+
+		/**
+		 * Corrige a direcao do canhão
+		 * @param	_anguloRadiano
+		 * angulo objetivo
+		 * @param	_rotacaoAtual
+		 * rotacao atual do canhão
+		 * @return
+		 * ajuste rotacao a ser apliacada ao canhão
+		 */ 
+		private function corrigeDirecaoAlvo(_anguloRadiano:Number, _rotacaoAtual:Number):Number {
+			
+			var anguloGraus:Number = Math.round(_anguloRadiano * 180 / Math.PI) - MC_ilha.rotation;
 		
+			var ajusteMax:Number = 3;
+			
+			var diferenca:Number = _rotacaoAtual -  anguloGraus ;
+			
+			if (diferenca > 180) anguloGraus += 360;
+			else if (diferenca < -180) anguloGraus -= 360;
+			
+			var ajusteAngulo = anguloGraus - _rotacaoAtual;
+			
+			if (ajusteAngulo > ajusteMax) ajusteAngulo = ajusteMax;
+			
+			if (ajusteAngulo < -ajusteMax) ajusteAngulo = -ajusteMax;
+							
+			return ajusteAngulo;
+		}
+	
+		
+		/*****************************************************************
+		 * Colisão da Ilha
+		 * **************************************************************/
+		 
 		override public function hitTestAtor(_atorAlvo:AtorBase):Boolean 
 		{	
 			if (_atorAlvo is BarcoHeroiAtor)
@@ -229,36 +294,7 @@ package Fases.FaseTesouroElementos
 				}
 			}
 		}
-				
-		/**
-		 * Corrige a direcao do canhão
-		 * @param	_anguloRadiano
-		 * angulo objetivo
-		 * @param	_rotacaoAtual
-		 * rotacao atual do canhão
-		 * @return
-		 * ajuste rotacao a ser apliacada ao canhão
-		 */ 
-		private function corrigeDirecaoAlvo(_anguloRadiano:Number, _rotacaoAtual:Number):Number {
 			
-			var anguloGraus:Number = Math.round(_anguloRadiano * 180 / Math.PI) - MC_ilha.rotation;
-		
-			var ajusteMax:Number = 3;
-			
-			var diferenca:Number = _rotacaoAtual -  anguloGraus ;
-			
-			if (diferenca > 180) anguloGraus += 360;
-			else if (diferenca < -180) anguloGraus -= 360;
-			
-			var ajusteAngulo = anguloGraus - _rotacaoAtual;
-			
-			if (ajusteAngulo > ajusteMax) ajusteAngulo = ajusteMax;
-			
-			if (ajusteAngulo < -ajusteMax) ajusteAngulo = -ajusteMax;
-							
-			return ajusteAngulo;
-		}
-		
 		
 		public function get raioSlot():uint 
 		{

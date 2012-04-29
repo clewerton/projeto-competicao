@@ -1,11 +1,14 @@
 package Fases.FaseTesouroElementos 
 {
+	import Fases.Efeitos.ImpactoTerra;
+	import Fases.Efeitos.SplashAgua;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.MovieClip;
 	import flash.events.Event;
 	import flash.geom.Point;
 	import flash.media.Sound;
 	import flash.media.SoundChannel;
+	import TangoGames.Atores.AtorAnimacao;
 	import TangoGames.Atores.AtorBase;
 	import TangoGames.Atores.AtorInterface;
 	import TangoGames.Utils;
@@ -18,7 +21,7 @@ package Fases.FaseTesouroElementos
 	{
 		//tipos de tiro
 		public static const TTRO_CANHAO_ILHA	:uint  = 1;
-		public static const TTRO_CANHAO_BARCO:	uint = 2;
+		public static const TTRO_CANHAO_BARCO   :uint = 2;
 
 		//tipo de tiro
 		private var UI_tipo			:uint;
@@ -40,12 +43,6 @@ package Fases.FaseTesouroElementos
 		
 		//alcance maximo do tiro
 		private var UI_alcance		:uint;
-		
-		//efeito de som do tiro
-		private var SC_canal		:SoundChannel;
-		private var SD_somTiro		:Sound;
-		private var SD_splash		:Sound;		
-		private var SD_impacto		:Sound;		
 		
 		//ator atingido
 		private var AB_atorAtingido: AtorBase;
@@ -79,11 +76,11 @@ package Fases.FaseTesouroElementos
 			{
 				case TTRO_CANHAO_ILHA:
 					MC_Tiro =  new TiroCanhao;
-					NU_VelABS = 5;
+					NU_VelABS = 10;
 					UI_alcance = 500;
 				break;
 				case TTRO_CANHAO_BARCO:
-					MC_Tiro =  new BolaCanhaoBarco;
+					MC_Tiro =  new BalaCanhao;
 					NU_VelABS = 10;
 					UI_alcance = Utils.Rnd( 250, 350 );
 				break;
@@ -97,12 +94,6 @@ package Fases.FaseTesouroElementos
 			//calcula os compenentes de velocidade
 			NU_VeloX = Math.cos(direcao) * NU_VelABS;
 		    NU_VeloY = Math.sin(direcao) * NU_VelABS;
-			
-			//controle de som
-			SD_somTiro = new somCanhao;
-			SD_splash  = new SomSplashAgua;
-			SD_impacto = new SomCrack;
-			SC_canal   = new SoundChannel();
 			
 			//ator atingido
 			AB_atorAtingido = null;
@@ -120,31 +111,32 @@ package Fases.FaseTesouroElementos
 			adcionaClassehitGrupo(BarcoHeroiAtor);
 			UI_distancia = 0;
 			iniciaAnima(MC_Tiro, "andar");
-			SC_canal = SD_somTiro.play(0);
 		}
 		
 		public function update(e:Event):void 
 		{
-			if (animacao == "splash") {
-				if ( MC_Tiro.currentFrameLabel == "splashfim" ) marcadoRemocao = true;
-				return;
-			}
 			controleAnima();
 			this.x += NU_VeloX;
 			this.y += NU_VeloY;
 			UI_distancia += NU_VelABS;
 			if (UI_distancia > UI_alcance) {
-				SC_canal = SD_splash.play(0);
-				removeClassehitGrupo(BarcoHeroiAtor);
-				iniciaAnima(MC_Tiro, "splash");
+				var splash:AtorAnimacao;
+				var pt:Point = faseAtor.mapa.convertePonto( new Point(this.x, this.y) );
+				if (faseAtor.mapa.mapaArray[pt.x][pt.y] == 1) splash = new ImpactoTerra();
+				else splash = new SplashAgua();
+				
+				splash.x = this.x;
+				splash.y = this.y;
+				splash.rotation = this.rotation;
+				faseAtor.addChild(splash);
+				marcadoRemocao = true;
 			}
 		}
 		
 		public function atingiuAtor( _ator:AtorBase ) {
-			SC_canal = SD_impacto.play(0);
+			//SC_canal = SD_impacto.play(0);
 			marcadoRemocao = true;
 			AB_atorAtingido = _ator;
-			
 		}
 		
 		public function remove():void 

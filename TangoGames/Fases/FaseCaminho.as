@@ -15,6 +15,7 @@ package TangoGames.Fases
 	public class FaseCaminho 
 	{
 		private var AR_mapa:Array;
+		private var AR_mapaAtores:Array;
 		private var AR_tmpMapa:Array;
 		private var AR_pontos:Array;
 		private var AR_caminhoArr:Array;
@@ -37,29 +38,38 @@ package TangoGames.Fases
 			UI_dimX = 0;
 			UI_dimY = 0;
 			AR_mapa = new Array;
+			AR_mapaAtores = new Array;
 			AR_caminhoArr = new Array;
 			NU_areaMaxHit = ( PT_quadrado.x * PT_quadrado.y ) * 0.30;
 		}
 		
 		public function montaMapa( _vetGrupo:Vector.<Class>) {
 			AR_mapa = new Array;
+			AR_mapaAtores = new Array;
 			var pX:Number = RT_fase.left;
 			var pY:Number = RT_fase.top;
 			var rect:Rectangle;
 			var _dimX:uint = 0;
 			var _dimY:uint = 0;
-			
+			var ator:AtorBase;
 			//avisa aos atores para recalcular o cache do bitmap
-			for each (var ator:AtorBase in FB_fase.Atores) ator.cacheBitmap = false;
+			for each (ator in FB_fase.Atores) ator.cacheBitmap = false;
 			
 			while ( pX <= RT_fase.right ) {
 				_dimY = 0;
 				pY = RT_fase.top;
 				AR_mapa[_dimX] = new Array;
+				AR_mapaAtores[_dimX] = new Array;
 				while ( pY <= RT_fase.bottom ) {
 					rect = new Rectangle(pX , pY, PT_quadrado.x, PT_quadrado.y);
-					if (testaIntersecao(rect,_vetGrupo)) AR_mapa[_dimX][_dimY] = 1;
-					else AR_mapa[_dimX][_dimY] = 0;
+					if (testaIntersecao(rect, _vetGrupo, ator)) {
+						AR_mapa[_dimX][_dimY] = 1;
+						AR_mapaAtores[_dimX][_dimY] = ator;
+					}
+					else {
+						AR_mapa[_dimX][_dimY] = 0;
+						AR_mapaAtores[_dimX][_dimY] = null;
+					}
 					pY += PT_quadrado.y;
 					_dimY++;
 				}
@@ -70,13 +80,13 @@ package TangoGames.Fases
 			UI_dimY = _dimY;
 		}
 		
-		private function testaIntersecao( _r:Rectangle, _vg:Vector.<Class> ):Boolean {
+		private function testaIntersecao( _r:Rectangle, _vg:Vector.<Class>, _ator:AtorBase ):Boolean {
 			var ra:Rectangle;
 			var index:int;
 			for each (var c:Class in _vg) {
 				index = FB_fase.GrupoClass.indexOf(c);
 				if (index>=0) {
-					for each( var ator:AtorBase in FB_fase.GrupoAtores[index] ) if (testaIntersecaoBitMap(_r, ator)) return true;
+					for each( _ator in FB_fase.GrupoAtores[index] ) if (testaIntersecaoBitMap(_r, _ator)) return true;
 				}
 			}
 			return false;
@@ -133,6 +143,11 @@ package TangoGames.Fases
 			return AR_mapa;
 		}
 		
+		public function get mapaAtores():Array 
+		{
+			return AR_mapaAtores;
+		}
+		
 		public function geraSprite(cor:uint):Sprite {
 			var sp:Sprite =  new Sprite;
 			sp.graphics.lineStyle(0.2, cor, 1);
@@ -166,8 +181,8 @@ package TangoGames.Fases
 				}
 			}
 			
-			var iniPoint:Point = convertePonto(_origem);
-			var fimPoint:Point = convertePonto(_destino);
+			var iniPoint:Point = convertePonto(_origem,true);
+			var fimPoint:Point = convertePonto(_destino,true);
 			
 			AR_tmpMapa[iniPoint.x][iniPoint.y] = 1;			
 			AR_tmpMapa[fimPoint.x][fimPoint.y] = -1;
@@ -191,13 +206,40 @@ package TangoGames.Fases
 		 * @return
 		 * ponto de quadrantes
 		 */
-		public function convertePonto(_pontoReal:Point):Point {
+		public function convertePonto(_pontoReal:Point, _livre:Boolean = false ):Point {
 			var p:Point = new Point ( Math.floor( ( _pontoReal.x - RT_fase.left ) / PT_quadrado.x ), Math.floor( ( _pontoReal.y - RT_fase.top ) /  PT_quadrado.y) );
+			p = retificaPonto(p);
+			if (_livre) {
+				var dx:int = -1
+				var dy:int = -1
+				var r:uint = 1
+				var pfix:Point = new Point(p.x, p.y);
+				while ( AR_mapa[p.x][p.y] == 1 ) {
+					p.x  = pfix.x + dx;
+					p = retificaPonto(p);
+					while ( AR_mapa[p.x][p.y] == 1 && dy < r ) {
+						p.y = pfix.y + dy;
+						p = retificaPonto(p);
+						dy++;
+					}
+					dx ++;
+					if (dx > r) {
+						r++;
+						dx = -r;
+					}
+					dy = -r;
+				}
+			}
+			return p
+		}
+		
+		private function retificaPonto(_p:Point):Point {
+			var p:Point =  new Point(_p.x, _p.y);
 			if ( p.x > UI_dimX ) p.x = UI_dimX;
 			else if (p.x < 0 ) p.x = 0;
 			if ( p.y > UI_dimY ) p.y = UI_dimY;
 			else if ( p.y < 0) p.y = 0;
-			return p
+			return p;
 		}
 
 		/**
@@ -212,7 +254,6 @@ package TangoGames.Fases
 			return p
 		}
 
-		
 		/**
 		 * Otimiza o array	
 		 */				
