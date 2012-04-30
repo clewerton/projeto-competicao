@@ -1,6 +1,5 @@
 package TangoGames.Atores 
 {
-	import Fases.FaseCasteloElementos.InimigoAtor;
 	import Fases.FaseTesouroElementos.BarcoHeroiAtor;
 	import fl.motion.AnimatorBase;
 	import flash.display.Bitmap;

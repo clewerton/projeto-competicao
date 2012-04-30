@@ -28,8 +28,14 @@ package
 		
 		public function manipulaMenuOpcaoSelecionada(_menuCor:MenuBase, _opcao: MenuOpcao):Boolean {
 			
+			
 			switch (_menuCor.ID_Menu) {
-				case MenuControle.MENU_CONTROLE_FASES:
+				
+				case MenuPrincipal.MENU_PRINCIPAL:
+					fases.inicia();
+					return true;
+				break;
+				case MenuPrincipal.MENU_CONTROLE_FASES:
 					fases.iniciaFase(_opcao.faseID, _opcao.valorRetorno);
 					return true;
 				break;

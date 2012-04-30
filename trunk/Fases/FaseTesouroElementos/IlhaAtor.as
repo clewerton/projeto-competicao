@@ -1,6 +1,5 @@
 package Fases.FaseTesouroElementos 
 {
-	import Fases.FaseCasteloElementos.PontuacaoHUD;
 	import Fases.FaseTesouro;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.MovieClip;
@@ -215,7 +214,7 @@ package Fases.FaseTesouroElementos
 						MC_premio.visible = false;
 						var canhao:CanhaoIlhaAtor = new CanhaoIlhaAtor(this);
 						canhao.x = PT_centroSlot.x;
-						canhao.y = PT_posicao.y;
+						canhao.y = PT_centroSlot.y;
 						faseAtor.adicionaAtor(canhao);
 					break;
 					default:

@@ -1,6 +1,5 @@
 package TangoGames.Fases 
 {
-	import Fases.FaseEspacoElementos.HeroiAtor;
 	import flash.display.Sprite;
 	import flash.geom.Point;
 	import flash.utils.getDefinitionByName;
