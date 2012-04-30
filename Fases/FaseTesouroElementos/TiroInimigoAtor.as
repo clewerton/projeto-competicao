@@ -87,7 +87,7 @@ package Fases.FaseTesouroElementos
 					//velocidade do tiro
 					NU_VelABS = VELOCIDADE_TIRO_ILHA;
 					//pontos de dano
-					NU_dano = 10;
+					NU_dano = 50;
 				break;
 				case TTRO_CANHAO_BARCO:
 					MC_Tiro =  new BalaCanhao;
@@ -95,7 +95,7 @@ package Fases.FaseTesouroElementos
 					//velocidade do tiro
 					NU_VelABS = VELOCIDADE_TIRO_BARCO;
 					//pontos de dano
-					NU_dano = 50;
+					NU_dano = 10;
 				break;
 				default:
 			}
