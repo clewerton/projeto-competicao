@@ -20,9 +20,18 @@ package Fases.FaseTesouroElementos
 	public class TiroInimigoAtor extends AtorBase implements AtorInterface 
 	{
 		//tipos de tiro
-		public static const TTRO_CANHAO_ILHA	:uint  = 1;
-		public static const TTRO_CANHAO_BARCO   :uint = 2;
+		public static const TTRO_CANHAO_ILHA		:uint  = 1;
+		public static const TTRO_CANHAO_BARCO   	:uint  = 2;
 
+		//velocidade de tiro
+		public static const VELOCIDADE_TIRO_ILHA	:uint  = 10;
+		public static const VELOCIDADE_TIRO_BARCO	:uint  = 10;
+		
+		//alcance de Maximo
+		public static const ALCANCE_TIRO_ILHA		:uint  = 500;
+		public static const ALCANCE_TIRO_BARCO		:uint  = 350;
+
+		
 		//tipo de tiro
 		private var UI_tipo			:uint;
 
@@ -58,8 +67,8 @@ package Fases.FaseTesouroElementos
 		 */
 		public function TiroInimigoAtor(  _tiro:uint, _pontoIni:Point, _direcao:Number ) 
 		{
-			//inverte
-			NU_direcao = _direcao + Math.PI;
+			//direção do tiro
+			NU_direcao = _direcao;
 			
 			//tipo do tiro
 			UI_tipo = _tiro;
@@ -76,13 +85,15 @@ package Fases.FaseTesouroElementos
 			{
 				case TTRO_CANHAO_ILHA:
 					MC_Tiro =  new TiroCanhao;
-					NU_VelABS = 10;
-					UI_alcance = 500;
+					UI_alcance = Utils.Rnd (ALCANCE_TIRO_ILHA * 0.9 , ALCANCE_TIRO_ILHA * 1.1)
+					//velocidade do tiro
+					NU_VelABS = VELOCIDADE_TIRO_ILHA;
 				break;
 				case TTRO_CANHAO_BARCO:
 					MC_Tiro =  new BalaCanhao;
-					NU_VelABS = 10;
-					UI_alcance = Utils.Rnd( 250, 350 );
+					UI_alcance = Utils.Rnd( ALCANCE_TIRO_BARCO * 0.9 , ALCANCE_TIRO_BARCO * 1.1 );
+					//velocidade do tiro
+					NU_VelABS = VELOCIDADE_TIRO_BARCO;
 				break;
 				default:
 			}

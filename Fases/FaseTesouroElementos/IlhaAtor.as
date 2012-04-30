@@ -1,6 +1,5 @@
 package Fases.FaseTesouroElementos 
 {
-	import Fases.Efeitos.ExplosaoTiroCanhaoGr;
 	import Fases.FaseCasteloElementos.PontuacaoHUD;
 	import Fases.FaseTesouro;
 	import flash.display.DisplayObjectContainer;
@@ -9,7 +8,6 @@ package Fases.FaseTesouroElementos
 	import flash.events.Event;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import TangoGames.Atores.AtorAnimacao;
 	import TangoGames.Atores.AtorBase;
 	import TangoGames.Atores.AtorInterface;
 	import TangoGames.Utils;
@@ -21,35 +19,30 @@ package Fases.FaseTesouroElementos
 	public class IlhaAtor extends AtorBase implements AtorInterface{
 		
 		//figurino da ilha
-		private var MC_ilha:MovieClip;
+		private var MC_ilha				:MovieClip;
 		
 		//slot base da ilha
-		private var SP_slot:Sprite;
+		private var SP_slot				:Sprite;
 
 		//premio da ilhas
-		private var MC_premio: MovieClip;
-		private var UI_premioID: uint;
+		private var MC_premio			:MovieClip;
+		private var UI_premioID			:uint;
 		
 		//Raio de interação da ilha
-		private var UI_raioSlot: uint;
-		private var BO_dentroRaio: Boolean;
+		private var UI_raioSlot			:uint;
+		private var BO_dentroRaio		:Boolean;
 
 		//névoa da ilha não revelada
-		private var MC_nevoa:MovieClip;
+		private var MC_nevoa			:MovieClip;
 		
 		//indica se a ilha já foi revelada
-		private var BO_revelada:Boolean;
+		private var BO_revelada			:Boolean;
 		
 		//posição fixa da ilha
-		private var PT_posicao:Point;
+		private var PT_posicao			:Point;
 		
 		//ponto de referencia global do centro do slot
-		private var PT_centroSlot:Point;
-		
-		//variávei dos PREMIO PIRATA
-		private var UI_freqTiro:uint;
-		private var UI_contTiro:uint;
-		private var UI_velocAng:uint;
+		private var PT_centroSlot		:Point;
 		
 		public function IlhaAtor() 
 		{
@@ -75,9 +68,6 @@ package Fases.FaseTesouroElementos
 			SP_slot = MC_ilha.slot;
 			super(MC_ilha);
 			
-			//valocidade máxima angular do canhã pirate
-			UI_velocAng = 3;
-			
 			//nevoa da ilha
 			MC_nevoa = new NevoaSlot;
 			MC_nevoa.gotoAndStop("inativo");
@@ -92,10 +82,7 @@ package Fases.FaseTesouroElementos
 		public function inicializa():void
 		{
 			adcionaClassehitGrupo(BarcoHeroiAtor);
-			
-			//Inicializa variaveis dos pirtas
-			UI_freqTiro = 24;
-			
+		
 			reinicializa()
 		}
 		
@@ -107,20 +94,15 @@ package Fases.FaseTesouroElementos
 			BO_revelada = false;
 			faseAtor.addChild(MC_nevoa);
 			PT_posicao = new Point(Number.MAX_VALUE,Number.MAX_VALUE);
-			PT_centroSlot = new Point(Number.MAX_VALUE,Number.MAX_VALUE);
+			PT_centroSlot = new Point(Number.MAX_VALUE, Number.MAX_VALUE);
+			
 		}
 		
 		public function update(e:Event):void
 		{			
 			if (PT_posicao.x != this.x || PT_posicao.y != this.y) reposicionouIlha();
 			
-			if (BO_revelada)
-			{
-				if (UI_premioID == FaseTesouro.PREMIO_PIRATAS) updatePiratas();
-			}
-			else {
-				faseAtor.setChildIndex(MC_nevoa, faseAtor.numChildren - 1);
-			}
+			if (!BO_revelada) faseAtor.setChildIndex(MC_nevoa, faseAtor.numChildren - 1);
 		}
 				
 		public function remove():void
@@ -156,7 +138,7 @@ package Fases.FaseTesouroElementos
 				default:
 				
 			}
-			
+			MC_ilha.stop();
 			SP_slot.addChildAt(MC_premio, 0);
 			MC_premio.rotation = - MC_ilha.rotation;
 			
@@ -175,73 +157,7 @@ package Fases.FaseTesouroElementos
 				MC_nevoa.x = PT_centroSlot.x;
 				MC_nevoa.y = PT_centroSlot.y; 
 			}	
-		}
-
-		/******************************************************************
-		 * Canhão pirata 
-		 * ***************************************************************/
-		/**
-		 * Trata o canhão dos piratas na ilha
-		 */
-		private function updatePiratas() {
-			var dx:Number = PT_centroSlot.x - FaseTesouro(faseAtor).barcoHeroi.x ;
-			var dy:Number = PT_centroSlot.y - FaseTesouro(faseAtor).barcoHeroi.y;
-			var dist:Number = Math.sqrt( ( dx * dx ) + ( dy * dy ) );
-			
-			
-			//antecipa a mira para o futuro ( VELOCIDADE DA BALA = 10);
-			dx -= FaseTesouro(faseAtor).barcoHeroi.veloX * ( dist / 10 ); 
-			dy -= FaseTesouro(faseAtor).barcoHeroi.veloY * ( dist / 10 ); 
-			
-			UI_contTiro++;
-			if (dist < 500) {
-				var ang:Number = Math.atan2(dy, dx);
-				var ajuste:Number = corrigeDirecaoAlvo(ang, MC_premio.rotation);
-				if (Math.abs( ajuste ) < UI_velocAng ) {
-					//ATIRA
-					if (UI_contTiro > UI_freqTiro) {
-						var rt:Rectangle = MovieClip(MC_premio.canhaoponta).getBounds(faseAtor);
-						faseAtor.adicionaAtor(new TiroInimigoAtor(TiroInimigoAtor.TTRO_CANHAO_ILHA, new Point(rt.x,rt.y), ang));
-						var efeito:AtorAnimacao = new ExplosaoTiroCanhaoGr();
-						MC_premio.addChild(efeito);
-						efeito.x = MC_premio.canhaoponta.x;
-						efeito.y = MC_premio.canhaoponta.y;
-						UI_contTiro = 0;
-					}
-				}
-				else {
-					MC_premio.rotation += ajuste;
-				}
-			}
-		}
-
-		/**
-		 * Corrige a direcao do canhão
-		 * @param	_anguloRadiano
-		 * angulo objetivo
-		 * @param	_rotacaoAtual
-		 * rotacao atual do canhão
-		 * @return
-		 * ajuste rotacao a ser apliacada ao canhão
-		 */ 
-		private function corrigeDirecaoAlvo(_anguloRadiano:Number, _rotacaoAtual:Number):Number {
-			
-			var anguloGraus:Number = Math.round(_anguloRadiano * 180 / Math.PI) - MC_ilha.rotation;
-			
-			var diferenca:Number = _rotacaoAtual -  anguloGraus ;
-			
-			if (diferenca > 180) anguloGraus += 360;
-			else if (diferenca < -180) anguloGraus -= 360;
-			
-			var ajusteAngulo = anguloGraus - _rotacaoAtual;
-			
-			if (ajusteAngulo > UI_velocAng) ajusteAngulo = UI_velocAng;
-			
-			if (ajusteAngulo < -UI_velocAng) ajusteAngulo = -UI_velocAng;
-							
-			return ajusteAngulo;
-		}
-	
+		}		
 		
 		/*****************************************************************
 		 * Colisão da Ilha
@@ -273,7 +189,6 @@ package Fases.FaseTesouroElementos
 		
 		public function calculaDistanciaSlot(_atorAlvo:AtorBase):Number
 		{
-			var rt:Rectangle = SP_slot.getBounds(faseAtor);
 			var dy:Number = PT_centroSlot.y - _atorAlvo.y ;
 			var dx:Number = PT_centroSlot.x - _atorAlvo.x ;
 			var dist:Number = Math.sqrt( (dy * dy) + (dx * dx) );
@@ -291,13 +206,30 @@ package Fases.FaseTesouroElementos
 			{
 				BO_revelada = true;
 				faseAtor.removeChild(MC_nevoa);
-				if (UI_premioID == FaseTesouro.PREMIO_TESOURO)
+				switch (UI_premioID) 
 				{
-					FaseTesouro(faseAtor).tesourosPegos ++;
+					case FaseTesouro.PREMIO_TESOURO:
+						FaseTesouro(faseAtor).tesourosPegos ++;	
+					break;
+					case FaseTesouro.PREMIO_PIRATAS:
+						MC_premio.visible = false;
+						var canhao:CanhaoIlhaAtor = new CanhaoIlhaAtor(this);
+						canhao.x = PT_centroSlot.x;
+						canhao.y = PT_posicao.y;
+						faseAtor.adicionaAtor(canhao);
+					break;
+					default:
 				}
 			}
 		}
-			
+		
+		/**
+		 * canhão pirata destruido
+		 */
+		public function canhaoPirataDestruido() {
+			MC_premio.visible = true;
+			MC_premio.gotoAndStop("destruido");
+		}
 		
 		public function get raioSlot():uint 
 		{
