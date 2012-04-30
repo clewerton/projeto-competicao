@@ -73,8 +73,6 @@ package Fases.FaseTesouroElementos
 			//tipo do tiro
 			UI_tipo = _tiro;
 			
-			//pontos de dano
-			NU_dano = 10;
 
 			//coloca no ponto inicial
 			this.x = _pontoIni.x;
@@ -88,12 +86,16 @@ package Fases.FaseTesouroElementos
 					UI_alcance = Utils.Rnd (ALCANCE_TIRO_ILHA * 0.9 , ALCANCE_TIRO_ILHA * 1.1)
 					//velocidade do tiro
 					NU_VelABS = VELOCIDADE_TIRO_ILHA;
+					//pontos de dano
+					NU_dano = 10;
 				break;
 				case TTRO_CANHAO_BARCO:
 					MC_Tiro =  new BalaCanhao;
 					UI_alcance = Utils.Rnd( ALCANCE_TIRO_BARCO * 0.9 , ALCANCE_TIRO_BARCO * 1.1 );
 					//velocidade do tiro
 					NU_VelABS = VELOCIDADE_TIRO_BARCO;
+					//pontos de dano
+					NU_dano = 50;
 				break;
 				default:
 			}

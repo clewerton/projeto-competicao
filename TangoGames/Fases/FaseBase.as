@@ -216,6 +216,7 @@ package TangoGames.Fases
 		public function adicionaHUD(_hud:FaseHUD):void {
 			SP_camadaSup.addChild(_hud);
 			VT_HUDS.push(_hud);
+			_hud.faseHUD = this;
 			FaseHUDInterface(_hud).inicializa();
 		}
 		/**
