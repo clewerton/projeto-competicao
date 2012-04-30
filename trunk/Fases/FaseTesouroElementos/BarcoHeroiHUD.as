@@ -1,5 +1,6 @@
 package Fases.FaseTesouroElementos 
 {
+	import Fases.FaseTesouro;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -15,9 +16,12 @@ package Fases.FaseTesouroElementos
 	{
 		
 		//barra de vida do barco heroi
-		private var MC_barraVida:MovieClip;
-		private var MC_barraInterna: MovieClip;
-		private var NU_percentual:Number;
+		private var MC_barraVida	:MovieClip;
+		private var MC_barraInterna	:MovieClip;
+		private var NU_vidaAtual	:Number;
+		
+		//referencia do Barco Heroi
+		private var AB_barcoHeroi	:BarcoHeroiAtor;
 		
 		public function BarcoHeroiHUD() {
 			super();
@@ -29,6 +33,10 @@ package Fases.FaseTesouroElementos
 		/* INTERFACE TangoGames.Fases.FaseHUDInterface */
 		
 		public function inicializa():void {
+			//atualiza referencia do barco heroi	
+			AB_barcoHeroi =	FaseTesouro(faseHUD).barcoHeroi;
+			
+			//adiciona barra de vida
 			addChild(MC_barraVida);
 			MC_barraVida.x = stage.stageWidth / 2;
 			MC_barraVida.y = stage.stageHeight - MC_barraVida.height;			
@@ -36,7 +44,7 @@ package Fases.FaseTesouroElementos
 		}
 		
 		public function reinicializa():void {
-			NU_percentual = 100;
+			NU_vidaAtual = 0;
 			var bX:Number = MC_barraInterna.x;
 			var bY:Number = MC_barraInterna.y;
 			MC_barraVida.removeChild(MC_barraInterna);
@@ -47,13 +55,12 @@ package Fases.FaseTesouroElementos
 		}
 		
 		public function update(e:Event):void {
-			var perc:Number = 0;//AB_castelo.percentualVida();
-			if ( NU_percentual != perc) {
-				NU_percentual = perc
-				var tam:Number =  ( MC_barraVida.width * ( perc / 100 ) );
-				MC_barraInterna.scrollRect = new Rectangle(0,0, tam ,MC_barraInterna.height)
+			var vida:Number = AB_barcoHeroi.vidaAtual;
+			if ( NU_vidaAtual != vida) {
+				var tam:Number =  ( MC_barraVida.width * ( vida / AB_barcoHeroi.vidaMaxima ) );
+				MC_barraInterna.scrollRect = new Rectangle(0, 0, tam , MC_barraInterna.height)
+				NU_vidaAtual = vida;
 			}
-			parent.setChildIndex(this, parent.numChildren - 1);
 		}
 		
 		public function remove():void 
@@ -61,20 +68,6 @@ package Fases.FaseTesouroElementos
 			
 		}
 		
-		private function atualizaBarra() {
-			
-		}
-		
-		public function get percentual():Number 
-		{
-			return NU_percentual;
-		}
-		
-		public function set percentual(value:Number):void 
-		{
-			NU_percentual = value;
-			MC_barraVida.addChild(MC_barraInterna);
-		}
 		/**
 		 * cria fundo para o menu de interrupção
 		 * @return

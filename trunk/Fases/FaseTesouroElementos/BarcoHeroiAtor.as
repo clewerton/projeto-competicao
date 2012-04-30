@@ -546,7 +546,7 @@
 			mcEfeito.y = p.y;
 			mcEfeito.rotation = ((_tiro.direcao * Utils.RADIANOS_TO_GRAUS) - 180) - this.rotation;
 			_tiro.atingiuAtor(this);
-			NU_vidaAtual = _tiro.dano()
+			NU_vidaAtual -= _tiro.dano;
 		}
 		
 		public function get veloABS():Number
@@ -568,6 +568,16 @@
 		public function get veloY():Number 
 		{
 			return NU_veloY;
+		}
+		
+		public function get vidaAtual():Number 
+		{
+			return NU_vidaAtual;
+		}
+		
+		public function get vidaMaxima():Number 
+		{
+			return NU_vidaMaxima;
 		}
 	}
 }

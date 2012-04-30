@@ -1,7 +1,7 @@
 package Fases 
 {
-	import adobe.utils.ProductManager;
 	import Fases.FaseTesouroElementos.BarcoHeroiAtor;
+	import Fases.FaseTesouroElementos.BarcoHeroiHUD;
 	import Fases.FaseTesouroElementos.BarcoInimigoAtor;
 	import Fases.FaseTesouroElementos.BoteFugaAtor;
 	import Fases.FaseTesouroElementos.CanhaoIlhaAtor;
@@ -9,6 +9,7 @@ package Fases
 	import Fases.FaseTesouroElementos.TesouroHUD;
 	import Fases.FaseTesouroElementos.TiroHeroiAtor;
 	import Fases.FaseTesouroElementos.TiroInimigoAtor;
+	import fl.motion.AnimatorBase;
 	import flash.display.BitmapData;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.MovieClip;
@@ -71,11 +72,13 @@ package Fases
 		private var FH_FPS:FaseHUD;
 		
 		//Controle de Tesouros
-		private var UI_qtdTesouros:uint;
-		private var UI_contTesouros:uint;
-		private var UI_tesourosPegos:uint;
-		private var FH_tesouroHUD: TesouroHUD;
+		private var UI_qtdTesouros		:uint;
+		private var UI_contTesouros		:uint;
+		private var UI_tesourosPegos	:uint;
+		private var FH_tesouroHUD		:TesouroHUD;
 		
+		//HUD de vida do Barco
+		private var FH_barcoHUD			:BarcoHeroiHUD;
 			
 		public function FaseTesouro(_main:DisplayObjectContainer, Nivel:int) {
 			super(_main, Nivel);
@@ -119,6 +122,10 @@ package Fases
 			FH_tesouroHUD = new TesouroHUD(this);
 			adicionaHUD(FH_tesouroHUD);
 			
+			//HUD do barco
+			FH_barcoHUD =  new BarcoHeroiHUD;
+			adicionaHUD(FH_barcoHUD);
+			
 			reiniciacao();
 			
 			return true
@@ -126,11 +133,8 @@ package Fases
 		
 		public function reiniciacao():void
 		{
-			for each (var ilha:IlhaAtor in VT_ilhas) removeAtor(ilha);
-			VT_ilhas = new Vector.<IlhaAtor>;
-
-			for each (var ini:BarcoInimigoAtor in VT_Inimigos) removeAtor(ini);
-			VT_Inimigos = new Vector.<BarcoInimigoAtor>;
+			//remove atores
+			removeAtores();
 			
 			//controle de tesouros
 			UI_tesourosPegos = 0;
@@ -157,6 +161,18 @@ package Fases
 		
 		public function update(e:Event):void
 		{
+			//termina o jogo
+			if ( barcoHeroi.vidaAtual <= 0) {
+				terminoFase()
+				return;
+			}
+
+			//ganhou o jogo
+			if ( UI_tesourosPegos >= UI_qtdTesouros) {
+				concluidaFase();
+				return;
+			}
+
 			//Pressionado pausa do Jogo
 			if (pressTecla1(Keyboard.P))
 			{
@@ -207,6 +223,23 @@ package Fases
 		public function remocao():void
 		{
 		}
+		
+		/*****************************************************************
+		 * Remove atores para reinicializacao
+		 * ***************************************************************/
+		/**
+		 * remove os atores para reiniciar
+		 */
+		private function removeAtores():void 
+		{
+			var ator:AtorBase;
+			var VT_TEMP:Vector.<AtorBase> =  new Vector.<AtorBase>;
+			
+			for each (ator in Atores) if (!(ator is BarcoHeroiAtor) ) VT_TEMP.push(ator);
+			
+			for each (ator in VT_TEMP) removeAtor(ator);
+		}
+
 		
 		public function colisao(C1:AtorBase, C2:AtorBase):void
 		{

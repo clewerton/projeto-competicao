@@ -136,7 +136,6 @@ package Fases.FaseTesouroElementos
 				break;
 				default:
 			}
-			trace("adciona no slot")
 			MC_premio.stop();
 			MC_ilha.addChild(MC_premio);
 			MC_premio.x = SP_slot.x;
