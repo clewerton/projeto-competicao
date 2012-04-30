@@ -360,6 +360,11 @@ package Fases.FaseTesouroElementos
 			var dx:Number = FB_faseRef.barcoHeroi.x - this.x;
 			var dy:Number = FB_faseRef.barcoHeroi.y - this.y;
 			
+			
+			//antecipa a mira para o futuro ( VELOCIDADE DA BALA = 10);
+			dx += FB_faseRef.barcoHeroi.veloX * ( NU_distancia / 10 ); 
+			dy += FB_faseRef.barcoHeroi.veloY * ( NU_distancia / 10 ); 
+			
 			var angulo:Number =  Math.atan2(dy, dx);
 			
 			var viraEsqueda:Number = angulo + ( Math.PI / 2 );

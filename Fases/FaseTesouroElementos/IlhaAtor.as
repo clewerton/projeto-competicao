@@ -49,6 +49,7 @@ package Fases.FaseTesouroElementos
 		//variávei dos PREMIO PIRATA
 		private var UI_freqTiro:uint;
 		private var UI_contTiro:uint;
+		private var UI_velocAng:uint;
 		
 		public function IlhaAtor() 
 		{
@@ -73,6 +74,9 @@ package Fases.FaseTesouroElementos
 			MC_ilha.rotation = Utils.Rnd(0, 359);
 			SP_slot = MC_ilha.slot;
 			super(MC_ilha);
+			
+			//valocidade máxima angular do canhã pirate
+			UI_velocAng = 3;
 			
 			//nevoa da ilha
 			MC_nevoa = new NevoaSlot;
@@ -182,17 +186,18 @@ package Fases.FaseTesouroElementos
 		private function updatePiratas() {
 			var dx:Number = PT_centroSlot.x - FaseTesouro(faseAtor).barcoHeroi.x ;
 			var dy:Number = PT_centroSlot.y - FaseTesouro(faseAtor).barcoHeroi.y;
-			
-			//antecipa a mira para o futuro
-			dx -= FaseTesouro(faseAtor).barcoHeroi.veloX * 20; 
-			dy -= FaseTesouro(faseAtor).barcoHeroi.veloY * 20; 
-			
 			var dist:Number = Math.sqrt( ( dx * dx ) + ( dy * dy ) );
+			
+			
+			//antecipa a mira para o futuro ( VELOCIDADE DA BALA = 10);
+			dx -= FaseTesouro(faseAtor).barcoHeroi.veloX * ( dist / 10 ); 
+			dy -= FaseTesouro(faseAtor).barcoHeroi.veloY * ( dist / 10 ); 
+			
 			UI_contTiro++;
 			if (dist < 500) {
 				var ang:Number = Math.atan2(dy, dx);
 				var ajuste:Number = corrigeDirecaoAlvo(ang, MC_premio.rotation);
-				if (Math.abs( ajuste ) < 3 ) {
+				if (Math.abs( ajuste ) < UI_velocAng ) {
 					//ATIRA
 					if (UI_contTiro > UI_freqTiro) {
 						var rt:Rectangle = MovieClip(MC_premio.canhaoponta).getBounds(faseAtor);
@@ -222,8 +227,6 @@ package Fases.FaseTesouroElementos
 		private function corrigeDirecaoAlvo(_anguloRadiano:Number, _rotacaoAtual:Number):Number {
 			
 			var anguloGraus:Number = Math.round(_anguloRadiano * 180 / Math.PI) - MC_ilha.rotation;
-		
-			var ajusteMax:Number = 3;
 			
 			var diferenca:Number = _rotacaoAtual -  anguloGraus ;
 			
@@ -232,9 +235,9 @@ package Fases.FaseTesouroElementos
 			
 			var ajusteAngulo = anguloGraus - _rotacaoAtual;
 			
-			if (ajusteAngulo > ajusteMax) ajusteAngulo = ajusteMax;
+			if (ajusteAngulo > UI_velocAng) ajusteAngulo = UI_velocAng;
 			
-			if (ajusteAngulo < -ajusteMax) ajusteAngulo = -ajusteMax;
+			if (ajusteAngulo < -UI_velocAng) ajusteAngulo = -UI_velocAng;
 							
 			return ajusteAngulo;
 		}
