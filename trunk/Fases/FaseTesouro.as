@@ -4,6 +4,7 @@ package Fases
 	import Fases.FaseTesouroElementos.BarcoHeroiAtor;
 	import Fases.FaseTesouroElementos.BarcoInimigoAtor;
 	import Fases.FaseTesouroElementos.BoteFugaAtor;
+	import Fases.FaseTesouroElementos.CanhaoIlhaAtor;
 	import Fases.FaseTesouroElementos.IlhaAtor;
 	import Fases.FaseTesouroElementos.TesouroHUD;
 	import Fases.FaseTesouroElementos.TiroHeroiAtor;
@@ -209,11 +210,15 @@ package Fases
 		
 		public function colisao(C1:AtorBase, C2:AtorBase):void
 		{
-			
-			
-			if (C1 is TiroHeroiAtor && C2 is BarcoInimigoAtor) {
-				BarcoInimigoAtor(C2).foiAtingido(TiroHeroiAtor(C1));
-				return
+			if (C1 is TiroHeroiAtor) {
+				if (C2 is BarcoInimigoAtor) {
+					BarcoInimigoAtor(C2).foiAtingido(TiroHeroiAtor(C1));
+					return
+				}
+				else if (C2 is CanhaoIlhaAtor) {
+					CanhaoIlhaAtor(C2).foiAtingido(TiroHeroiAtor(C1));
+					return				
+				}
 			}
 			if (C1 is TiroInimigoAtor && C2 is BarcoHeroiAtor) {
 				BarcoHeroiAtor(C2).foiAtingido(TiroInimigoAtor(C1));

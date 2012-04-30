@@ -22,22 +22,37 @@ package Fases.FaseTesouroElementos
 	 */
 	public class BarcoInimigoAtor extends AtorBase implements AtorInterface 
 	{
+		//constantes de estado do barco inimigo
 		public const ESTADO_AGUARDANDO        :uint = 1; 
 		public const ESTADO_PERSEGUINDO_HEROI :uint = 2; 
 		public const ESTADO_ATIRANDO_HEROI    :uint = 3; 
 		public const ESTADO_VOLTANDO_ORIGEM   :uint = 4; 
 		
-		private var MC_barco	:MovieClip;
-		private var FB_faseRef	:FaseTesouro;
-		private var PT_objetivo	:Point;
-		private var PT_alvo		:Point;
-		private var PT_origem	:Point;
-		private var BO_origem	:Boolean;
+		//imagem do Barco
+		private var MC_barco		:MovieClip;
 		
-		//estado do inimigo
-		var UI_estado:uint = 0;
-
-		private var NU_distancia:Number;
+		//referencia do Barco Heroi
+		private var AB_barcoHeroi	:BarcoHeroiAtor;
+		
+		//variaveis de ponto de navegação do barco
+		private var PT_objetivo		:Point;
+		private var PT_alvo			:Point;
+		private var PT_origem		:Point;
+		private var BO_origem		:Boolean;
+		
+		//estado atual do inimigo
+		private var UI_estado		:uint = 0;
+		
+		//variavel indica a distancia para perseguir o barco Heroi
+		private var UI_distPersegue	:uint;
+		
+		//variavel indica a distancia para desistir do barco heroi
+		private var UI_distDesiste	:uint;
+		
+		//distancia do alvo e componentes atualizada todo frame
+		private var NU_distancia	:Number;
+		private var NU_distX		:Number;
+		private var NU_distY		:Number;
 		
 		//conponentes de direcao e movimento do barco
 		private var NU_direcao		:Number;
@@ -54,10 +69,15 @@ package Fases.FaseTesouroElementos
 		private var NU_impacY		:Number;
 		private var NU_impacX		:Number;
 		
+		//velocidade angular máxima
+		private var UI_velAngMax	:uint;
+		
 		//Controle de Ataque
 		private var UI_alcanceTiro		:uint;
-		private var MC_canhaoEsquerdo	:MovieClip;
-		private var MC_canhaoDireito	:MovieClip;
+		private var UI_distAtaque		:uint;
+		
+		//controle da frequncia de tiro
+		private var UI_freqTiro			:uint;
 		private var UI_tiroTempo		:uint;
 		private var UI_tiroTempo2		:uint;
 		private var UI_tiroSeque		:uint;
@@ -71,7 +91,7 @@ package Fases.FaseTesouroElementos
 		//variavel de Vida Inimigo
 		private var NU_vidaAtual		:Number;
 		private var NU_vidaMaxima		:Number;
-		private var NU_vidaBarra		:Number;	
+		private var NU_vidaBarra		:Number;
 	
 		//mini barra de vida barco
 		private var SP_barraVida		:Sprite;
@@ -91,20 +111,33 @@ package Fases.FaseTesouroElementos
 
 		public function inicializa():void 
 		{
+			//atualiza referencia do barco heroi
+			AB_barcoHeroi = FaseTesouro(faseAtor).barcoHeroi;
+			
 			//fricao
 			NU_friccaoVel = 0.98;
 			NU_veloMax = 5;
 			
+			//velocidade angular máxima
+			UI_velAngMax = 3;
+			
 			//valor de vida
 			NU_vidaMaxima = 100;
 			
+			//frequencia de tiro em frames
+			UI_freqTiro = 48;
 			
 			//ALCANCE DO TIRO
-			UI_alcanceTiro = 300;
+			UI_alcanceTiro = TiroInimigoAtor.ALCANCE_TIRO_BARCO;
 			
-			//define alvo
-			FB_faseRef = FaseTesouro(faseAtor);
-		
+			//distancia para iniciar o ataque
+			UI_distAtaque = UI_alcanceTiro * 0.9;
+			
+			//distancia de controle de estado
+			UI_distPersegue = Math.sqrt( ( ( stage.stageHeight  * stage.stageHeight) / 2 ) + ( (stage.stageWidth * stage.stageWidth) / 2 ) )
+			UI_distDesiste =  UI_distPersegue * 1.5;
+			
+			//define dos grupos de hit teste
 			adcionaClassehitGrupo(IlhaAtor);
 			adcionaClassehitGrupo(BarcoHeroiAtor);
 			adcionaClassehitGrupo(BarcoInimigoAtor);
@@ -162,25 +195,28 @@ package Fases.FaseTesouroElementos
 		
 		public function update(e:Event):void 
 		{	
-			
+			//armazena ponto de origem no primeiro update
+			if (!BO_origem) {
+				BO_origem = true;
+				PT_origem = new Point(this.x, this.y);
+			}
+
+			//barco foi destruido
 			if ( NU_vidaAtual <= 0 ) { 
 				barcoDestruido();
 				return;
 			}
 			
+			//calcula distancia do barco Heroi
+			calculaDistanciaBarco();
+			
 			atualizaBarradeVida();
 			
-			if (!BO_origem) {
-				BO_origem = true;
-				PT_origem = new Point(this.x, this.y);
-			}
-			
-			calculaDistanciaBarco();
 			
 			switch (UI_estado) 
 			{
 				case ESTADO_AGUARDANDO:
-					if (NU_distancia < 500) UI_estado = ESTADO_PERSEGUINDO_HEROI; 
+					if (NU_distancia < UI_distPersegue ) UI_estado = ESTADO_PERSEGUINDO_HEROI; 
 				break;
 				case ESTADO_PERSEGUINDO_HEROI:				
 					perseguindoAlvo();
@@ -206,6 +242,17 @@ package Fases.FaseTesouroElementos
 			
 		}
 		
+		public function remove():void 
+		{
+			faseAtor.removeChild(SP_barraVida);
+		}
+		
+		/********************************************************************************************
+		 * Detruição do barco
+		 * *****************************************************************************************/
+		/**
+		 * destruição do barco e liberação dos botes
+		 */
 		private function barcoDestruido():void 
 		{
 			var bote:BoteFugaAtor = new BoteFugaAtor();
@@ -225,19 +272,13 @@ package Fases.FaseTesouroElementos
 			
 			marcadoRemocao = true;
 			
-			var clonemorte:BarcoInimigoNaufragioAtor = new BarcoInimigoNaufragioAtor();
+			var clonemorto:BarcoInimigoNaufragioAtor = new BarcoInimigoNaufragioAtor();
 			
-			faseAtor.adicionaAtor(clonemorte);
+			faseAtor.adicionaAtor(clonemorto);
 			
-			clonemorte.x = this.x;
-			clonemorte.y = this.y;
-			clonemorte.rotation = this.rotation;
-		}
-		
-		
-		public function remove():void 
-		{
-			faseAtor.removeChild(SP_barraVida);
+			clonemorto.x = this.x;
+			clonemorto.y = this.y;
+			clonemorto.rotation = this.rotation;
 		}
 		
 		/*******************************************************************************
@@ -249,17 +290,16 @@ package Fases.FaseTesouroElementos
 		private function perseguindoAlvo() {
 			
 			//ESCAPOU
-			if (NU_distancia > 1000) {
+			if ( NU_distancia > UI_distPersegue ) {
 				UI_estado = ESTADO_VOLTANDO_ORIGEM;
 				return;
 			}
 
 			//dentro do alcançe do tiro
-			if ( NU_distancia < UI_alcanceTiro * 0.8 ) {
+			if ( NU_distancia < UI_distAtaque ) {
 				UI_estado = ESTADO_ATIRANDO_HEROI;
 				return;
 			}
-			
 			
 			verificaPontos();
 			
@@ -293,11 +333,11 @@ package Fases.FaseTesouroElementos
 		 * calcula distancia do Barco Heroi
 		 */
 		private function calculaDistanciaBarco() {	
-			PT_alvo.x = FB_faseRef.barcoHeroi.x;
-			PT_alvo.y = FB_faseRef.barcoHeroi.y;
-			var dx:Number = FB_faseRef.barcoHeroi.x - this.x;
-			var dy:Number = FB_faseRef.barcoHeroi.y - this.y;
-			NU_distancia = Math.sqrt( ( dx * dx ) + ( dy * dy ) );
+			PT_alvo.x = AB_barcoHeroi.x;
+			PT_alvo.y = AB_barcoHeroi.y;
+			NU_distX = PT_alvo.x - this.x;
+			NU_distY = PT_alvo.y - this.y;
+			NU_distancia = Math.sqrt( ( NU_distX * NU_distX ) + ( NU_distY * NU_distY ) );
 		}
 
 		private function calculaRotaAlvo() {
@@ -329,8 +369,6 @@ package Fases.FaseTesouroElementos
 		private function corrigeDirecao(_anguloRadiano:Number):Number {
 			
 			var anguloGraus:Number = Math.round(_anguloRadiano * Utils.RADIANOS_TO_GRAUS);
-		
-			var ajusteMax:Number = 3;
 			
 			var diferenca:Number = this.rotation -  anguloGraus ;
 			
@@ -339,9 +377,9 @@ package Fases.FaseTesouroElementos
 			
 			var ajusteAngulo = anguloGraus - this.rotation;
 			
-			if (ajusteAngulo > ajusteMax) ajusteAngulo = ajusteMax;
+			if (ajusteAngulo > UI_velAngMax) ajusteAngulo = UI_velAngMax;
 			
-			if (ajusteAngulo < -ajusteMax) ajusteAngulo = -ajusteMax;
+			if (ajusteAngulo < -UI_velAngMax) ajusteAngulo = -UI_velAngMax;
 							
 			return ajusteAngulo;
 			
@@ -357,13 +395,13 @@ package Fases.FaseTesouroElementos
 				return;
 			}
 			
-			var dx:Number = FB_faseRef.barcoHeroi.x - this.x;
-			var dy:Number = FB_faseRef.barcoHeroi.y - this.y;
+			//componentes para calculo do angulo
+			var dx:Number = NU_distX;
+			var dy:Number = NU_distY;
 			
-			
-			//antecipa a mira para o futuro ( VELOCIDADE DA BALA = 10);
-			dx += FB_faseRef.barcoHeroi.veloX * ( NU_distancia / 10 ); 
-			dy += FB_faseRef.barcoHeroi.veloY * ( NU_distancia / 10 ); 
+			//antecipa a mira para posição projetada do barco heroi
+			dx += AB_barcoHeroi.veloX * ( NU_distancia / TiroInimigoAtor.VELOCIDADE_TIRO_BARCO ); 
+			dy += AB_barcoHeroi.veloY * ( NU_distancia / TiroInimigoAtor.VELOCIDADE_TIRO_BARCO ); 
 			
 			var angulo:Number =  Math.atan2(dy, dx);
 			
@@ -378,24 +416,28 @@ package Fases.FaseTesouroElementos
 				ladoTiro = 2;
 			}
 			
-			//var direcaoAlvo:Number =  angulo * Utils.RADIANOS_TO_GRAUS; 
-			
+			//calcula ajuste do angulo do barco para atirar no alvo
 			var ajuste:Number = corrigeDirecao(anguloTiro);
 			this.rotation += ajuste;
 			NU_direcao = this.rotation *  Utils.GRAUS_TO_RADIANOS;
 			NU_direY = Math.sin(NU_direcao);
 			NU_direX = Math.cos(NU_direcao);
 			
-			//verifica se é para atirar
+			//verifica se pode para atirar e atira
 			UI_tiroTempo++;
 			UI_tiroTempo2++;
-			if ( Math.abs( Math.floor(ajuste) ) < 3 ) atira(ladoTiro);
+			if ( Math.abs( ajuste ) < UI_velAngMax ) atira(ladoTiro);
 			
 		}
 		
+		/**
+		 * Atira
+		 * @param	_lado
+		 * lado do tiro 1=direito /  2=esquerdo
+		 */
 		private function atira(_lado:uint):void 
 		{
-			if (UI_tiroTempo < 50) return;
+			if (UI_tiroTempo < UI_freqTiro) return;
 			if (UI_tiroTempo2 < Utils.Rnd(1,8)) return;
 			UI_tiroTempo2 = 0;
 			var ang:Number = this.rotation * Utils.GRAUS_TO_RADIANOS; 
@@ -403,11 +445,11 @@ package Fases.FaseTesouroElementos
 			var canhao:String;
 			UI_tiroSeque++;
 			if (_lado == 1) {
-				ang -= ( Math.PI / 2 );
+				ang += ( Math.PI / 2 );
 				canhao = "canhaoDireito" + UI_tiroSeque
 			}
 			else {
-				ang += ( Math.PI / 2 );
+				ang -= ( Math.PI / 2 );
 				canhao = "canhaoEsquerdo" + UI_tiroSeque
 			}
 			if (UI_tiroSeque >= 3) {
@@ -537,7 +579,7 @@ package Fases.FaseTesouroElementos
 		}
 		
 		/**
-		 * Trata a colisão do tiro com barcoHeroi
+		 * Trata a colisão do tiro do heroi
 		 * @param	_tiro
 		 * tiro que atingiu o barco
 		 */
@@ -553,7 +595,7 @@ package Fases.FaseTesouroElementos
 			_tiro.atingiuAtor( this );
 			NU_vidaAtual -= _tiro.dano;
 		}
-		
+			
 		/*************************************************************************************
 		 * Mini HUD de vida
 		 ************************************************************************************/

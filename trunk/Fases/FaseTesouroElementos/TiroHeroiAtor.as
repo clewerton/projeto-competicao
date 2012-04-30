@@ -119,8 +119,12 @@ package Fases.FaseTesouroElementos
 		}
 		
 		public function inicializa():void 
-		{			
+		{	
+			//adiciona grupos de hit teste
+			adcionaClassehitGrupo(CanhaoIlhaAtor);
 			adcionaClassehitGrupo(BarcoInimigoAtor);
+			
+			//inicializa distancia percorrida pelo tiro
 			UI_distancia = 0;
 			iniciaAnima(MC_Tiro, "andar");
 		}
