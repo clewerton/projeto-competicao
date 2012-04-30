@@ -1,6 +1,5 @@
 package TangoGames.Fases 
 {
-	import Fases.FaseCasteloElementos.PontuacaoHUD;
 	import fl.motion.AnimatorBase;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;

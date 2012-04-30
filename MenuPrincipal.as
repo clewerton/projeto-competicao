@@ -70,7 +70,7 @@ package
 		override protected function defineMenuInicial():MenuBase 
 		{
 			var mn:MenuBase = new MenuBase(MENU_PRINCIPAL, new MenuPrincipalFundo());
-			mn.adicionaOpcao("Novo Jogo", 1,null , new Iniciar());
+			mn.adicionaOpcao("Novo Jogo", 1 );
 			mn.adicionaOpcao("Opções", 1,defineMenuOpcoes);
 			mn.adicionaOpcao("Selecionar Fase",2,defineMenuFases);
 			mn.formatacao = TF_txtForm;	
@@ -119,6 +119,13 @@ package
 			mn.adicionaOpcao("Voltar", 2 , defineMenuFases);			
 			mn.formatacao = TF_txtForm;
 			return mn;
-		}		
+		}
+		
+		static public function get MENU_CONTROLE_FASES():String 
+		{
+			return MenuControle.MENU_CONTROLE_FASES;
+		}
+		
+		
 	}
 }
