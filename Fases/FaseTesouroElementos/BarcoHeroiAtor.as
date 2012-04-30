@@ -31,62 +31,73 @@
 		public static const UPGRADE_TIRO_NIVEL0:uint = 0;
 		public static const UPGRADE_TIRO_NIVEL1:uint = 1;
 		public static const UPGRADE_TIRO_NIVEL2:uint = 2;
+
+		//Upgrate do tipo tiro
+		public static const UPGRADE_CASCO_NIVEL0:uint = 500;
+		public static const UPGRADE_CASCO_NIVEL1:uint = 1000;
+		public static const UPGRADE_CASCO_NIVEL2:uint = 2000;
+		
+		
+		//Imagem do Barco
+		private var MC_Barco			:MovieClip;
+		private var MC_velas			:MovieClip
+
+		//Controle de vida do Barco
+		private var NU_vidaAtual		:Number;
+		private var NU_vidaMaxima		:Number;
 		
 		//Situacao Upgrades
-		private var UI_nivelCanhoes:uint
-		private var UI_nivelRecarga:uint
-		private var UI_nivelTiro:uint
-		
-		//Barco
-		private var MC_Barco:MovieClip;
-		private var MC_velas:MovieClip
+		private var UI_nivelCanhoes		:uint
+		private var UI_nivelRecarga		:uint
+		private var UI_nivelTiro		:uint
+
 		
 		//Direcao do barco em radianos
-		private var NU_direcao:Number;
+		private var NU_direcao			:Number;
 		
 		//Componentes de velocidade X e Y
-		private var NU_veloX:Number;
-		private var NU_veloY:Number;
+		private var NU_veloX			:Number;
+		private var NU_veloY			:Number;
 		
 		//velocidade Absoluta atual
-		private var NU_veloABS:Number;
+		private var NU_veloABS			:Number;
 		
 		//valocidade angular atual
-		private var NU_veloAng:Number;
+		private var NU_veloAng			:Number;
 		
 		//limites de velocidade e rotação
-		private var NU_veloAngMax:Number;
-		private var NU_veloAngTax:Number;
-		private var NU_veloMaxNor:Number;
-		private var NU_veloMaxRod:Number;
+		private var NU_veloAngMax		:Number;
+		private var NU_veloAngTax		:Number;
+		private var NU_veloMaxNor		:Number;
+		private var NU_veloMaxRod		:Number;
 		
 		//coeficientes de fricção
-		private var NU_friccaoVel:Number;
-		private var NU_friccaoAng:Number;
-		private var NU_friccaoAnc:Number;
+		private var NU_friccaoVel		:Number;
+		private var NU_friccaoAng		:Number;
+		private var NU_friccaoAnc		:Number;
 		
 		//variaveis de impacto
-		private var NU_impacX:Number;
-		private var NU_impacY:Number;
-		private var NU_impacFric:Number;
+		private var NU_impacX			:Number;
+		private var NU_impacY			:Number;
+		private var NU_impacFric		:Number;
 		
 		//ilha encontrada no raio de interação
-		private var IA_IlhaProxima:IlhaAtor;
+		private var IA_IlhaProxima		:IlhaAtor;
 		
 		//contantes de controle de tiro
-		private const ATIRA_ESQUERDA:uint = 1;
-		private const ATIRA_DIREITA:uint = 2;
+		private const ATIRA_ESQUERDA	:uint = 1;
+		private const ATIRA_DIREITA		:uint = 2;
 		
 		//variaveis de controle da salva de tiros do barco heroi
-		private var UI_tempoTiroEsq:uint;
-		private var UI_tempoTiroDir:uint;
-		private var UI_tempoSalvaEsq:uint;
-		private var UI_tempoSalvaDir:uint;
-		private var BO_dispararEsq:Boolean;
-		private var BO_dispararDir:Boolean;
-		private var UI_SeqTiroEsq:uint;
-		private var UI_SeqTiroDir:uint;
-		private var UI_tempoRecarga:uint;
+		private var UI_tempoTiroEsq		:uint;
+		private var UI_tempoTiroDir		:uint;
+		private var UI_tempoSalvaEsq	:uint;
+		private var UI_tempoSalvaDir	:uint;
+		private var BO_dispararEsq		:Boolean;
+		private var BO_dispararDir		:Boolean;
+		private var UI_SeqTiroEsq		:uint;
+		private var UI_SeqTiroDir		:uint;
+		private var UI_tempoRecarga		:uint;
 		
 		/**
 		 * Função contrutora do BarcoHeroi
@@ -103,6 +114,7 @@
 			//posiciona da vela no slot
 			MC_velas.x = MC_Barco.slotVela.x;
 			MC_velas.y = MC_Barco.slotVela.y;
+			
 		}
 		
 		/*******************************************************************************
@@ -140,9 +152,16 @@
 		{
 			//upgrades
 			UI_nivelCanhoes = UPGRADE_CANHOES_NIVEL0;
+			
 			UI_nivelRecarga = UPGRADE_RECARGA_NIVEL0;
+			
 			UI_tempoRecarga = UI_nivelRecarga;
+			
 			UI_nivelTiro = UPGRADE_TIRO_NIVEL0;
+			
+			//inicializa a quantidade de vida
+			NU_vidaMaxima = UPGRADE_CASCO_NIVEL0;
+			
 		}
 		
 		/**
@@ -150,18 +169,25 @@
 		 */
 		public function reinicializa():void
 		{
+			//centraliza barco no mapa
 			this.x = 0;
 			this.y = 0;
 			
+			//inicializa a quantidade de vida
+			NU_vidaAtual = NU_vidaMaxima;
+			
+			//inicializa os controle de direcao e velocidade
 			NU_direcao = -90 * Utils.GRAUS_TO_RADIANOS;
 			NU_veloX = 0;
 			NU_veloY = 0;
 			NU_veloABS = 0;
 			NU_veloAng = 0;
 			
+			//inicializa o impacto
 			NU_impacY = 0;
 			NU_impacX = 0;
 			
+			//inicializa ilha para interaçao
 			IA_IlhaProxima = null;
 			
 			//zera contador de tempo para o tiro
@@ -520,6 +546,7 @@
 			mcEfeito.y = p.y;
 			mcEfeito.rotation = ((_tiro.direcao * Utils.RADIANOS_TO_GRAUS) - 180) - this.rotation;
 			_tiro.atingiuAtor(this);
+			NU_vidaAtual = _tiro.dano()
 		}
 		
 		public function get veloABS():Number
