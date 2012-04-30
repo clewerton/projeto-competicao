@@ -135,12 +135,13 @@ package Fases.FaseTesouroElementos
 					MC_premio = new Slot04;
 				break;
 				default:
-				
 			}
-			MC_ilha.stop();
-			SP_slot.addChildAt(MC_premio, 0);
+			trace("adciona no slot")
+			MC_premio.stop();
+			MC_ilha.addChild(MC_premio);
+			MC_premio.x = SP_slot.x;
+			MC_premio.y = SP_slot.y;
 			MC_premio.rotation = - MC_ilha.rotation;
-			
 		}
 		/**
 		 * reposicionou Ilha
