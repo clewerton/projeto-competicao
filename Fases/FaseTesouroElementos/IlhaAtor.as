@@ -80,21 +80,21 @@ package Fases.FaseTesouroElementos
 		
 		public function inicializa():void
 		{
-			adcionaClassehitGrupo(BarcoHeroiAtor);
-		
+			adcionaClassehitGrupo(BarcoHeroiAtor);		
+			
+			UI_premioID = 0;
+			PT_posicao = new Point(Number.MAX_VALUE,Number.MAX_VALUE);
+			PT_centroSlot = new Point(Number.MAX_VALUE, Number.MAX_VALUE);
+			UI_raioSlot = 200;
+			
 			reinicializa()
 		}
 		
 		public function reinicializa():void
 		{
-			UI_raioSlot = 200;
 			BO_dentroRaio = false;
-			UI_premioID = 0;
 			BO_revelada = false;
 			faseAtor.addChild(MC_nevoa);
-			PT_posicao = new Point(Number.MAX_VALUE,Number.MAX_VALUE);
-			PT_centroSlot = new Point(Number.MAX_VALUE, Number.MAX_VALUE);
-			
 		}
 		
 		public function update(e:Event):void
@@ -208,7 +208,7 @@ package Fases.FaseTesouroElementos
 				switch (UI_premioID) 
 				{
 					case FaseTesouro.PREMIO_TESOURO:
-						FaseTesouro(faseAtor).tesourosPegos ++;	
+						FaseTesouro(faseAtor).pegou_Tesouro();
 					break;
 					case FaseTesouro.PREMIO_PIRATAS:
 						MC_premio.visible = false;

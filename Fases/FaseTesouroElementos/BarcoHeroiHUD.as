@@ -38,8 +38,8 @@ package Fases.FaseTesouroElementos
 			
 			//adiciona barra de vida
 			addChild(MC_barraVida);
-			MC_barraVida.x = stage.stageWidth / 2;
-			MC_barraVida.y = stage.stageHeight - MC_barraVida.height;			
+			this.x = stage.stageWidth / 2;
+			this.y = stage.stageHeight - this.height;			
 			reinicializa();
 		}
 		

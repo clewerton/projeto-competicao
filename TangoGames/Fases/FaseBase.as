@@ -17,8 +17,8 @@ package TangoGames.Fases
 	 */
 	public class FaseBase extends MovieClip {
 		
-		private var IN_faseID:int;
-		private var IN_nivel:int;
+		private var UI_faseID:uint;
+		private var UI_nivel:uint;
 		private var _mainapp:DisplayObjectContainer;
 		private var BO_fimdeJogo:Boolean;
 		private var BO_faseConcluida:Boolean;
@@ -42,6 +42,12 @@ package TangoGames.Fases
 		//Fase Caminho
 		private var FC_mapa:FaseCaminho;
 		
+		//Fase Parametros
+		private var FP_param: FaseParamentos;
+		
+		//Fase Controle
+		private var FC_faseCtr: FaseControle;
+		
 		/**
 		 * construtora da Class FaseBase
 		 * @param	_main
@@ -49,7 +55,7 @@ package TangoGames.Fases
 		 * @param	_nivel
 		 * Número do nível da fase
 		 */
-		public function FaseBase(_main:DisplayObjectContainer, _nivel:int) 
+		public function FaseBase(_main:DisplayObjectContainer, _faseCtr:FaseControle, _faseID:uint, _nivel:uint) 
 		{
 			if (Class(getDefinitionByName(getQualifiedClassName(this))) == FaseBase ) {
 				throw (new Error("FaseBase: Esta classe não pode ser instanciada diretamente"))
@@ -60,8 +66,17 @@ package TangoGames.Fases
 			if (_main == null) {
 				throw (new Error("FaseBase: O Parametro main não pode ser nulo"))				
 			}
+			if (_faseCtr == null) {
+				throw (new Error("FaseBase: O Parametro _faseCtr não pode ser nulo"))				
+			}
+			
 			this._mainapp = _main;
-			this.IN_nivel = _nivel;
+			this.FC_faseCtr = _faseCtr;
+			this.UI_faseID = _faseID;
+			this.UI_nivel = _nivel;
+			
+			//atualiza referencia da fase controle
+			FP_param = FC_faseCtr.carregaFaseParametros( UI_faseID, UI_nivel);
 			
 			//inicializa vetores da FaseBase
 			VT_Atores = new Vector.<AtorBase>;
@@ -71,19 +86,23 @@ package TangoGames.Fases
 			OB_teclas = new Object;
 			
 			//Cria camada superior 
-			SP_camadaSup = new Sprite();			
+			SP_camadaSup = new Sprite();		
 		}
-
-		
-		 
+		;
 		/***************************************************************************
 		 *    Área dos métodos publicos da classe
 		 * ************************************************************************/
 		/**
-		 * Inicia a execução da fase
+		 * Inicia fase
+		 * @param	_faseID
+		 * ID da fase na fase controle
+		 * @param	_faseCtr
+		 * referencia do objeto da FaseControle 
 		 */
 		public function iniciaFase():void {
+			//adiciona a fase ao display
 			_mainapp.addChild(this);
+			
 			//CAMADA Suior
 			_mainapp.addChild(SP_camadaSup);
 			
@@ -94,8 +113,6 @@ package TangoGames.Fases
 				continuaFase();
 				
 			}
-			
-			
 		}
 		/**
 		 * Metodo reinicia a fase interrompida do ponto de pausa
@@ -405,19 +422,14 @@ package TangoGames.Fases
 		 * valor do nível da fase
 		 */
 		public function get nivel():int {
-			return IN_nivel;
+			return UI_nivel;
 		}
 		
 		public function get faseID():int 
 		{
-			return IN_faseID;
+			return UI_faseID;
 		}
-		
-		public function set faseID(value:int):void 
-		{
-			IN_faseID = value;
-		}
-		
+				
 		public function get GrupoClass():Vector.<Class> 
 		{
 			return VT_GrupoClass;
@@ -431,6 +443,11 @@ package TangoGames.Fases
 		public function get mapa():FaseCaminho 
 		{
 			return FC_mapa;
+		}
+		
+		public function get param():FaseParamentos
+		{
+			return FP_param;
 		}
 	}
 }

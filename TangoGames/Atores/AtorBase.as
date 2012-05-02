@@ -222,6 +222,36 @@ package TangoGames.Atores
 				}
 			}
 		}
+		/**
+		 * Remove AtorAnimacao
+		 * @param	content
+		 * 
+		 */
+		protected function removeAnimacao(content:DisplayObjectContainer, _vt:Vector.<AtorAnimacao> = null ):void {
+			var boss:Boolean = false;
+			if (_vt == null) {
+				boss = true;
+				_vt =  new Vector.<AtorAnimacao>;
+			}
+			
+			if (content.numChildren) {
+				var child:DisplayObjectContainer;
+				for (var i:int, n:int = content.numChildren; i < n; ++i)
+				{
+					if (content.getChildAt(i) is DisplayObjectContainer)
+					{
+						child = content.getChildAt(i) as DisplayObjectContainer;
+						if (child.numChildren) removeAnimacao(child, _vt);
+						else if (child is AtorAnimacao) _vt.push(child)
+					}
+				}
+			}
+			
+			if (content is AtorAnimacao) _vt.push(content);
+			
+			if (boss) for each (var a:AtorAnimacao in _vt) a.parent.removeChild(a);
+			
+		}
 		
 		/**
 		 * Inicia animacao deve ser chamada o controleAnimacao no update 
