@@ -143,6 +143,7 @@
 			iniciaUpgrades();
 			
 			reinicializa();
+			
 		}
 		
 		/**
@@ -169,6 +170,8 @@
 		 */
 		public function reinicializa():void
 		{
+			removeAnimacao(this);
+			
 			//centraliza barco no mapa
 			this.x = 0;
 			this.y = 0;
@@ -232,7 +235,6 @@
 		 */
 		public function remove():void
 		{
-		
 		}
 		
 		/***********************************************************************************************

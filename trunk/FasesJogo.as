@@ -19,5 +19,10 @@ package
 			adicionaNivel(1, "Normal", 1);
 			adicionaNivel(1, "Dificil", 2);
 		}	
+		
+		override public function carregaFaseParametros(_faseID:uint, _nivel:uint):FaseParamentos
+		{
+			return new FaseJogoParamentos(_faseID,_nivel);
+		}
 	}
 }

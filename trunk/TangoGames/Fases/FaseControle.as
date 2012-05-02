@@ -222,8 +222,7 @@ package TangoGames.Fases
 			VT_fases[i].bloqueada = false;
 			VT_fases[i].VT_Niveis[0].bloq = false;
 			var nivel:uint =  VT_fases[i].VT_Niveis[0].valor
-			FB_faseCorrente = new VT_fases[i].classFase(DO_mainapp, nivel);
-			FB_faseCorrente.faseID = VT_fases[i].ID;
+			FB_faseCorrente = new VT_fases[i].classFase(DO_mainapp,this, VT_fases[i].ID, nivel);
 			FB_faseCorrente.iniciaFase();
 			FB_faseCorrente.addEventListener(FaseEvent.FASE_CONCLUIDA, controleInterrupcaoFase, false, 0, true);
 			FB_faseCorrente.addEventListener(FaseEvent.FASE_FIMDEJOGO, controleInterrupcaoFase, false, 0, true);
@@ -236,9 +235,8 @@ package TangoGames.Fases
 		public function inicia():void {
 			if (FB_faseCorrente != null) removeFaseCorrente();
 			var nivel:uint =  VT_fases[0].VT_Niveis[0].valor
-			FB_faseCorrente = new VT_fases[0].classFase(DO_mainapp, nivel);
+			FB_faseCorrente = new VT_fases[0].classFase(DO_mainapp,this,VT_fases[0].ID, nivel);
 			FB_faseCorrente.iniciaFase();
-			FB_faseCorrente.faseID = VT_fases[0].ID;
 			FB_faseCorrente.addEventListener(FaseEvent.FASE_CONCLUIDA, controleInterrupcaoFase, false, 0, true);
 			FB_faseCorrente.addEventListener(FaseEvent.FASE_FIMDEJOGO, controleInterrupcaoFase, false, 0, true);
 			FB_faseCorrente.addEventListener(FaseEvent.FASE_PAUSA    , controleInterrupcaoFase, false, 0, true);
@@ -251,12 +249,11 @@ package TangoGames.Fases
 		 * @param	Nivel
 		 * Número do nível da fase que será executada
 		 */
-		public function iniciaFase(_faseID:uint, _nivel:int):void {
+		public function iniciaFase(_faseID:uint, _nivel:uint):void {
 			if (FB_faseCorrente != null) removeFaseCorrente();
 			var i:uint = VT_fasesID.indexOf(_faseID);
-			FB_faseCorrente = new VT_fases[i].classFase(DO_mainapp, _nivel);
+			FB_faseCorrente = new VT_fases[i].classFase(DO_mainapp, this, _faseID,_nivel);
 			FB_faseCorrente.iniciaFase();
-			FB_faseCorrente.faseID = _faseID;
 			FB_faseCorrente.addEventListener(FaseEvent.FASE_CONCLUIDA, controleInterrupcaoFase, false, 0, true);
 			FB_faseCorrente.addEventListener(FaseEvent.FASE_FIMDEJOGO, controleInterrupcaoFase, false, 0, true);
 			FB_faseCorrente.addEventListener(FaseEvent.FASE_PAUSA    , controleInterrupcaoFase, false, 0, true);
@@ -284,10 +281,27 @@ package TangoGames.Fases
 				_menu.adicionaOpcaoNiveisFase(_faseID, VT_fases[index].VT_Niveis[i].nome, VT_fases[index].VT_Niveis[i].valor ,null,null,!VT_fases[index].VT_Niveis[i].bloq)
 			}
 		}
-
+		/**
+		 * retorna o array de niveis da fase
+		 * @param	_faseID
+		 * ID da fase
+		 * @return
+		 */
 		public function faseNives(_faseID:uint):Array {
 			var i:int = VT_fasesID.indexOf(_faseID);
 			return VT_fases[i].VT_Niveis;			
+		}
+		
+		/**
+		 * Este método retorna dos paramentros específicos da fase
+		 * @param	faseID
+		 * ID da fase
+		 * @return
+		 * objeto com os paramentos especificos da fase
+		 */
+		public function carregaFaseParametros(_faseID:uint, _nivel:uint):FaseParamentos {
+			throw (new Error("FaseControle: O método 'carregaFaseParametros' deve ser sobrescrito/implementado pela classe derivada de " + this.toString()));
+			return null;
 		}
 		
 		/***************************************************************************
@@ -328,6 +342,7 @@ internal class FaseDado {
 	public var nomeMenu: String;
 	public var bloqueada:Boolean;
 	public var VT_Niveis:Array;
+
 	public function FaseDado( _faseID:uint , _nomeMenu: String, _classeFase:Class) {
 		classFase = _classeFase;
 		ID = _faseID;

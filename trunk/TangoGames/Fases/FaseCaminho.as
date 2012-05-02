@@ -11,7 +11,7 @@ package TangoGames.Fases
 	 * ...
 	 * @author Arthur Figueirdo
 	 */
-	public class FaseCaminho 
+	public class FaseCaminho extends Object
 	{
 		private var AR_mapa:Array;
 		private var AR_mapaAtores:Array;

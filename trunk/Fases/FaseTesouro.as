@@ -6,10 +6,10 @@ package Fases
 	import Fases.FaseTesouroElementos.BoteFugaAtor;
 	import Fases.FaseTesouroElementos.CanhaoIlhaAtor;
 	import Fases.FaseTesouroElementos.IlhaAtor;
+	import Fases.FaseTesouroElementos.PontosHUD;
 	import Fases.FaseTesouroElementos.TesouroHUD;
 	import Fases.FaseTesouroElementos.TiroHeroiAtor;
 	import Fases.FaseTesouroElementos.TiroInimigoAtor;
-	import fl.motion.AnimatorBase;
 	import flash.display.BitmapData;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.MovieClip;
@@ -21,6 +21,7 @@ package Fases
 	import flash.ui.Keyboard;
 	import TangoGames.Atores.AtorBase;
 	import TangoGames.Fases.FaseBase;
+	import TangoGames.Fases.FaseControle;
 	import TangoGames.Fases.FaseFPS;
 	import TangoGames.Fases.FaseHUD;
 	import TangoGames.Fases.FaseInterface;
@@ -77,11 +78,15 @@ package Fases
 		private var UI_tesourosPegos	:uint;
 		private var FH_tesouroHUD		:TesouroHUD;
 		
+		//Pontos da Fase
+		private var UI_pontos			:uint;
+		private var FH_pontosHUD		:PontosHUD;
+		
 		//HUD de vida do Barco
 		private var FH_barcoHUD			:BarcoHeroiHUD;
 			
-		public function FaseTesouro(_main:DisplayObjectContainer, Nivel:int) {
-			super(_main, Nivel);
+		public function FaseTesouro(_main:DisplayObjectContainer, _faseCtr:FaseControle, _faseID:uint, _nivel:uint) {
+			super(_main,_faseCtr,_faseID,_nivel);
 			MC_backGround = geraMarFundo();
 			this.addChild(MC_backGround);
 			MC_backGround.x = -  MC_backGround.width / 2;
@@ -126,6 +131,11 @@ package Fases
 			FH_barcoHUD =  new BarcoHeroiHUD;
 			adicionaHUD(FH_barcoHUD);
 			
+			//HUD Pontos
+			FH_pontosHUD = new PontosHUD;
+			adicionaHUD(FH_pontosHUD);
+			
+			//Reinicia variaveis
 			reiniciacao();
 			
 			return true
@@ -135,6 +145,10 @@ package Fases
 		{
 			//remove atores
 			removeAtores();
+			
+			//reposiciona barco
+			AB_barcoHeroi.x = 0;
+			AB_barcoHeroi.y = 0;
 			
 			//controle de tesouros
 			UI_tesourosPegos = 0;
@@ -452,7 +466,15 @@ package Fases
 			}
 			return teste
 		}
-
+		
+		/****************************************************************************
+		 * Contagem de pontuacao
+		 * *************************************************************************/
+		public function pegou_Tesouro() {
+			UI_tesourosPegos++;
+			UI_pontos += param[FaseJogoParamentos.PARAM_PONTO_TESOURO];
+		}
+		 
 		
 		/***********************************************************
 		 * Propriedade públicas
@@ -473,16 +495,24 @@ package Fases
 			return UI_tesourosPegos;
 		}
 		
-		public function set tesourosPegos(value:uint):void 
-		{
-			UI_tesourosPegos = value;
-		}
-		
 		public function get qtdTesouros():uint 
 		{
 			return UI_qtdTesouros;
 		}
+		
+		public function get pontos():uint 
+		{
+			return UI_pontos;
+		}
+		
+		public function set pontos(value:uint):void 
+		{
+			UI_pontos = value;
+		}
 	
+		/*******************************************************************************
+		 *  metodos de apoio desenvolvimento
+		 * ****************************************************************************/
 		private function pintaQuadradosDebugMapa() {
 			//pinta mapa
 			var m:Sprite;
