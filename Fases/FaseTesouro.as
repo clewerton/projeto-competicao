@@ -472,7 +472,7 @@ package Fases
 		 * *************************************************************************/
 		public function pegou_Tesouro() {
 			UI_tesourosPegos++;
-			UI_pontos += param[FaseJogoParamentos.PARAM_PONTO_TESOURO];
+			UI_pontos += param[FaseJogoParamentos.PARAM_PONTOS_TESOURO];
 		}
 		 
 		

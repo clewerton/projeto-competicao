@@ -74,7 +74,9 @@ package Fases.FaseTesouroElementos
 		
 		//Controle de Ataque
 		private var UI_alcanceTiro		:uint;
+		private var UI_velocidadeIiro	:uint;
 		private var UI_distAtaque		:uint;
+		private var UI_qtdCanhoes		:uint;
 		
 		//controle da frequncia de tiro
 		private var UI_freqTiro			:uint;
@@ -116,19 +118,27 @@ package Fases.FaseTesouroElementos
 			
 			//fricao
 			NU_friccaoVel = 0.98;
-			NU_veloMax = 5;
+			
+			//velocidade Máxima
+			NU_veloMax	  = faseAtor.param[FaseJogoParamentos.PARAM_INIMIGO_VELOC_MAX];
 			
 			//velocidade angular máxima
-			UI_velAngMax = 3;
+			UI_velAngMax  = 3;
 			
 			//valor de vida
-			NU_vidaMaxima = 100;
+			NU_vidaMaxima = faseAtor.param[FaseJogoParamentos.PARAM_INIMIGO_MAXIMO_VIDA];
 			
 			//frequencia de tiro em frames
-			UI_freqTiro = 48;
+			UI_freqTiro	 = faseAtor.param[FaseJogoParamentos.PARAM_INIMIGO_FREQ_TIRO];
+			
+			//quantidade de canhoes
+			UI_qtdCanhoes = faseAtor.param[FaseJogoParamentos.PARAM_INIMIGO_QTD_CANHOES];
 			
 			//ALCANCE DO TIRO
-			UI_alcanceTiro = TiroInimigoAtor.ALCANCE_TIRO_BARCO;
+			UI_alcanceTiro = faseAtor.param[FaseJogoParamentos.PARAM_TIRO_INIMIGO_ALCANCE];
+			
+			//Velocidade do tiro
+			UI_velocidadeIiro = faseAtor.param[FaseJogoParamentos.PARAM_TIRO_INIMIGO_VELOCID];
 			
 			//distancia para iniciar o ataque
 			UI_distAtaque = UI_alcanceTiro * 0.9;
@@ -400,8 +410,8 @@ package Fases.FaseTesouroElementos
 			var dy:Number = NU_distY;
 			
 			//antecipa a mira para posição projetada do barco heroi
-			dx += AB_barcoHeroi.veloX * ( NU_distancia / TiroInimigoAtor.VELOCIDADE_TIRO_BARCO ); 
-			dy += AB_barcoHeroi.veloY * ( NU_distancia / TiroInimigoAtor.VELOCIDADE_TIRO_BARCO ); 
+			dx += AB_barcoHeroi.veloX * ( NU_distancia / UI_velocidadeIiro ); 
+			dy += AB_barcoHeroi.veloY * ( NU_distancia / UI_velocidadeIiro ); 
 			
 			var angulo:Number =  Math.atan2(dy, dx);
 			
@@ -452,7 +462,7 @@ package Fases.FaseTesouroElementos
 				ang -= ( Math.PI / 2 );
 				canhao = "canhaoEsquerdo" + UI_tiroSeque
 			}
-			if (UI_tiroSeque >= 3) {
+			if (UI_tiroSeque >= UI_qtdCanhoes) {
 				UI_tiroSeque = 0;
 				UI_tiroTempo = 0;
 			}
