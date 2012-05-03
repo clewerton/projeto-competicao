@@ -25,11 +25,9 @@ package Fases.FaseTesouroElementos
 
 		//velocidade de tiro
 		public static const VELOCIDADE_TIRO_ILHA	:uint  = 10;
-		public static const VELOCIDADE_TIRO_BARCO	:uint  = 10;
 		
 		//alcance de Maximo
 		public static const ALCANCE_TIRO_ILHA		:uint  = 500;
-		public static const ALCANCE_TIRO_BARCO		:uint  = 350;
 
 		
 		//tipo de tiro
@@ -67,42 +65,58 @@ package Fases.FaseTesouroElementos
 		 */
 		public function TiroInimigoAtor(  _tiro:uint, _pontoIni:Point, _direcao:Number ) 
 		{
-			//direção do tiro
-			NU_direcao = _direcao;
-			
 			//tipo do tiro
 			UI_tipo = _tiro;
 			
-
 			//coloca no ponto inicial
 			this.x = _pontoIni.x;
 			this.y = _pontoIni.y;
+			
+			//direção do tiro
+			NU_direcao = _direcao;
 			
 			//cria o movie clip do tiro
 			switch (UI_tipo) 
 			{
 				case TTRO_CANHAO_ILHA:
-					MC_Tiro =  new TiroCanhao;
-					UI_alcance = Utils.Rnd (ALCANCE_TIRO_ILHA * 0.9 , ALCANCE_TIRO_ILHA * 1.1)
-					//velocidade do tiro
-					NU_VelABS = VELOCIDADE_TIRO_ILHA;
-					//pontos de dano
-					NU_dano = 50;
+					MC_Tiro    =  new TiroCanhao;
 				break;
 				case TTRO_CANHAO_BARCO:
-					MC_Tiro =  new BalaCanhao;
-					UI_alcance = Utils.Rnd( ALCANCE_TIRO_BARCO * 0.9 , ALCANCE_TIRO_BARCO * 1.1 );
+					MC_Tiro    =  new BalaCanhao;
+				break;
+				default:
+			}
+			
+			super(MC_Tiro);
+			
+		}
+		
+		public function calculaVariaveisIniciais() {
+			
+			//cria o movie clip do tiro
+			switch (UI_tipo) 
+			{
+				case TTRO_CANHAO_ILHA:
+					UI_alcance = Utils.Rnd (ALCANCE_TIRO_ILHA * 0.9 , ALCANCE_TIRO_ILHA * 1.1)
 					//velocidade do tiro
-					NU_VelABS = VELOCIDADE_TIRO_BARCO;
+					NU_VelABS  = VELOCIDADE_TIRO_ILHA;
 					//pontos de dano
-					NU_dano = 10;
+					NU_dano    = 50;
+				break;
+				case TTRO_CANHAO_BARCO:
+					UI_alcance = faseAtor.param[FaseJogoParamentos.PARAM_TIRO_INIMIGO_ALCANCE];
+					//inclui randomico de 10% +-
+					UI_alcance *= ( (Math.random() * 0.2 ) + 0.9 );
+					//velocidade do tiro
+					NU_VelABS  = faseAtor.param[FaseJogoParamentos.PARAM_TIRO_INIMIGO_VELOCID ];
+					//pontos de dano
+					NU_dano    = faseAtor.param[FaseJogoParamentos.PARAM_TIRO_INIMIGO_DANO];
 				break;
 				default:
 			}
 			
 			//registro imagem do tiro
 			MC_Tiro.rotation = NU_direcao * Utils.RADIANOS_TO_GRAUS;
-			super(MC_Tiro);
 			
 			//calcula os compenentes de velocidade
 			NU_VeloX = Math.cos(direcao) * NU_VelABS;
@@ -120,9 +134,17 @@ package Fases.FaseTesouroElementos
 		}
 		
 		public function inicializa():void 
-		{			
+		{	
+			//calcula variaveis iniciais
+			calculaVariaveisIniciais();
+			
+			//adiciona hit teste grupo
 			adcionaClassehitGrupo(BarcoHeroiAtor);
+			
+			//inicializa distancia percorrida
 			UI_distancia = 0;
+			
+			//inica animacao do tiro
 			iniciaAnima(MC_Tiro, "andar");
 		}
 		
@@ -132,31 +154,47 @@ package Fases.FaseTesouroElementos
 			this.x += NU_VeloX;
 			this.y += NU_VeloY;
 			UI_distancia += NU_VelABS;
-			if (UI_distancia > UI_alcance) {
-				var splash:AtorAnimacao;
-				var pt:Point = faseAtor.mapa.convertePonto( new Point(this.x, this.y) );
-				if (faseAtor.mapa.mapaArray[pt.x][pt.y] == 1) splash = new ImpactoTerra();
-				else splash = new SplashAgua();
-				
-				splash.x = this.x;
-				splash.y = this.y;
-				splash.rotation = this.rotation;
-				faseAtor.addChild(splash);
-				marcadoRemocao = true;
-			}
+			if (UI_distancia > UI_alcance) fimAlcance();
 		}
-		
-		public function atingiuAtor( _ator:AtorBase ) {
-			//SC_canal = SD_impacto.play(0);
-			marcadoRemocao = true;
-			AB_atorAtingido = _ator;
-		}
-		
+
 		public function remove():void 
 		{
 			
 		}
 		
+		
+		/*****************************************************************
+		 * métodos chamados update
+		 * **************************************************************/
+		/**
+		 * tiro atingiu ator
+		 * @param	_ator
+		 * referencia do objeto atingido
+		 */
+		public function atingiuAtor( _ator:AtorBase ) {
+			marcadoRemocao = true;
+			AB_atorAtingido = _ator;
+		}
+		/**
+		 * final do alcance do tiro
+		 */
+		public function fimAlcance() {
+			var splash:AtorAnimacao;
+			var pt:Point = faseAtor.mapa.convertePonto( new Point(this.x, this.y) );
+			if (faseAtor.mapa.mapaArray[pt.x][pt.y] == 1) splash = new ImpactoTerra();
+			else splash = new SplashAgua();
+			//animacao de splash da água ou de terra
+			splash.x = this.x;
+			splash.y = this.y;
+			splash.rotation = this.rotation;
+			faseAtor.addChild(splash);
+			marcadoRemocao = true;
+		}
+		
+		/****************************************************************
+		 * propriedades públicas da classe
+		 ****************************************************************/
+		 
 		public function get distancia():Number 
 		{
 			return UI_distancia;
