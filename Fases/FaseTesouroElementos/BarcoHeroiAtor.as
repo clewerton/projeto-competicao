@@ -84,6 +84,9 @@
 		//ilha encontrada no raio de interação
 		private var IA_IlhaProxima		:IlhaAtor;
 		
+		//bote encotrado raio de intereção
+		private var BF_boteCapturar		:BoteFugaAtor ;
+		
 		//contantes de controle de tiro
 		private const ATIRA_ESQUERDA	:uint = 1;
 		private const ATIRA_DIREITA		:uint = 2;
@@ -98,6 +101,9 @@
 		private var UI_SeqTiroEsq		:uint;
 		private var UI_SeqTiroDir		:uint;
 		private var UI_tempoRecarga		:uint;
+		
+		//controle de som
+		private var SC_canal			:SoundChannel;
 		
 		/**
 		 * Função contrutora do BarcoHeroi
@@ -114,6 +120,9 @@
 			//posiciona da vela no slot
 			MC_velas.x = MC_Barco.slotVela.x;
 			MC_velas.y = MC_Barco.slotVela.y;
+			
+			//canal de som
+			SC_canal = new SoundChannel;
 			
 		}
 		
@@ -253,8 +262,10 @@
 				UI_nivelCanhoes = UPGRADE_CANHOES_NIVEL2;
 			
 			//Tecla de interacao com a Ilha
-			if (pressTecla(Keyboard.E))
+			if (pressTecla1(Keyboard.E)) {
 				interageIlhaProxima();
+				interageBoteCapturar();
+			}
 			
 			//Tecla para avançar
 			if (pressTecla(Keyboard.UP))
@@ -431,7 +442,8 @@
 		
 		/***************************************************************************************
 		 * Colisão do Barco Heroi
-		 ***************************************************************************************/ /**
+		 ***************************************************************************************/
+		/**
 		 * interage com a ilha proxima
 		 */
 		private function interageIlhaProxima():void
@@ -439,7 +451,6 @@
 			if (testaIlhaProxima())
 				IA_IlhaProxima.interageIlha(this);
 		}
-		
 		/**
 		 * testa se ilha pode interagir
 		 * @return
@@ -496,6 +507,29 @@
 			if (_ilha.revelada)
 				return;
 			IA_IlhaProxima = _ilha;
+		}
+
+		/**
+		 * Bote visa quando pode capturar
+		 * @param	_bote
+		 */
+		public function avisoBote(_bote: BoteFugaAtor )
+		{
+			BF_boteCapturar	 = _bote;
+		}
+		/**		
+		 * interage com o bote
+		 */
+		private function interageBoteCapturar():void
+		{
+			if (BF_boteCapturar != null) {
+				if (BF_boteCapturar.capturar) {
+					BF_boteCapturar.marcadoRemocao = true;
+					BF_boteCapturar = null;
+					SC_canal  = Sound(new SomCaptura).play(0);
+					FaseTesouro (faseAtor ).capturouBote()
+				}
+			}
 		}
 		
 		/**

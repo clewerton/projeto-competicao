@@ -19,6 +19,9 @@ package
 		public static const PARAM_INIMIGO_FREQ_TIRO		= "INIMIGO_FREQ_TIRO";
 		public static const PARAM_INIMIGO_MAXIMO_VIDA	= "INIMIGO_MAXIMO_VIDA";
 		
+		//Parametros do bote de fuga
+		public static const PARAM_BOTE_FUGA_VELOC_MAX	= "BOTE_FUGA_VELOC_MAX";
+		
 		//Parametros do tiro inimigo
 		public static const PARAM_TIRO_INIMIGO_VELOCID	= "TIRO_INIMIGO_VELOCID";
 		public static const PARAM_TIRO_INIMIGO_DANO		= "TIRO_INIMIGO_DANO";
@@ -59,10 +62,14 @@ package
 			this[PARAM_INIMIGO_QTD_CANHOES] 	= 1;
 			this[PARAM_INIMIGO_FREQ_TIRO] 		= 48;	//EM FRAMES	
 			this[PARAM_INIMIGO_MAXIMO_VIDA]		= 100;
+			
 			//tiro do barco inimigo
-			this[PARAM_TIRO_INIMIGO_VELOCID]	    = 10;
-			this[PARAM_TIRO_INIMIGO_DANO]			= 10;
-			this[PARAM_TIRO_INIMIGO_ALCANCE]		= 350;
+			this[PARAM_TIRO_INIMIGO_VELOCID]	= 10;
+			this[PARAM_TIRO_INIMIGO_DANO]		= 10;
+			this[PARAM_TIRO_INIMIGO_ALCANCE]	= 350;
+			
+			//bote de fuga
+			this[PARAM_BOTE_FUGA_VELOC_MAX]     = 3;
 			
 		}
 	}

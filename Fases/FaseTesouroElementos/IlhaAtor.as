@@ -208,7 +208,7 @@ package Fases.FaseTesouroElementos
 				switch (UI_premioID) 
 				{
 					case FaseTesouro.PREMIO_TESOURO:
-						FaseTesouro(faseAtor).pegou_Tesouro();
+						FaseTesouro(faseAtor).pegouTesouro();
 					break;
 					case FaseTesouro.PREMIO_PIRATAS:
 						MC_premio.visible = false;
