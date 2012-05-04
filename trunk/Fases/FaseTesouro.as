@@ -63,7 +63,6 @@ package Fases
 		private var VT_Inimigos:Vector.<BarcoInimigoAtor>
 		private var UI_qtdMaxInimigos:uint;
 		
-		
 		//controle de soom do mapa
 		private var BO_zoom:Boolean;
 		private var NU_escala:Number;
@@ -470,11 +469,18 @@ package Fases
 		/****************************************************************************
 		 * Contagem de pontuacao
 		 * *************************************************************************/
-		public function pegou_Tesouro() {
+		public function pegouTesouro() {
 			UI_tesourosPegos++;
 			UI_pontos += param[FaseJogoParamentos.PARAM_PONTOS_TESOURO];
 		}
-		 
+		
+		public function destruiBarco() {
+			UI_pontos += param[FaseJogoParamentos.PARAM_PONTOS_BARCO_INIMIGO];
+		}
+
+		public function capturouBote() {
+			UI_pontos += param[FaseJogoParamentos.PARAM_PONTOS_CAPTURA_BOTE];
+		}
 		
 		/***********************************************************
 		 * Propriedade públicas

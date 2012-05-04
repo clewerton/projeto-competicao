@@ -161,10 +161,10 @@ package Fases.FaseTesouroElementos
 			faseAtor.addChild(SP_barraVida);
 			SP_barraInterna = geraSprite(0XFF0000, new Rectangle(0, 0, 50, 5), false);
 			SP_barraVida.addChild(SP_barraInterna);
-
+			
 			//reinicia variaveis
 			reinicializa();
-
+			
 		}
 
 		
@@ -289,6 +289,10 @@ package Fases.FaseTesouroElementos
 			clonemorto.x = this.x;
 			clonemorto.y = this.y;
 			clonemorto.rotation = this.rotation;
+			
+			//avisa a fase que destrui o barco
+			FaseTesouro(faseAtor).destruiBarco();
+			
 		}
 		
 		/*******************************************************************************
@@ -303,7 +307,7 @@ package Fases.FaseTesouroElementos
 			if ( NU_distancia > UI_distPersegue ) {
 				UI_estado = ESTADO_VOLTANDO_ORIGEM;
 				return;
-			}
+			} 
 
 			//dentro do alcançe do tiro
 			if ( NU_distancia < UI_distAtaque ) {
@@ -474,6 +478,7 @@ package Fases.FaseTesouroElementos
 			this.addChild(mcExp);
 			mcExp.x = mcCanhao.x;
 			mcExp.y = mcCanhao.y;
+			
 		}
 		
 		private function calculaAjusteMiraLateral(_anguloRadiano:Number):Number {
@@ -488,6 +493,7 @@ package Fases.FaseTesouroElementos
 			var ajusteAngulo = anguloGraus - this.rotation;
 			
 			return ajusteAngulo;
+			
 		}
 		
 		/******************************************************************************
@@ -615,15 +621,14 @@ package Fases.FaseTesouroElementos
 			SP_barraVida.x = this.x - 25 ;
 			SP_barraVida.y = this.y - 80; 
 			faseAtor.setChildIndex(SP_barraVida, faseAtor.numChildren - 1);
-			if ( NU_vidaBarra != NU_vidaAtual) {
+			if ( NU_vidaBarra != NU_vidaAtual ) {
 				NU_vidaBarra = NU_vidaAtual
 		    	var tam:Number =  SP_barraVida.width * ( NU_vidaAtual / NU_vidaMaxima );
 				SP_barraInterna.scrollRect = new Rectangle(0,0, tam ,SP_barraInterna.height)
 			}
 			parent.setChildIndex(this, parent.numChildren - 1);
-			
 		}
-
+		
 		public function geraSprite(cor:uint, _ret:Rectangle, _contormo:Boolean ):Sprite {
 			var sp:Sprite =  new Sprite;
 			if (_contormo) sp.graphics.lineStyle(0.1, cor, 1);

@@ -23,6 +23,21 @@ package Fases.FaseTesouroElementos
 		//imagem do barco
 		private var MC_barco		:MovieClip;
 		
+		//Referencia do Barco Herio
+		private var AB_barcoHeroi	:BarcoHeroiAtor;
+		private var PT_alvo			:Point;
+		
+		//componentes da distancia do barco Heroi
+		private var NU_distX		:Number;
+		private var NU_distY		:Number;
+		private var NU_distancia	:Number;
+		
+		//distancia de captura
+		private var UI_distCaptura	:uint;
+		private var BO_capturar		:Boolean;
+		private var MC_captura		:MovieClip;
+
+		
 		//velocidade maxima
 		private var NU_veloMax		:Number;
 		
@@ -52,20 +67,29 @@ package Fases.FaseTesouroElementos
 		{
 			MC_barco =  new Bote;
 			super(MC_barco);
+			MC_captura = new Capture;
 		}
 		
 		/* INTERFACE TangoGames.Atores.AtorInterface */
 
 		public function inicializa():void 
 		{
+			//Atualiza referencid do Barco Heroi
+			AB_barcoHeroi = FaseTesouro ( faseAtor ).barcoHeroi;
+			
 			//velocidade maxima
-			NU_veloMax = 3;
+			NU_veloMax = faseAtor.param[FaseJogoParamentos.PARAM_BOTE_FUGA_VELOC_MAX];
+			
+			//Distancia do barco para captura
+			UI_distCaptura = 100;
 			
 			//adiciona hit teste
 			adcionaClassehitGrupo(IlhaAtor);
 			adcionaClassehitGrupo(BarcoHeroiAtor);
 			adcionaClassehitGrupo(BarcoInimigoAtor);
 			adcionaClassehitGrupo(BoteFugaAtor);
+			
+			PT_alvo = new Point(0, 0);
 
 			VT_TEMP = new Vector.<Sprite>;
 			//reinicia variaveis
@@ -79,7 +103,7 @@ package Fases.FaseTesouroElementos
 			NU_direY = 0;
 			NU_impacX = 0;
 			NU_impacY = 0;			
-			NU_veloABS = 0
+			NU_veloABS = 0;
 			
 			//contador de colisão com a ilha
 			UI_colidiuIlha = 0;
@@ -87,11 +111,29 @@ package Fases.FaseTesouroElementos
 			//alvo
 			PT_PontoFuga = selecionaPontodeFuga();
 			
+			//capturar?
+			BO_capturar = false;
+			
 			verificaCaminho();
+			
 		}
 				
 		public function update(e:Event):void 
 		{	
+			calculaDistanciaBarco();
+			
+			if (NU_distancia < UI_distCaptura ) {
+				if (!BO_capturar) {
+					BO_capturar = true;
+					addChild(MC_captura);
+					AB_barcoHeroi.avisoBote (this);
+				}
+			}
+			else if (BO_capturar) {
+				BO_capturar = false;
+				removeChild (MC_captura);
+			}
+			
 			if ( UI_colidiuIlha > 12 ) {
 				//alvo
 				PT_PontoFuga = selecionaPontodeFuga();
@@ -110,7 +152,6 @@ package Fases.FaseTesouroElementos
 		public function remove():void 
 		{
 			for (var i:uint = 0; i < VT_TEMP.length; i++) faseAtor.removeChild(VT_TEMP[i]);
-
 		}
 		
 		/*******************************************************************************
@@ -180,7 +221,7 @@ package Fases.FaseTesouroElementos
 		 */
 		private function verificaCaminho() {
 			var caminho:Array =  faseAtor.mapa.caminho( new Point (this.x, this.y),  PT_PontoFuga , true);
-			geraQuadradosDebugCaminho(caminho);
+			//geraQuadradosDebugCaminho(caminho);
 			if (caminho.length < 3) {
 				PT_objetivo = PT_PontoFuga;
 			}
@@ -239,7 +280,10 @@ package Fases.FaseTesouroElementos
 			if (C is IlhaAtor) UI_colidiuIlha++;
 			BO_colidiu = true;
 		}
-		
+		/**
+		 * 
+		 * @param	_caminho
+		 */
 		private function geraQuadradosDebugCaminho(_caminho:Array) {
 			var m:Sprite;
 			var p:Point;
@@ -255,6 +299,21 @@ package Fases.FaseTesouroElementos
 				m.y = p.y;
 			}
 		}
-
+		/**
+		 * calcula distancia do barco
+		 */
+		private function calculaDistanciaBarco() {	
+			PT_alvo.x = AB_barcoHeroi.x;
+			PT_alvo.y = AB_barcoHeroi.y;
+			NU_distX = PT_alvo.x - this.x;
+			NU_distY = PT_alvo.y - this.y;
+			NU_distancia = Math.sqrt( ( NU_distX * NU_distX ) + ( NU_distY * NU_distY ) );
+		}
+		
+		public function get capturar():Boolean 
+		{
+			return BO_capturar;
+		}
+		
 	}
 }
