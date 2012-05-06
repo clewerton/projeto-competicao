@@ -32,10 +32,16 @@
 		public static const UPGRADE_TIRO_NIVEL1:uint = 1;
 		public static const UPGRADE_TIRO_NIVEL2:uint = 2;
 
-		//Upgrate do tipo tiro
+		//Upgrate do tipo navio
 		public static const UPGRADE_CASCO_NIVEL0:uint = 500;
 		public static const UPGRADE_CASCO_NIVEL1:uint = 1000;
 		public static const UPGRADE_CASCO_NIVEL2:uint = 2000;
+		
+		//Upgrate de qtd de municao
+		public static const UPGRADE_MUNICAO_NIVEL0:uint = 50;
+		public static const UPGRADE_MUNICAO_NIVEL1:uint = 100;
+		public static const UPGRADE_MUNICAO_NIVEL2:uint = 200;
+		
 		
 		
 		//Imagem do Barco
@@ -83,9 +89,14 @@
 		
 		//ilha encontrada no raio de interação
 		private var IA_IlhaProxima		:IlhaAtor;
-		
-		//bote encotrado raio de intereção
+				
+		//bote encontrado raio de intereção
 		private var BF_boteCapturar		:BoteFugaAtor ;
+		private var BO_boteAlvo			:Boolean;
+		
+		//Controle de Municao 
+		private var UI_municao			:uint;
+		private var UI_muniMax			:uint;
 		
 		//contantes de controle de tiro
 		private const ATIRA_ESQUERDA	:uint = 1;
@@ -102,9 +113,6 @@
 		private var UI_SeqTiroDir		:uint;
 		private var UI_tempoRecarga		:uint;
 		
-		//controle de som
-		private var SC_canal			:SoundChannel;
-		
 		/**
 		 * Função contrutora do BarcoHeroi
 		 */
@@ -120,9 +128,6 @@
 			//posiciona da vela no slot
 			MC_velas.x = MC_Barco.slotVela.x;
 			MC_velas.y = MC_Barco.slotVela.y;
-			
-			//canal de som
-			SC_canal = new SoundChannel;
 			
 		}
 		
@@ -167,10 +172,13 @@
 			
 			UI_tempoRecarga = UI_nivelRecarga;
 			
-			UI_nivelTiro = UPGRADE_TIRO_NIVEL0;
+			UI_nivelTiro    = UPGRADE_TIRO_NIVEL0;
 			
 			//inicializa a quantidade de vida
-			NU_vidaMaxima = UPGRADE_CASCO_NIVEL0;
+			NU_vidaMaxima   = UPGRADE_CASCO_NIVEL0;
+			
+			//municao
+			UI_muniMax      =  UPGRADE_MUNICAO_NIVEL0;
 			
 		}
 		
@@ -202,6 +210,13 @@
 			//inicializa ilha para interaçao
 			IA_IlhaProxima = null;
 			
+			//municao
+			UI_municao = UI_muniMax;
+			
+			//bote alvo para captura
+			BF_boteCapturar = null;
+			BO_boteAlvo = false;
+			
 			//zera contador de tempo para o tiro
 			UI_tempoTiroEsq = 0;
 			UI_tempoTiroDir = 0;
@@ -221,6 +236,9 @@
 		 */
 		public function update(e:Event):void
 		{
+			//interacoes do Barco Heroi
+			controleInteracoes();
+			
 			//responde aos comandos de teclado
 			controleTeclado();
 			
@@ -248,7 +266,8 @@
 		
 		/***********************************************************************************************
 		 * funções usar no  método update
-		 * ********************************************************************************************/ /**
+		 * ********************************************************************************************/
+		/**
 		 * Controle de teclas pressionadas e ações
 		 */
 		private function controleTeclado():void
@@ -340,6 +359,7 @@
 		private function atiraCanhoes(_bordo:uint, _tempoSalva:String, _seqTiro:String):Boolean
 		{
 			this[_tempoSalva]++;
+			if (UI_municao <= 0) return false;
 			if (this[_tempoSalva] < Utils.Rnd(1, 8))
 				return false;
 			this[_tempoSalva] = 0;
@@ -377,6 +397,10 @@
 			this.addChild(mcExp);
 			mcExp.x = mcCanhao.x;
 			mcExp.y = mcCanhao.y;
+			
+			//gasta munição
+			UI_municao--;
+			
 			return true;
 		}
 		
@@ -504,31 +528,93 @@
 		 */
 		public function avisoIlha(_ilha:IlhaAtor)
 		{
-			if (_ilha.revelada)
-				return;
+			if (_ilha.revelada) {
+				switch (_ilha.premioID ) 
+				{
+					case IlhaAtor.PREMIO_BALA:
+						compraMunicao(_ilha);
+					break;
+					case IlhaAtor.PREMIO_BARCO:
+						compraVida(_ilha);
+					break;
+					case IlhaAtor.PREMIO_TESOURO:
+						pegaPontos(_ilha);
+					break;
+					
+					default:
+				} 
+				return
+			}
 			IA_IlhaProxima = _ilha;
 		}
-
+		/**
+		 * peag tesouro da ilha
+		 * @param	ilha
+		 * referencia ilha
+		 */
+		private function pegaPontos(_ilha:IlhaAtor):void 
+		{
+			var pts:uint = _ilha.pontosTesouro;
+			if (pts<=0) return
+			FaseTesouro(faseAtor).pegouPontosTesouro(this, pts);
+		}
+		/**
+		 * compra municao
+		 */
+		private function compraMunicao(_ilha:IlhaAtor) {
+			if (UI_municao < UI_muniMax) {
+				var pontos:uint = FaseTesouro (faseAtor).pontos;
+				var custo:uint = _ilha.municaoCusto;
+				var municao:uint = _ilha.municaoPremio;
+				if ( pontos >= custo) {
+					UI_municao += municao;
+					if (UI_municao > UI_muniMax)  UI_municao = UI_muniMax;
+					FaseTesouro (faseAtor).comprouVida(this,custo);
+				}				
+			}
+		}
+		
+		/**
+		 * compra vida
+		 */
+		private function compraVida(_ilha:IlhaAtor) {
+			if (NU_vidaAtual < NU_vidaMaxima) {
+				var pontos:uint = FaseTesouro (faseAtor).pontos;
+				var custo:uint = _ilha.vidaCusto;
+				var vida:uint = _ilha.vidaPremio;
+				if (pontos >= custo) {
+					NU_vidaAtual += vida;
+					if (NU_vidaAtual > NU_vidaMaxima) NU_vidaAtual = NU_vidaMaxima;
+					FaseTesouro (faseAtor).comprouVida(this,custo);
+				}
+			}
+		}
+		 
+		 
 		/**
 		 * Bote visa quando pode capturar
 		 * @param	_bote
 		 */
-		public function avisoBote(_bote: BoteFugaAtor )
+		public function avisoBote(_bote: BoteFugaAtor ):Boolean
 		{
-			BF_boteCapturar	 = _bote;
+			if (!BO_boteAlvo) {
+				BO_boteAlvo = true;
+				BF_boteCapturar = _bote;
+				return true;
+			}
+			return false;
 		}
 		/**		
 		 * interage com o bote
 		 */
 		private function interageBoteCapturar():void
 		{
-			if (BF_boteCapturar != null) {
-				if (BF_boteCapturar.capturar) {
-					BF_boteCapturar.marcadoRemocao = true;
+			if (BO_boteAlvo) {
+				if (BF_boteCapturar != null) {
+					if (BF_boteCapturar.capturar) BF_boteCapturar.iniciaCaptura ();
 					BF_boteCapturar = null;
-					SC_canal  = Sound(new SomCaptura).play(0);
-					FaseTesouro (faseAtor ).capturouBote()
 				}
+				BO_boteAlvo = false;
 			}
 		}
 		
@@ -584,6 +670,23 @@
 			_tiro.atingiuAtor(this);
 			NU_vidaAtual -= _tiro.dano;
 		}
+		/**
+		 * controle de interaçoes do barco Heroi
+		 */
+		private function controleInteracoes():void 
+		{
+			//libera bote alvo se fora de alcance
+			if (BO_boteAlvo) {
+				if (BF_boteCapturar != null) {
+					if (!BF_boteCapturar.capturar) {
+						BF_boteCapturar = null;
+						BO_boteAlvo = false;
+					}
+				}
+			}
+		}
+		
+		
 		
 		public function get veloABS():Number
 		{
@@ -614,6 +717,16 @@
 		public function get vidaMaxima():Number 
 		{
 			return NU_vidaMaxima;
+		}
+		
+		public function get municao():uint 
+		{
+			return UI_municao;
+		}
+		
+		public function get muniMax():uint 
+		{
+			return UI_muniMax;
 		}
 	}
 }

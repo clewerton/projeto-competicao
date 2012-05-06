@@ -9,7 +9,6 @@ package
 	public class FaseJogoParamentos extends FaseParamentos 
 	{
 		//Parametros da Pontuacao Fase
-		public static const PARAM_PONTOS_TESOURO 		= "PONTOS_TESOURO";
 		public static const PARAM_PONTOS_BARCO_INIMIGO 	= "PONTOS_BARCO_INIMIGO";
 		public static const PARAM_PONTOS_CAPTURA_BOTE 	= "PONTOS_CAPTURA_BOTE";
 		
@@ -27,6 +26,19 @@ package
 		public static const PARAM_TIRO_INIMIGO_DANO		= "TIRO_INIMIGO_DANO";
 		public static const PARAM_TIRO_INIMIGO_ALCANCE	= "TIRO_INIMIGO_ALCANCE";
 		
+		//Paramentos de compra vida
+		public static const PARAM_ILHA_PONTOS_POR_VIDA		= "ILHA_PONTOS_POR_VIDA";
+		public static const PARAM_ILHA_QTD_VIDA_LOTE		= "ILHA_QTD_VIDA_LOTE";
+
+		//Paramentos de compra municao
+		public static const PARAM_ILHA_PONTOS_POR_MUNICAO	= "ILHA_PONTOS_POR_MUNICAO";
+		public static const PARAM_ILHA_QTD_MUNICAO_LOTE		= "ILHA_QTD_MUNICAO_LOTE";
+
+		//Parametros de Tesouro
+		public static const PARAM_ILHA_TOTAL_PONTOS			= "ILHA_TOTAL_PONTOS";
+		public static const PARAM_ILHA_QTD_PONTOS_LOTE		= "ILHA_QTD_PONTOS_LOTE";
+		public static const PARAM_ILHA_QTD_MAX_INI_DEFESA	= "ILHA_QTD_MAX_INI_DEFESA";
+		
 		public function FaseJogoParamentos( _faseID:uint , _nivel:uint) 
 		{
 			super(_faseID, _nivel);
@@ -37,20 +49,31 @@ package
 			//caracteristicas do inimigo
 			inimigo();
 			
+			//parametros das ilhas
+			ilhas();
+			
+		}
+		
+		private function ilhas():void 
+		{
+			//vida
+			this[PARAM_ILHA_PONTOS_POR_VIDA] 	= 1;
+			this[PARAM_ILHA_QTD_VIDA_LOTE] 		= 10;
+			
+			//municao
+			this[PARAM_ILHA_PONTOS_POR_MUNICAO] = 10;
+			this[PARAM_ILHA_QTD_MUNICAO_LOTE] 	= 2;
+			
+			//tesouro
+			this[PARAM_ILHA_TOTAL_PONTOS] 		= 2000;
+			this[PARAM_ILHA_QTD_PONTOS_LOTE] 	= 50;
+			this[PARAM_ILHA_QTD_MAX_INI_DEFESA]	= 1;
+			
 		}
 		
 		private function pontuacao() {
-			this[PARAM_PONTOS_TESOURO] 			= 1000;
-			this[PARAM_PONTOS_BARCO_INIMIGO] 	= 500;
-			this[PARAM_PONTOS_CAPTURA_BOTE] 	= 1000;		
-			switch (faseID) 
-			{
-				case 2:
-					this[PARAM_PONTOS_TESOURO] = 2000;
-				break;
-					
-				default:
-			}
+			this[PARAM_PONTOS_BARCO_INIMIGO] 	= 600;
+			this[PARAM_PONTOS_CAPTURA_BOTE] 	= 300;
 		}
 		
 		/**

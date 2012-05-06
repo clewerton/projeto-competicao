@@ -48,6 +48,9 @@ package Fases.FaseTesouroElementos
 			var tesouroImg:MovieClip;
 			for (var i:uint = 0 ; i < FB_faseTesouro.qtdTesouros ; i++) {
 				tesouroImg = new Slot01();
+				tesouroImg.stop();
+				tesouroImg.scaleX = 0.75;
+				tesouroImg.scaleY = 0.75;
 				tesouroImg.alpha = 0.3;
 				tesouroImg.y = tesouroImg.height / 2;
 				tesouroImg.x = tesouroImg.width / 2 + (tesouroImg.width + 10) * i;
@@ -63,8 +66,14 @@ package Fases.FaseTesouroElementos
 				UI_ultQtd = FB_faseTesouro.tesourosPegos;
 				for (var i:uint = 0 ; i < FB_faseTesouro.qtdTesouros ; i++)
 				{
-					if (i < FB_faseTesouro.tesourosPegos) VT_Tesouro[i].alpha = 1;
-					else VT_Tesouro[i].alpha = 0.3;
+					if (i < FB_faseTesouro.tesourosPegos) {
+						VT_Tesouro[i].alpha = 1;
+						VT_Tesouro[i].gotoAndStop("cheio");
+					}
+					else {
+						VT_Tesouro[i].gotoAndStop("vazio");
+						VT_Tesouro[i].alpha = 0.3;
+					}
 				}
 			}
 		}

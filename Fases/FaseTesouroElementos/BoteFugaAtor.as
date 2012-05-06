@@ -20,6 +20,13 @@ package Fases.FaseTesouroElementos
 	 */
 	public class BoteFugaAtor extends AtorBase implements AtorInterface 
 	{
+		//constantes de estado do barco inimigo
+		public const ESTADO_FUGINDO	    	:uint = 1; 
+		public const ESTADO_EM_CAPTURA	:uint = 2; 
+
+		//estado atual do bote
+		private var UI_estado		:uint;
+		
 		//imagem do barco
 		private var MC_barco		:MovieClip;
 		
@@ -36,8 +43,11 @@ package Fases.FaseTesouroElementos
 		private var UI_distCaptura	:uint;
 		private var BO_capturar		:Boolean;
 		private var MC_captura		:MovieClip;
+		private var MC_emCaptura	:MovieClip;
+		private var BO_emCaptura	:Boolean;
+		private var UI_contCaptura	:uint
+		private var UI_limiteCaptura:uint
 
-		
 		//velocidade maxima
 		private var NU_veloMax		:Number;
 		
@@ -59,6 +69,10 @@ package Fases.FaseTesouroElementos
 		private var NU_impacY		:Number;
 		private var NU_impacX		:Number;
 		
+		//controle de som
+		private var SC_canal			:SoundChannel;
+		
+		
 		
 		private var VT_TEMP:Vector.<Sprite>;
 	
@@ -68,6 +82,7 @@ package Fases.FaseTesouroElementos
 			MC_barco =  new Bote;
 			super(MC_barco);
 			MC_captura = new Capture;
+			MC_emCaptura = new capturandoBote;
 		}
 		
 		/* INTERFACE TangoGames.Atores.AtorInterface */
@@ -81,7 +96,7 @@ package Fases.FaseTesouroElementos
 			NU_veloMax = faseAtor.param[FaseJogoParamentos.PARAM_BOTE_FUGA_VELOC_MAX];
 			
 			//Distancia do barco para captura
-			UI_distCaptura = 100;
+			UI_distCaptura = 150;
 			
 			//adiciona hit teste
 			adcionaClassehitGrupo(IlhaAtor);
@@ -91,7 +106,11 @@ package Fases.FaseTesouroElementos
 			
 			PT_alvo = new Point(0, 0);
 
-			VT_TEMP = new Vector.<Sprite>;
+			VT_TEMP = new Vector.<Sprite>;			
+		
+			//canal de som
+			SC_canal = new SoundChannel;
+			
 			//reinicia variaveis
 			reinicializa();
 		}
@@ -113,20 +132,59 @@ package Fases.FaseTesouroElementos
 			
 			//capturar?
 			BO_capturar = false;
+			BO_emCaptura = false;
+			
+			//contador de frames para captura
+			UI_contCaptura = 0;
+			UI_limiteCaptura = 48;
+			
+			//estado inicia do bote
+			UI_estado = ESTADO_FUGINDO;
 			
 			verificaCaminho();
-			
 		}
 				
 		public function update(e:Event):void 
 		{	
 			calculaDistanciaBarco();
 			
+			switch ( UI_estado ) 
+			{
+				case ESTADO_FUGINDO  :
+					fugaBote();
+				break;
+				case ESTADO_EM_CAPTURA:
+					emCaptura();
+				break;
+				default:
+			} 
+			
+			this.x += ( NU_direX * NU_veloABS ) + NU_impacX;
+			this.y += ( NU_direY * NU_veloABS ) + NU_impacY;
+			NU_impacX = 0 ;
+			NU_impacY = 0;
+			
+		}
+		
+		public function remove():void 
+		{
+			for (var i:uint = 0; i < VT_TEMP.length; i++) faseAtor.removeChild(VT_TEMP[i]);
+		}
+		
+		/*******************************************************************************
+		 *  Fuga
+		 ******************************************************************************/
+		/**
+		 * Bote em fuga
+		 */
+		private function fugaBote():void 
+		{		
 			if (NU_distancia < UI_distCaptura ) {
-				if (!BO_capturar) {
-					BO_capturar = true;
-					addChild(MC_captura);
-					AB_barcoHeroi.avisoBote (this);
+				if (AB_barcoHeroi.avisoBote (this)) {
+					if (!BO_capturar) {
+						BO_capturar = true;
+						addChild(MC_captura);
+					}
 				}
 			}
 			else if (BO_capturar) {
@@ -143,20 +201,9 @@ package Fases.FaseTesouroElementos
 			}
 			
 			fugindo();
-			this.x += ( NU_direX * NU_veloABS ) + NU_impacX;
-			this.y += ( NU_direY * NU_veloABS ) + NU_impacY;
-			NU_impacX = 0 ;
-			NU_impacY = 0;			
+			
 		}
 		
-		public function remove():void 
-		{
-			for (var i:uint = 0; i < VT_TEMP.length; i++) faseAtor.removeChild(VT_TEMP[i]);
-		}
-		
-		/*******************************************************************************
-		 *  Fugindo
-		 ******************************************************************************/
 		/**
 		 * Perseguindo o Heroi
 		 */
@@ -198,7 +245,6 @@ package Fases.FaseTesouroElementos
 				dx = PT_PontoFuga.x - this.x;
 				dy = PT_PontoFuga.y - this.y;
 				if ( Math.sqrt( ( dx * dx ) + ( dy * dy ) ) < 100 ) {
-					trace("fugiu");
 					marcadoRemocao = true;
 					return
 				}
@@ -268,18 +314,6 @@ package Fases.FaseTesouroElementos
 			
 		}
 		
-		public function colisaoPadrao(C:AtorBase) {
-			var ret:Rectangle = Utils.colisaoIntersecao(this, C, faseAtor);
-			if (ret == null) return;
-			var dy:Number = ret.y - this.y;
-			var dx:Number = ret.x - this.x;
-			var ang:Number =  Math.atan2(dy, dx);
-			var impact:Number = Math.max(NU_veloABS * 1.1,1);
-			NU_impacY -= ( Math.sin(ang) * impact ) ;
-			NU_impacX -= ( Math.cos(ang) * impact ) ;
-			if (C is IlhaAtor) UI_colidiuIlha++;
-			BO_colidiu = true;
-		}
 		/**
 		 * 
 		 * @param	_caminho
@@ -299,6 +333,75 @@ package Fases.FaseTesouroElementos
 				m.y = p.y;
 			}
 		}
+		/***********************************************************************************
+		 * Cena da Captura
+		 * ********************************************************************************/
+		/**
+		 * bote sendo capturado
+		 */
+		private function emCaptura():void 
+		{
+			UI_contCaptura ++;
+			if ( UI_contCaptura > UI_limiteCaptura ) {
+				if (BO_emCaptura) {
+					BO_emCaptura = false;
+					removeChild (MC_emCaptura );
+				}
+				UI_estado = ESTADO_FUGINDO
+				return;
+			}
+			
+			if (BO_capturar) {
+				BO_capturar = false;
+				removeChild(MC_captura);
+			}
+
+			if (!BO_emCaptura) {
+				BO_emCaptura = true
+				addChild (MC_emCaptura );
+			}
+			
+			var angulo:Number = Math.atan2(NU_distY, NU_distX )
+			NU_direY = Math.sin(angulo);
+			NU_direX = Math.cos(angulo);
+			NU_veloABS = 1;
+			MC_emCaptura.rotation = ( angulo * Utils.RADIANOS_TO_GRAUS ) - this.rotation;
+			
+		}
+		 
+		public function iniciaCaptura():void {
+			UI_estado = ESTADO_EM_CAPTURA;
+			UI_contCaptura = 0;
+		}
+		 
+		/**********************************************************************************
+		 * colisoes
+		 * *******************************************************************************/
+		/**
+		 * colisão padrão
+		 * @param	C
+		 * ator que colidiu
+		 */
+		public function colisaoPadrao(C:AtorBase) {
+			var ret:Rectangle = Utils.colisaoIntersecao(this, C, faseAtor);
+			if (ret == null) return;
+			var dy:Number = ret.y - this.y;
+			var dx:Number = ret.x - this.x;
+			var ang:Number =  Math.atan2(dy, dx);
+			var impact:Number = Math.max(NU_veloABS * 1.1,1);
+			NU_impacY -= ( Math.sin(ang) * impact ) ;
+			NU_impacX -= ( Math.cos(ang) * impact ) ;
+			if (C is IlhaAtor) UI_colidiuIlha++;
+			BO_colidiu = true;
+			if (UI_estado == ESTADO_EM_CAPTURA) {
+				if (C is BarcoHeroiAtor ) {
+					SC_canal  = Sound(new SomCaptura).play(0);
+					FaseTesouro(faseAtor).capturouBote(this);
+					marcadoRemocao = true;
+				}
+			}
+		}
+		 
 		/**
 		 * calcula distancia do barco
 		 */
@@ -309,6 +412,10 @@ package Fases.FaseTesouroElementos
 			NU_distY = PT_alvo.y - this.y;
 			NU_distancia = Math.sqrt( ( NU_distX * NU_distX ) + ( NU_distY * NU_distY ) );
 		}
+		
+		/*************************************************************************************
+		 * Propriedade públicas
+		 * **********************************************************************************/
 		
 		public function get capturar():Boolean 
 		{

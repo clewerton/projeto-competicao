@@ -449,5 +449,10 @@ package TangoGames.Fases
 		{
 			return FP_param;
 		}
+		
+		public function get camadaSup():Sprite 
+		{
+			return SP_camadaSup;
+		}
 	}
 }

@@ -15,9 +15,9 @@ package TangoGames.Fases
 	{
 		private var AR_mapa:Array;
 		private var AR_mapaAtores:Array;
-		private var AR_tmpMapa:Array;
-		private var AR_pontos:Array;
-		private var AR_caminhoArr:Array;
+		//private var AR_tmpMapa:Array;
+		//private var AR_pontos:Array;
+		//private var AR_caminhoArr:Array;
 
 		private var PT_ini:Point;
 		private var PT_quadrado:Point;
@@ -38,7 +38,7 @@ package TangoGames.Fases
 			UI_dimY = 0;
 			AR_mapa = new Array;
 			AR_mapaAtores = new Array;
-			AR_caminhoArr = new Array;
+			//AR_caminhoArr = new Array;
 			NU_areaMaxHit = ( PT_quadrado.x * PT_quadrado.y ) * 0.30;
 		}
 		
@@ -172,27 +172,29 @@ package TangoGames.Fases
 		 */
 		public function caminho( _origem:Point, _destino:Point, diag:Boolean = true):Array {		
 			BO_diagonal = diag;
-			AR_tmpMapa = new Array;
+			var AR_tmpMapa:Array = new Array;
 			for(var i:Number = 0; i < UI_dimX; i++) {
 				AR_tmpMapa[i] = new Array();		
 				for(var j:Number = 0; j < UI_dimY; j++) {
 					AR_tmpMapa[i][j] = 0;
 				}
 			}
-			
-			var iniPoint:Point = convertePonto(_origem,true);
-			var fimPoint:Point = convertePonto(_destino,true);
+			//trace("dimenções: (", UI_dimX, " / ", UI_dimY, " )");
+			var iniPoint:Point = convertePonto(_origem,  true);
+			//trace("ponto origem : (", iniPoint.x, " /" , iniPoint.y,")");
+			var fimPoint:Point = convertePonto(_destino, true);
+			//trace("ponto destino : (", fimPoint.x, " /" , fimPoint.y,")");
 			
 			AR_tmpMapa[iniPoint.x][iniPoint.y] = 1;			
 			AR_tmpMapa[fimPoint.x][fimPoint.y] = -1;
 			
-			AR_pontos = new Array;
+			var AR_pontos:Array = new Array;
 			AR_pontos.push(iniPoint);
 
-			var iteracoes:Number = iterate();					
+			var iteracoes:Number = iterate(AR_pontos,AR_tmpMapa);					
 
-			AR_caminhoArr = new Array();
-			AR_caminhoArr = pegaCaminhoArray(fimPoint, iteracoes);
+			var AR_caminhoArr:Array = new Array();
+			AR_caminhoArr = pegaCaminhoArray(fimPoint, iteracoes,AR_caminhoArr,AR_tmpMapa);
 			
 			AR_caminhoArr = caminhoMaisCurto(AR_caminhoArr);
 			return AR_caminhoArr;
@@ -208,35 +210,32 @@ package TangoGames.Fases
 		public function convertePonto(_pontoReal:Point, _livre:Boolean = false ):Point {
 			var p:Point = new Point ( Math.floor( ( _pontoReal.x - RT_fase.left ) / PT_quadrado.x ), Math.floor( ( _pontoReal.y - RT_fase.top ) /  PT_quadrado.y) );
 			p = retificaPonto(p);
-			if (_livre) {
-				var dx:int = -1
-				var dy:int = -1
-				var r:uint = 1
-				var pfix:Point = new Point(p.x, p.y);
-				while ( AR_mapa[p.x][p.y] == 1 ) {
-					p.x  = pfix.x + dx;
-					p = retificaPonto(p);
-					while ( AR_mapa[p.x][p.y] == 1 && dy < r ) {
-						p.y = pfix.y + dy;
-						p = retificaPonto(p);
-						dy++;
-					}
-					dx ++;
-					if (dx > r) {
-						r++;
-						dx = -r;
-					}
-					dy = -r;
-				}
-			}
+			if (_livre && !testaPonto(p) ) p = interacaoPonto(p, 1, -1, -1);
 			return p
+		}
+		
+		private function interacaoPonto(_p:Point, _r:uint, _dx:int, _dy:int):Point {
+			var p:Point = new Point(_p.x + _dx, _p.y + _dy)
+			if ( testaPonto (p) ) return p;
+			if ( _dy > _r ) return interacaoPonto( _p , _r + 1 , -(_r + 1 ) , -(_r + 1) );	
+			if ( _dx > _r ) return interacaoPonto( _p , _r     , - _r       , _dy + 1   );
+			return interacaoPonto( _p , _r , _dx + 1 , _dy );	
+		}
+		
+		private function testaPonto(_p:Point):Boolean {
+			if ( _p.x >= UI_dimX - 1 ) return false;
+			else if ( _p.x < 0 ) return false;
+			if ( _p.y >= UI_dimY ) return false;
+			else if ( _p.y < 0) return false;
+			if ( AR_mapa[_p.x][_p.y] == 1) return false;
+			return true;
 		}
 		
 		private function retificaPonto(_p:Point):Point {
 			var p:Point =  new Point(_p.x, _p.y);
-			if ( p.x > UI_dimX ) p.x = UI_dimX;
-			else if (p.x < 0 ) p.x = 0;
-			if ( p.y > UI_dimY ) p.y = UI_dimY;
+			if ( p.x >= UI_dimX - 1 ) p.x = UI_dimX-2;
+			else if ( p.x < 0 ) p.x = 0;
+			if ( p.y >= UI_dimY ) p.y = UI_dimY-1;
 			else if ( p.y < 0) p.y = 0;
 			return p;
 		}
@@ -278,7 +277,7 @@ package TangoGames.Fases
 		/**
 		 * Retorna Array do Caminho de POntos dado pelo caminho tmpMapa tamanho array
 		 */		
-		private function pegaCaminhoArray(pt:Point, iteracao:Number):Array {
+		private function pegaCaminhoArray(pt:Point, iteracao:Number, AR_caminhoArr:Array, AR_tmpMapa:Array):Array {
 			var tmpPt:Point;
 			var i:Number = pt.x;
 			var j:Number = pt.y;
@@ -291,25 +290,25 @@ package TangoGames.Fases
 			if(i > 0 && AR_tmpMapa[i-1][j] == iteracao)  {
 				tmpPt = new Point(i-1,j);
 				AR_caminhoArr.push(tmpPt);
-				pegaCaminhoArray(tmpPt, iteracao-1);
+				pegaCaminhoArray(tmpPt, iteracao-1,AR_caminhoArr,AR_tmpMapa);
 				return AR_caminhoArr;
 			}
 			if(j > 0 && AR_tmpMapa[i][j-1] == iteracao) {
 				tmpPt = new Point(i,j-1);
 				AR_caminhoArr.push(tmpPt);
-				pegaCaminhoArray(tmpPt, iteracao-1);
+				pegaCaminhoArray(tmpPt, iteracao-1,AR_caminhoArr,AR_tmpMapa);
 				return AR_caminhoArr;
 			}
 			if(i < UI_dimX && AR_tmpMapa[i+1][j] == iteracao) {
 				tmpPt = new Point(i+1,j);
 				AR_caminhoArr.push(tmpPt);
-				pegaCaminhoArray(tmpPt, iteracao-1);
+				pegaCaminhoArray(tmpPt, iteracao-1,AR_caminhoArr,AR_tmpMapa);
 				return AR_caminhoArr;
 			}
 			if(j < UI_dimY && AR_tmpMapa[i][j+1] == iteracao)  {
 				tmpPt = new Point(i,j+1);	
 				AR_caminhoArr.push(tmpPt);
-				pegaCaminhoArray(tmpPt, iteracao-1);
+				pegaCaminhoArray(tmpPt, iteracao-1, AR_caminhoArr , AR_tmpMapa );
 				return AR_caminhoArr;
 			}
 			
@@ -317,25 +316,25 @@ package TangoGames.Fases
 				if(i > 0 && j > 0 && AR_tmpMapa[i-1][j-1] == iteracao)  {
 					tmpPt = new Point(i-1,j-1);
 					AR_caminhoArr.push(tmpPt);
-					pegaCaminhoArray(tmpPt, iteracao-1);
+					pegaCaminhoArray(tmpPt, iteracao-1,AR_caminhoArr,AR_tmpMapa);
 					return AR_caminhoArr;
 				}
 				if(i < UI_dimX && j < UI_dimY && AR_tmpMapa[i+1][j+1] == iteracao) {
 					tmpPt = new Point(i+1,j+1);
 					AR_caminhoArr.push(tmpPt);
-					pegaCaminhoArray(tmpPt, iteracao-1);
+					pegaCaminhoArray(tmpPt, iteracao-1,AR_caminhoArr,AR_tmpMapa);
 					return AR_caminhoArr;
 				}
 				if(i > 0 && j < UI_dimY && AR_tmpMapa[i-1][j+1] == iteracao) {
 					tmpPt = new Point(i-1,j+1);
 					AR_caminhoArr.push(tmpPt);
-					pegaCaminhoArray(tmpPt, iteracao-1);
+					pegaCaminhoArray(tmpPt, iteracao-1,AR_caminhoArr,AR_tmpMapa);
 					return AR_caminhoArr;
 				}
 				if(j > 0 && i < UI_dimX && AR_tmpMapa[i+1][j-1] == iteracao)  {
 					tmpPt = new Point(i+1,j-1);	
 					AR_caminhoArr.push(tmpPt);
-					pegaCaminhoArray(tmpPt, iteracao-1);
+					pegaCaminhoArray(tmpPt, iteracao-1,AR_caminhoArr,AR_tmpMapa );
 					return AR_caminhoArr;
 				}				
 			}
@@ -347,7 +346,7 @@ package TangoGames.Fases
 		/**
 		 * Iterates through map to find best rout for current step
 		 */			
-		private function iterate(iteracao:Number = 1):Number {
+		private function iterate(AR_pontos:Array, AR_tmpMapa:Array,iteracao:Number = 1):Number {
 			var novosPontos:Array = new Array();
 			for(var key:Number = 0; key < AR_pontos.length; key++) {
 				var i:Number = AR_pontos[key].x;
@@ -414,7 +413,7 @@ package TangoGames.Fases
 				return iteracao;
 			}			
 			AR_pontos = novosPontos;
-			iteracao = iterate(iteracao+1);
+			iteracao = iterate(AR_pontos,AR_tmpMapa , iteracao+1);
 			return iteracao;
 		}
 	}
