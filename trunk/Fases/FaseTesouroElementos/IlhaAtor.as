@@ -1,5 +1,6 @@
 package Fases.FaseTesouroElementos 
 {
+	import Fases.Efeitos.DanoBarcoInimigo;
 	import Fases.FaseTesouro;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.MovieClip;
@@ -9,14 +10,22 @@ package Fases.FaseTesouroElementos
 	import flash.geom.Rectangle;
 	import TangoGames.Atores.AtorBase;
 	import TangoGames.Atores.AtorInterface;
+	import TangoGames.Fases.FaseEvent;
 	import TangoGames.Utils;
 	
 	/**
 	 * ...
 	 * @author Arthur Figueirdo
 	 */
-	public class IlhaAtor extends AtorBase implements AtorInterface{
+	public class IlhaAtor extends AtorBase implements AtorInterface {
 		
+		//PREMIOS
+		public static const PREMIO_TESOURO:uint =  1;
+		public static const PREMIO_BALA:uint =  2;
+		public static const PREMIO_BARCO:uint =  3;
+		public static const PREMIO_PIRATAS:uint =  4;
+
+	
 		//figurino da ilha
 		private var MC_ilha				:MovieClip;
 		
@@ -42,6 +51,25 @@ package Fases.FaseTesouroElementos
 		
 		//ponto de referencia global do centro do slot
 		private var PT_centroSlot		:Point;
+		
+		//premio de vida
+		private var UI_custoVida		:uint;
+		private var UI_vidaLote			:uint;
+		private var UI_contador			:uint;		
+		private var UI_frequencia		:uint;		
+
+		//premio de municao
+		private var UI_custoMunicao		:uint;
+		private var UI_municaoLote		:uint;
+		
+		//tesouro
+		private var TA_tesouro			:TesouroIlhaAtor;
+		private var BO_temTesouro		:Boolean;
+		private var UI_qtd_Max_inimigos	:uint;
+		private var UI_qtd_inimigos		:uint;
+		
+		//vetor de inimigos protetores da ilha
+		private var VT_protetores		:Vector.<BarcoInimigoAtor>
 		
 		public function IlhaAtor() 
 		{
@@ -85,16 +113,39 @@ package Fases.FaseTesouroElementos
 			UI_premioID = 0;
 			PT_posicao = new Point(Number.MAX_VALUE,Number.MAX_VALUE);
 			PT_centroSlot = new Point(Number.MAX_VALUE, Number.MAX_VALUE);
-			UI_raioSlot = 200;
 			
+			//raio de interatividade do barco heroi com a ilha
+			UI_raioSlot = 220;
+			
+			//pontos por vida na ilha de vida
+			UI_custoVida = faseAtor.param [ FaseJogoParamentos.PARAM_ILHA_PONTOS_POR_VIDA ];
+			UI_vidaLote  = faseAtor.param [ FaseJogoParamentos.PARAM_ILHA_QTD_VIDA_LOTE];
+			
+			//custo da municao e quantidade por entrega
+			UI_custoMunicao = faseAtor.param [ FaseJogoParamentos.PARAM_ILHA_PONTOS_POR_MUNICAO ];
+			UI_municaoLote  = faseAtor.param [ FaseJogoParamentos.PARAM_ILHA_QTD_MUNICAO_LOTE];
+			
+			//quantidade maxiam de inimigos chamado pela ilha pelo ativado tesouro
+			UI_qtd_Max_inimigos = faseAtor.param [ FaseJogoParamentos.PARAM_ILHA_QTD_MAX_INI_DEFESA];
+			
+			//frequncia de venda de vida e municao
+			UI_frequencia = 24;
+			
+			// reinicia valores
 			reinicializa()
 		}
 		
 		public function reinicializa():void
 		{
+			UI_qtd_inimigos = 0;
+			UI_contador = UI_frequencia;
 			BO_dentroRaio = false;
 			BO_revelada = false;
+			BO_temTesouro = false;
 			faseAtor.addChild(MC_nevoa);
+			
+			VT_protetores = new Vector.<BarcoInimigoAtor>;
+			
 		}
 		
 		public function update(e:Event):void
@@ -102,8 +153,9 @@ package Fases.FaseTesouroElementos
 			if (PT_posicao.x != this.x || PT_posicao.y != this.y) reposicionouIlha();
 			
 			if (!BO_revelada) faseAtor.setChildIndex(MC_nevoa, faseAtor.numChildren - 1);
+			else if (UI_premioID == PREMIO_TESOURO && BO_temTesouro ) chamaBarcosPiratas();
 		}
-				
+		
 		public function remove():void
 		{
 			if (!BO_revelada) faseAtor.removeChild(MC_nevoa);
@@ -122,16 +174,16 @@ package Fases.FaseTesouroElementos
 			
 			switch (_premio) 
 			{
-				case FaseTesouro.PREMIO_TESOURO:
+				case PREMIO_TESOURO:
 					MC_premio = new Slot01;
 				break;
-				case FaseTesouro.PREMIO_BARCO:
+				case PREMIO_BARCO:
 					MC_premio = new Slot02;
 				break;
-				case FaseTesouro.PREMIO_BALA:
+				case PREMIO_BALA:
 					MC_premio = new Slot03;
 				break;
-				case FaseTesouro.PREMIO_PIRATAS:
+				case PREMIO_PIRATAS:
 					MC_premio = new Slot04;
 				break;
 				default:
@@ -165,9 +217,8 @@ package Fases.FaseTesouroElementos
 		override public function hitTestAtor(_atorAlvo:AtorBase):Boolean 
 		{	
 			if (_atorAlvo is BarcoHeroiAtor)
-			{
+			{   var dist:Number = calculaDistanciaSlot(_atorAlvo);
 				if (!BO_revelada) {
-					var dist:Number = calculaDistanciaSlot(_atorAlvo);
 					if ( dist < UI_raioSlot) {
 						BO_dentroRaio = true;
 						MC_nevoa.gotoAndStop("ativo");
@@ -180,7 +231,15 @@ package Fases.FaseTesouroElementos
 					}
 				}
 				else {
-					return false;
+					if ( dist < UI_raioSlot ) {
+						UI_contador++;
+						if (UI_contador > UI_frequencia) {
+							UI_contador = 0;
+							return true;
+						}
+						else return false;
+					}
+					else return false;
 				}
 			}
 			return super.hitTestAtor(_atorAlvo);
@@ -207,10 +266,15 @@ package Fases.FaseTesouroElementos
 				faseAtor.removeChild(MC_nevoa);
 				switch (UI_premioID) 
 				{
-					case FaseTesouro.PREMIO_TESOURO:
-						FaseTesouro(faseAtor).pegouTesouro();
+					case PREMIO_TESOURO:
+						MC_premio.visible = false;
+						TA_tesouro = new TesouroIlhaAtor(this);
+						TA_tesouro.x = PT_centroSlot.x;
+						TA_tesouro.y = PT_centroSlot.y;
+						faseAtor.adicionaAtor(TA_tesouro);
+						BO_temTesouro = true;
 					break;
-					case FaseTesouro.PREMIO_PIRATAS:
+					case PREMIO_PIRATAS:
 						MC_premio.visible = false;
 						var canhao:CanhaoIlhaAtor = new CanhaoIlhaAtor(this);
 						canhao.x = PT_centroSlot.x;
@@ -230,6 +294,72 @@ package Fases.FaseTesouroElementos
 			MC_premio.gotoAndStop("destruido");
 		}
 		
+		/**************************************************************************
+		 * tesouro ilha
+		 * ***********************************************************************/
+		public function get pontosTesouro():uint
+		{
+			if (BO_temTesouro) return TA_tesouro.pegarPontos();
+			else return 0;
+		}
+		
+		public function tesouroVazio():void {
+			MC_premio.visible = true;
+			MC_premio.gotoAndStop("vazio");
+			if (BO_temTesouro) {
+				BO_temTesouro = false;
+				
+				//limpa protetores
+				for each ( var bi:BarcoInimigoAtor in VT_protetores) bi.ativaPerseguidor();
+				UI_qtd_inimigos = 0;
+				VT_protetores = new Vector.<BarcoInimigoAtor>;			
+				
+				//remove o bau Ator
+				TA_tesouro = null;
+				
+				//contabiliza tesouro pego
+				FaseTesouro(faseAtor).pegouTesouro(this);
+			}
+		}
+		
+		public function chamaBarcosPiratas():void {
+			for (var i:uint = 0 ; i < VT_protetores.length; i++) {
+				if (VT_protetores[i].marcadoRemocao) {
+					UI_qtd_inimigos--;
+					VT_protetores.splice(i, 1);
+					break;
+				}
+			}
+			if ( UI_qtd_inimigos >= UI_qtd_Max_inimigos ) return;
+			
+			var pt:Point  =  faseAtor.mapa.convertePonto( new Point(this.x, this.y), true);
+			var ptreal:Point = faseAtor.mapa.convertePontoMapa(pt);
+			var barcoIni:BarcoInimigoAtor 
+			
+			while (UI_qtd_inimigos < UI_qtd_Max_inimigos) {
+				barcoIni= new BarcoInimigoAtor();
+				faseAtor.adicionaAtor(barcoIni);
+				barcoIni.definePosicaoOrigem(ptreal);
+				randomizaPosicaoInimigo(barcoIni);
+				UI_qtd_inimigos++;
+				VT_protetores.push(barcoIni);
+			}
+		}
+		
+		private function randomizaPosicaoInimigo(_ini:BarcoInimigoAtor):void
+		{	
+			var rt:Rectangle = FaseTesouro(faseAtor).limGlob;
+			//x
+			if ( this.x > 0 ) _ini.x = Utils.Rnd( 0 , rt.right );
+			else _ini.x = Utils.Rnd( rt.left  , 0 );
+			//y
+			if ( this.y > 0 ) _ini.y = rt.bottom - 50;	
+			else _ini.y = rt.top - 50;						
+		}
+		/***************************************************************************
+		 * Propriedade publicas
+		 * ************************************************************************/
+		
 		public function get raioSlot():uint 
 		{
 			return UI_raioSlot;
@@ -245,6 +375,31 @@ package Fases.FaseTesouroElementos
 			return BO_dentroRaio;
 		}
 		
+		public function get premioID():uint 
+		{
+			return UI_premioID;
+		}
+		
+		public function get vidaPremio():uint 
+		{
+			return UI_vidaLote;
+		}
+		
+		public function get vidaCusto():uint
+		{
+			return UI_custoVida * UI_vidaLote;
+		}
+
+		public function get municaoPremio():uint 
+		{
+			return UI_municaoLote;
+		}
+		
+		public function get municaoCusto():uint
+		{
+			return UI_municaoLote * UI_custoMunicao;
+		}
+
 	}
 
 }

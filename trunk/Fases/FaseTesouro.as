@@ -1,16 +1,19 @@
 package Fases 
 {
+	import Fases.Efeitos.AvisoPontos;
 	import Fases.FaseTesouroElementos.BarcoHeroiAtor;
 	import Fases.FaseTesouroElementos.BarcoHeroiHUD;
 	import Fases.FaseTesouroElementos.BarcoInimigoAtor;
 	import Fases.FaseTesouroElementos.BoteFugaAtor;
 	import Fases.FaseTesouroElementos.CanhaoIlhaAtor;
 	import Fases.FaseTesouroElementos.IlhaAtor;
+	import Fases.FaseTesouroElementos.MunicaoHUD;
 	import Fases.FaseTesouroElementos.PontosHUD;
 	import Fases.FaseTesouroElementos.TesouroHUD;
 	import Fases.FaseTesouroElementos.TiroHeroiAtor;
 	import Fases.FaseTesouroElementos.TiroInimigoAtor;
 	import flash.display.BitmapData;
+	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
@@ -33,11 +36,6 @@ package Fases
 	 */
 	public class FaseTesouro extends FaseBase implements FaseInterface
 	{
-		public static const PREMIO_TESOURO:uint =  1;
-		public static const PREMIO_BALA:uint =  2;
-		public static const PREMIO_BARCO:uint =  3;
-		public static const PREMIO_PIRATAS:uint =  4;
-		
 		public const MAPA_LARGURA:uint = 5000;
 		public const MAPA_ALTURA:uint = 3750;
 		
@@ -60,7 +58,6 @@ package Fases
 		private var UI_contPiratas:uint;
 		
 		//variaveis dos Inimigos
-		private var VT_Inimigos:Vector.<BarcoInimigoAtor>
 		private var UI_qtdMaxInimigos:uint;
 		
 		//controle de soom do mapa
@@ -83,7 +80,10 @@ package Fases
 		
 		//HUD de vida do Barco
 		private var FH_barcoHUD			:BarcoHeroiHUD;
-			
+		
+		//HUD de munição
+		private var FH_municaoHUD		:MunicaoHUD;
+		
 		public function FaseTesouro(_main:DisplayObjectContainer, _faseCtr:FaseControle, _faseID:uint, _nivel:uint) {
 			super(_main,_faseCtr,_faseID,_nivel);
 			MC_backGround = geraMarFundo();
@@ -115,7 +115,6 @@ package Fases
 			VT_ilhas = new Vector.<IlhaAtor>;
 			
 			//inicializa Inimigos
-			VT_Inimigos = new Vector.<BarcoInimigoAtor>;
 			UI_qtdMaxInimigos = 5;
 			
 			//cpntrole de ZOOM e VISÃO
@@ -134,6 +133,10 @@ package Fases
 			FH_pontosHUD = new PontosHUD;
 			adicionaHUD(FH_pontosHUD);
 			
+			//HUD Munição
+			FH_municaoHUD = new MunicaoHUD;
+			adicionaHUD(FH_municaoHUD);
+			
 			//Reinicia variaveis
 			reiniciacao();
 			
@@ -151,6 +154,7 @@ package Fases
 			
 			//controle de tesouros
 			UI_tesourosPegos = 0;
+			UI_pontos = 0;
 			
 			BO_zoom = false;
 			BO_limites = false;
@@ -167,13 +171,15 @@ package Fases
 			vg.push(IlhaAtor);
 			montaMapa(new Point(50, 50), vg);
 			
+			//coloca quadrados vermelhos marcando o mapeamento
 			//pintaQuadradosDebugMapa()
 			
 			geraInimigo();
+			
 		}
 		
 		public function update(e:Event):void
-		{
+		{	
 			//termina o jogo
 			if ( barcoHeroi.vidaAtual <= 0) {
 				terminoFase()
@@ -215,7 +221,6 @@ package Fases
 					this.x = - AB_barcoHeroi.x + ( stage.stageWidth / 2 );
 					this.y = - AB_barcoHeroi.y + ( stage.stageHeight / 2 );
 					testeRetornoZoom();
-					for each (ini in VT_Inimigos) ini.visible =true
 				}
 				else
 				{
@@ -224,7 +229,6 @@ package Fases
 					this.x = stage.stageWidth  / 2 ;
 					this.y = stage.stageHeight / 2 ;
 					BO_zoom = true;
-					for each (ini in VT_Inimigos) ini.visible =false
 				}
 			}
 			
@@ -296,7 +300,7 @@ package Fases
 			}
 			if (C1 is BoteFugaAtor) BoteFugaAtor(C1).colisaoPadrao(C2);
 
-			trace(C1, " colidiu com ", C2);
+			//trace(C1, " colidiu com ", C2);
 
 		}
 		
@@ -310,7 +314,6 @@ package Fases
 			
 			for (var i:uint = 0 ; i < UI_qtdMaxInimigos ; i++) {
 				barcoIni = new BarcoInimigoAtor();
-				VT_Inimigos.push(barcoIni);
 				adicionaAtor(barcoIni);
 				randomizaPosicaoInimigo(barcoIni);
 				while (!testaSobreposicao(barcoIni)) randomizaPosicaoInimigo(barcoIni);
@@ -319,8 +322,8 @@ package Fases
 		
 		private function randomizaPosicaoInimigo(_ini:BarcoInimigoAtor):void
 		{	
-			_ini.x =  Utils.Rnd( RE_limGlob.left , RE_limGlob.right );
-			_ini.y = Utils.Rnd( RE_limGlob.top , RE_limGlob.bottom );			
+			_ini.x = Utils.Rnd( RE_limGlob.left , RE_limGlob.right );
+			_ini.y = Utils.Rnd( RE_limGlob.top  , RE_limGlob.bottom );			
 		}
 
 		/***********************************************************
@@ -359,22 +362,22 @@ package Fases
 			randomizaPosicaoIlha(_ilha);
 			if (UI_contTesouros < UI_qtdTesouros)
 			{
-				_ilha.definiPremio(PREMIO_TESOURO);
+				_ilha.definiPremio(IlhaAtor.PREMIO_TESOURO);
 				UI_contTesouros++;
 			}
 			else if (UI_contBarco < UI_qtdBarco)
 			{
-				_ilha.definiPremio(PREMIO_BARCO);
+				_ilha.definiPremio(IlhaAtor.PREMIO_BARCO);
 				UI_contBarco++;
 			}
 			else if (UI_contBala < UI_qtdBala)
 			{
-				_ilha.definiPremio(PREMIO_BALA);
+				_ilha.definiPremio(IlhaAtor.PREMIO_BALA);
 				UI_contBala++;
 			}
 			else if (UI_contPiratas < UI_qtdPiratas)
 			{
-				_ilha.definiPremio(PREMIO_PIRATAS);
+				_ilha.definiPremio(IlhaAtor.PREMIO_PIRATAS);
 				UI_contPiratas++;
 			}
 		}
@@ -469,17 +472,44 @@ package Fases
 		/****************************************************************************
 		 * Contagem de pontuacao
 		 * *************************************************************************/
-		public function pegouTesouro() {
+		public function pegouTesouro(_dobj:DisplayObject) {
 			UI_tesourosPegos++;
-			UI_pontos += param[FaseJogoParamentos.PARAM_PONTOS_TESOURO];
-		}
-		
-		public function destruiBarco() {
-			UI_pontos += param[FaseJogoParamentos.PARAM_PONTOS_BARCO_INIMIGO];
 		}
 
-		public function capturouBote() {
-			UI_pontos += param[FaseJogoParamentos.PARAM_PONTOS_CAPTURA_BOTE];
+		public function pegouPontosTesouro(_dobj:DisplayObject, _pts:uint) {
+			UI_pontos += _pts;
+			avisoPontos(_dobj, _pts);
+		}
+
+		
+		public function destruiBarco(_dobj:DisplayObject) {
+			var pts:uint = param[FaseJogoParamentos.PARAM_PONTOS_BARCO_INIMIGO];
+			UI_pontos += pts;
+			avisoPontos(_dobj, pts);
+		}
+
+		public function capturouBote(_dobj:DisplayObject) {
+			var pts:uint = param[FaseJogoParamentos.PARAM_PONTOS_CAPTURA_BOTE];
+			UI_pontos += pts;
+			avisoPontos(_dobj, pts);
+		}
+		
+		public function comprouVida(_dobj:DisplayObject,_custo:int) {
+			UI_pontos -= _custo;
+			avisoPontos(_dobj, -_custo);
+		}
+
+		public function comprouMunicao(_dobj:DisplayObject,_custo:int) {
+			UI_pontos -= _custo;
+			avisoPontos(_dobj, -_custo);
+		}
+		
+		private function avisoPontos(_dobj:DisplayObject , _pontos:int):void {
+			var anima:AvisoPontos = new AvisoPontos (_pontos);
+			var rt:Rectangle = _dobj.getBounds(stage);
+			anima.x = rt.x + ( rt.width / 2 );
+			anima.y = rt.y + ( rt.height / 2 );
+			this.camadaSup.addChild(anima);
 		}
 		
 		/***********************************************************

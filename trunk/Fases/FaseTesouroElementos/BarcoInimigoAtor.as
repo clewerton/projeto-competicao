@@ -43,6 +43,9 @@ package Fases.FaseTesouroElementos
 		//estado atual do inimigo
 		private var UI_estado		:uint = 0;
 		
+		//modo perseguidor
+		private var BO_perseguidor	:Boolean;
+		
 		//variavel indica a distancia para perseguir o barco Heroi
 		private var UI_distPersegue	:uint;
 		
@@ -190,6 +193,8 @@ package Fases.FaseTesouroElementos
 			NU_vidaAtual = NU_vidaMaxima;
 			NU_vidaBarra = 0;
 
+			//modo perseguidor o barco não desiste pela distancia
+			BO_perseguidor = false;
 			
 			//alvo
 			PT_alvo = new Point;
@@ -206,10 +211,7 @@ package Fases.FaseTesouroElementos
 		public function update(e:Event):void 
 		{	
 			//armazena ponto de origem no primeiro update
-			if (!BO_origem) {
-				BO_origem = true;
-				PT_origem = new Point(this.x, this.y);
-			}
+			if (!BO_origem) definePosicaoOrigem(new Point(this.x, this.y));
 
 			//barco foi destruido
 			if ( NU_vidaAtual <= 0 ) { 
@@ -233,9 +235,6 @@ package Fases.FaseTesouroElementos
 				break;
 				case ESTADO_ATIRANDO_HEROI:				
 					atirandoAlvo();
-				break;
-				case ESTADO_VOLTANDO_ORIGEM:
-					voltandoOrigem();
 				break;
 				case ESTADO_VOLTANDO_ORIGEM:
 					voltandoOrigem();
@@ -291,7 +290,7 @@ package Fases.FaseTesouroElementos
 			clonemorto.rotation = this.rotation;
 			
 			//avisa a fase que destrui o barco
-			FaseTesouro(faseAtor).destruiBarco();
+			FaseTesouro(faseAtor).destruiBarco(this);
 			
 		}
 		
@@ -304,7 +303,7 @@ package Fases.FaseTesouroElementos
 		private function perseguindoAlvo() {
 			
 			//ESCAPOU
-			if ( NU_distancia > UI_distPersegue ) {
+			if ( ( NU_distancia > UI_distPersegue ) && (!BO_perseguidor) ) {
 				UI_estado = ESTADO_VOLTANDO_ORIGEM;
 				return;
 			} 
@@ -399,6 +398,16 @@ package Fases.FaseTesouroElementos
 			
 		}
 
+		/**
+		 * ativa o modo perceguidor
+		 * nãi desiste nunca matar ou morrer
+		 */
+		public function ativaPerseguidor():void {
+			BO_perseguidor = true;
+			UI_estado = ESTADO_PERSEGUINDO_HEROI;
+		}
+			
+		
 		/*******************************************************************************
 		 *   Atirando no Barco Heroi
 		 ******************************************************************************/
@@ -502,6 +511,11 @@ package Fases.FaseTesouroElementos
 		
 		private function voltandoOrigem():void 
 		{
+			if (NU_distancia < UI_distPersegue ) {
+				UI_estado = ESTADO_PERSEGUINDO_HEROI; 
+				return
+			}
+			
 			var dx:Number = PT_origem.x - this.x;
 			var dy:Number = PT_origem.y - this.y;
 			if ( Math.sqrt( ( dx * dx ) + ( dy * dy ) ) < 50 ) {
@@ -510,6 +524,7 @@ package Fases.FaseTesouroElementos
 			}
 
 			var caminho:Array =  faseAtor.mapa.caminho( new Point (this.x, this.y),  PT_origem , true);
+			
 			if (caminho.length < 3) {
 				PT_objetivo = PT_origem;
 			}
@@ -517,6 +532,8 @@ package Fases.FaseTesouroElementos
 				PT_objetivo = faseAtor.mapa.convertePontoMapa(caminho[1]);
 			}	
 			
+			//geraQuadradosDebugCaminho(caminho);
+
 			calculaRotaAlvo()
 			
 			NU_veloABS += 0.1;
@@ -528,6 +545,13 @@ package Fases.FaseTesouroElementos
 			NU_direY = Math.sin(NU_direcao);
 			NU_direX = Math.cos(NU_direcao);
 		}
+		
+		public function definePosicaoOrigem(_pt:Point ):void {
+			BO_origem = true;
+			PT_origem = _pt;
+			UI_estado = ESTADO_VOLTANDO_ORIGEM;
+		}
+		
 	
 		/************************************************************************************
 		 * trata colisões
@@ -638,6 +662,6 @@ package Fases.FaseTesouroElementos
 			sp.graphics.drawRect(_ret.left, _ret.left, _ret.width, _ret.height);
 			sp.graphics.endFill();
 			return sp;
-		}
+		}		
 	}
 }
