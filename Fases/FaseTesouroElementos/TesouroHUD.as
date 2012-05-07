@@ -16,10 +16,9 @@ package Fases.FaseTesouroElementos
 		private var VT_Tesouro:Vector.<MovieClip>
 		private var UI_ultQtd:uint;
 		
-		public function TesouroHUD(_fase:FaseTesouro) 
+		public function TesouroHUD() 
 		{
 			VT_Tesouro = new Vector.<MovieClip>;
-			FB_faseTesouro = _fase;
 			super();			
 		}
 		
@@ -27,7 +26,8 @@ package Fases.FaseTesouroElementos
 		
 		public function inicializa():void 
 		{
-			this.x = stage.stageWidth - 150;
+			FB_faseTesouro = FaseTesouro(faseHUD);
+			this.x = stage.stageWidth - 50 * FB_faseTesouro.qtdTesouros;
 			this.y = 20;
 			reinicializa();
 		}

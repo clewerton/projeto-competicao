@@ -68,6 +68,13 @@ package Fases.FaseTesouroElementos
 		private var SP_barraVida		:Sprite;
 		private var SP_barraInterna		:Sprite;
 		
+		//tiro do canhao
+		private var UI_tiroAlcance		:uint;
+		private var UI_tiroVelocidade	:uint;
+		private var UI_tiroPrecisao		:uint;
+		private var UI_tiroPreciso		:Boolean;
+		private var UI_tiroAngDispersao :uint;
+		
 		public function CanhaoIlhaAtor(_ilha:IlhaAtor) 
 		{
 			AB_ilhaCanhao = _ilha;
@@ -94,14 +101,20 @@ package Fases.FaseTesouroElementos
 			//velocidade máxima angular do canhão pirata
 			UI_velAngMax = 3;
 			
+			//informações sobre o tiro
+			UI_tiroAlcance		= faseAtor.param[FaseJogoParamentos.PARAM_TIRO_ILHA_ALCANCE];
+			UI_tiroVelocidade	= faseAtor.param[FaseJogoParamentos.PARAM_TIRO_ILHA_VELOCID];
+			UI_tiroPrecisao		= faseAtor.param[FaseJogoParamentos.PARAM_ILHA_CANHAO_PRECISAO];
+			UI_tiroPreciso		= faseAtor.param[FaseJogoParamentos.PARAM_ILHA_CANHAO_MIRA_PRECISA];
+			UI_tiroAngDispersao = faseAtor.param[FaseJogoParamentos.PARAM_ILHA_CANHAO_ANG_DISPERSAO];
 			//variavis de controle de mira antecipada
-			UI_distMinMirar = TiroInimigoAtor.ALCANCE_TIRO_ILHA * 1.25;
+			UI_distMinMirar = UI_tiroAlcance * 1.25;
 			
 			//frequencia de tiro em frames
-			UI_freqTiro = 72;
+			UI_freqTiro         = faseAtor.param[FaseJogoParamentos.PARAM_ILHA_CANHAO_FREQ_TIRO];
 			
 			//valor de vida máxima do canhão pirata
-			NU_vidaMaxima = 100;
+			NU_vidaMaxima 		= faseAtor.param[FaseJogoParamentos.PARAM_ILHA_CANHAO_MAX_VIDA];
 			
 			//mini barra de vida
 			SP_barraVida = geraSprite(0XFF0000, new Rectangle(0, 0, 50, 5), true);
@@ -152,14 +165,14 @@ package Fases.FaseTesouroElementos
 				break;
 				case ESTADO_MIRANDO_HEROI:
 					atualizaMira();
-					if (NU_distancia <= TiroInimigoAtor.ALCANCE_TIRO_ILHA) UI_estado = ESTADO_ATIRANDO_HEROI;
+					if (NU_distancia <= UI_tiroAlcance) UI_estado = ESTADO_ATIRANDO_HEROI;
 					else if (NU_distancia > UI_distMinMirar) UI_estado = ESTADO_AGUARDANDO;
 					UI_contTiro = UI_freqTiro;
 				break;
 				case ESTADO_ATIRANDO_HEROI:
 					atualizaMira();
 					disparaCanhao();
-					if (NU_distancia > TiroInimigoAtor.ALCANCE_TIRO_ILHA) UI_estado = ESTADO_MIRANDO_HEROI;
+					if (NU_distancia > UI_tiroAlcance) UI_estado = ESTADO_MIRANDO_HEROI;
 				break;
 				default:
 			}
@@ -181,11 +194,13 @@ package Fases.FaseTesouroElementos
 			var dy:Number = NU_distY ;
 
 			//antecipa a mira para destino do barco heroi
-			dx += AB_barcoHeroiAlvo.veloX * ( NU_distancia / TiroInimigoAtor.VELOCIDADE_TIRO_ILHA ); 
-			dy += AB_barcoHeroiAlvo.veloY * ( NU_distancia / TiroInimigoAtor.VELOCIDADE_TIRO_ILHA ); 
-
-			var ang = Math.atan2(dy, dx);
+			if (UI_tiroPreciso) {
+				dx += AB_barcoHeroiAlvo.veloX * ( NU_distancia / UI_tiroVelocidade ); 
+				dy += AB_barcoHeroiAlvo.veloY * ( NU_distancia / UI_tiroVelocidade );
+			}
 			
+			var ang = Math.atan2(dy, dx);
+
 			NU_ajusteAng = corrigeDirecaoAlvo(ang, this.rotation);
 			
 			this.rotation += NU_ajusteAng;
@@ -216,8 +231,16 @@ package Fases.FaseTesouroElementos
 			UI_contTiro ++;
 			if (UI_contTiro > UI_freqTiro) {
 				if (Math.abs( NU_ajusteAng ) < UI_velAngMax ) {
+					//calcula erro de dispersoa do tiro
+					var erro:Number = 0;
+					if (UI_tiroPrecisao < 100) {
+						if ( Utils.Rnd( 0, 99 ) > UI_tiroPrecisao ) {
+							var dif:Number = UI_tiroAngDispersao * Utils.GRAUS_TO_RADIANOS;
+							erro =  ( ( dif * Math.random() ) - ( dif /2 ) );
+						}
+					}
 					var rt:Rectangle = MovieClip(MC_canhao.canhaoponta).getBounds(faseAtor);
-					faseAtor.adicionaAtor(new TiroInimigoAtor(TiroInimigoAtor.TTRO_CANHAO_ILHA, new Point(rt.x, rt.y), NU_direcao));
+					faseAtor.adicionaAtor(new TiroInimigoAtor(TiroInimigoAtor.TTRO_CANHAO_ILHA, new Point(rt.x, rt.y), ( NU_direcao + erro ) ) );
 					//cria efeito do tiro
 					var efeito:AtorAnimacao = new ExplosaoTiroCanhaoGr();
 					this.addChild(efeito);

@@ -62,6 +62,9 @@ package Fases.FaseTesouroElementos
 		private var UI_custoMunicao		:uint;
 		private var UI_municaoLote		:uint;
 		
+		//canhão da ilha
+		private var BO_ativoCanhao		:Boolean;
+		
 		//tesouro
 		private var TA_tesouro			:TesouroIlhaAtor;
 		private var BO_temTesouro		:Boolean;
@@ -138,10 +141,11 @@ package Fases.FaseTesouroElementos
 		public function reinicializa():void
 		{
 			UI_qtd_inimigos = 0;
-			UI_contador = UI_frequencia;
-			BO_dentroRaio = false;
-			BO_revelada = false;
-			BO_temTesouro = false;
+			UI_contador 	= UI_frequencia;
+			BO_dentroRaio 	= false;
+			BO_revelada 	= false;
+			BO_temTesouro 	= false;
+			BO_ativoCanhao 	= false;
 			faseAtor.addChild(MC_nevoa);
 			
 			VT_protetores = new Vector.<BarcoInimigoAtor>;
@@ -276,6 +280,7 @@ package Fases.FaseTesouroElementos
 					break;
 					case PREMIO_PIRATAS:
 						MC_premio.visible = false;
+						BO_ativoCanhao = true;
 						var canhao:CanhaoIlhaAtor = new CanhaoIlhaAtor(this);
 						canhao.x = PT_centroSlot.x;
 						canhao.y = PT_centroSlot.y;
@@ -290,8 +295,12 @@ package Fases.FaseTesouroElementos
 		 * canhão pirata destruido
 		 */
 		public function canhaoPirataDestruido() {
-			MC_premio.visible = true;
-			MC_premio.gotoAndStop("destruido");
+			if (BO_ativoCanhao) {
+				BO_ativoCanhao = false;
+				MC_premio.visible = true;
+				MC_premio.gotoAndStop("destruido");
+				FaseTesouro (faseAtor).destruiCanhao(MC_premio);
+			}
 		}
 		
 		/**************************************************************************
