@@ -22,13 +22,6 @@ package Fases.FaseTesouroElementos
 		//tipos de tiro
 		public static const TTRO_CANHAO_ILHA		:uint  = 1;
 		public static const TTRO_CANHAO_BARCO   	:uint  = 2;
-
-		//velocidade de tiro
-		public static const VELOCIDADE_TIRO_ILHA	:uint  = 10;
-		
-		//alcance de Maximo
-		public static const ALCANCE_TIRO_ILHA		:uint  = 500;
-
 		
 		//tipo de tiro
 		private var UI_tipo			:uint;
@@ -97,11 +90,12 @@ package Fases.FaseTesouroElementos
 			switch (UI_tipo) 
 			{
 				case TTRO_CANHAO_ILHA:
-					UI_alcance = Utils.Rnd (ALCANCE_TIRO_ILHA * 0.9 , ALCANCE_TIRO_ILHA * 1.1)
+					UI_alcance = faseAtor.param[FaseJogoParamentos.PARAM_TIRO_ILHA_ALCANCE];
+					UI_alcance *= ( (Math.random() * 0.2 ) + 0.9 );
 					//velocidade do tiro
-					NU_VelABS  = VELOCIDADE_TIRO_ILHA;
+					NU_VelABS  = faseAtor.param[FaseJogoParamentos.PARAM_TIRO_ILHA_VELOCID];
 					//pontos de dano
-					NU_dano    = 50;
+					NU_dano    = faseAtor.param[FaseJogoParamentos.PARAM_TIRO_ILHA_DANO];
 				break;
 				case TTRO_CANHAO_BARCO:
 					UI_alcance = faseAtor.param[FaseJogoParamentos.PARAM_TIRO_INIMIGO_ALCANCE];

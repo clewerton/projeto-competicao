@@ -81,6 +81,12 @@ package Fases.FaseTesouroElementos
 		private var UI_distAtaque		:uint;
 		private var UI_qtdCanhoes		:uint;
 		
+		//precisao do tiro
+		private var BO_tiroPreciso		:Boolean;
+		private var UI_tiroPrecisao		:uint;
+		private var UI_tiroAngDispersao	:uint;
+
+		
 		//controle da frequncia de tiro
 		private var UI_freqTiro			:uint;
 		private var UI_tiroTempo		:uint;
@@ -102,8 +108,7 @@ package Fases.FaseTesouroElementos
 		private var SP_barraVida		:Sprite;
 		private var SP_barraInterna		:Sprite;
 		
-		private var VT_TEMP				:Vector.<Sprite>;
-	
+		private var VT_TEMP				:Vector.<Sprite>;	
 		
 		public function BarcoInimigoAtor() 
 		{
@@ -142,6 +147,11 @@ package Fases.FaseTesouroElementos
 			
 			//Velocidade do tiro
 			UI_velocidadeIiro = faseAtor.param[FaseJogoParamentos.PARAM_TIRO_INIMIGO_VELOCID];
+			
+			//Tiro antecipado SIM ou NAO
+			BO_tiroPreciso	    = faseAtor.param[FaseJogoParamentos.PARAM_INIMIGO_MIRA_PRECISA];
+			UI_tiroPrecisao	    = faseAtor.param[FaseJogoParamentos.PARAM_INIMIGO_PRECISAO];
+			UI_tiroAngDispersao = faseAtor.param[FaseJogoParamentos.PARAM_INIMIGO_ANG_DISPERSAO];
 			
 			//distancia para iniciar o ataque
 			UI_distAtaque = UI_alcanceTiro * 0.9;
@@ -367,7 +377,7 @@ package Fases.FaseTesouroElementos
 			else {
 				PT_objetivo = faseAtor.mapa.convertePontoMapa(caminho[1]);
 			}			
-			//geraQuadradosDebugCaminho(caminho);
+			geraQuadradosDebugCaminho(caminho);
 		}
 		
 		/**
@@ -423,8 +433,10 @@ package Fases.FaseTesouroElementos
 			var dy:Number = NU_distY;
 			
 			//antecipa a mira para posição projetada do barco heroi
-			dx += AB_barcoHeroi.veloX * ( NU_distancia / UI_velocidadeIiro ); 
-			dy += AB_barcoHeroi.veloY * ( NU_distancia / UI_velocidadeIiro ); 
+			if (BO_tiroPreciso) {
+				dx += AB_barcoHeroi.veloX * ( NU_distancia / UI_velocidadeIiro ); 
+				dy += AB_barcoHeroi.veloY * ( NU_distancia / UI_velocidadeIiro ); 
+			}
 			
 			var angulo:Number =  Math.atan2(dy, dx);
 			
@@ -479,9 +491,21 @@ package Fases.FaseTesouroElementos
 				UI_tiroSeque = 0;
 				UI_tiroTempo = 0;
 			}
+			
+			
 			var mcCanhao:MovieClip = MovieClip(MC_barco.getChildByName(canhao))
 			rt = MovieClip(mcCanhao).getBounds(faseAtor);
-			faseAtor.adicionaAtor(new TiroInimigoAtor(TiroInimigoAtor.TTRO_CANHAO_BARCO, new Point( rt.x , rt.y ) , ang));
+			
+			//calcula erro de dispersoa do tiro
+			var erro:Number = 0;
+			if (UI_tiroPrecisao < 100) {
+				if ( Utils.Rnd( 0, 99 ) > UI_tiroPrecisao ) {
+					var dif:Number = UI_tiroAngDispersao * Utils.GRAUS_TO_RADIANOS;
+					erro =  ( ( dif * Math.random() ) - ( dif /2 ) );
+				}
+			}
+			
+			faseAtor.adicionaAtor(new TiroInimigoAtor(TiroInimigoAtor.TTRO_CANHAO_BARCO, new Point( rt.x , rt.y ) , ( ang + erro ) ) );
 			
 			var mcExp:MovieClip =  new ExplosaoCanhao;
 			this.addChild(mcExp);
@@ -532,7 +556,7 @@ package Fases.FaseTesouroElementos
 				PT_objetivo = faseAtor.mapa.convertePontoMapa(caminho[1]);
 			}	
 			
-			//geraQuadradosDebugCaminho(caminho);
+			geraQuadradosDebugCaminho(caminho);
 
 			calculaRotaAlvo()
 			

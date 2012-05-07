@@ -35,57 +35,66 @@ package Fases
 	 * @author ...
 	 */
 	public class FaseTesouro extends FaseBase implements FaseInterface
-	{
-		public const MAPA_LARGURA:uint = 5000;
-		public const MAPA_ALTURA:uint = 3750;
+	{	
+		//tamanho do mapa
+		private var UI_mapa_Largura	:uint; 
+		private var UI_mapa_Altura	:uint; 
 		
-		private var AB_barcoHeroi:BarcoHeroiAtor;
-		private var MC_backGround:Sprite;
-		private var RE_limites:Rectangle;
-		private var RE_limGlob:Rectangle;
-		private var BO_limites:Boolean;
-		private var NU_limVX:Number;
-		private var NU_limVY:Number;
+		//barco heroi
+		private var AB_barcoHeroi	:BarcoHeroiAtor;
+		
+		//fundo do mapa
+		private var MC_backGround	:Sprite;
+		private var RE_limites		:Rectangle;
+		private var RE_limGlob		:Rectangle;
+		private var BO_limites		:Boolean;
+		private var NU_limVX		:Number;
+		private var NU_limVY		:Number;
 		
 		//Variaveis das Ilhas
-		private var VT_ilhas:Vector.<IlhaAtor>;
-		private var UI_qtdIlhas:uint;
-		private var UI_qtdBala:uint;
-		private var UI_contBala:uint;
-		private var UI_qtdBarco:uint;
-		private var UI_contBarco:uint;
-		private var UI_qtdPiratas:uint;
-		private var UI_contPiratas:uint;
+		private var VT_ilhas		:Vector.<IlhaAtor>;
+		private var UI_qtdIlhas		:uint;
+		private var UI_qtdBala		:uint;
+		private var UI_contBala		:uint;
+		private var UI_qtdBarco		:uint;
+		private var UI_contBarco	:uint;
+		private var UI_qtdPiratas	:uint;
+		private var UI_contPiratas	:uint;
 		
 		//variaveis dos Inimigos
 		private var UI_qtdMaxInimigos:uint;
 		
 		//controle de soom do mapa
-		private var BO_zoom:Boolean;
-		private var NU_escala:Number;
-		private var BO_centralizado:Boolean;
+		private var BO_zoom			:Boolean;
+		private var NU_escala		:Number;
+		private var BO_centralizado	:Boolean;
 		
 		//DISPLAY FPS
 		private var FH_FPS:FaseHUD;
 		
 		//Controle de Tesouros
-		private var UI_qtdTesouros		:uint;
-		private var UI_contTesouros		:uint;
-		private var UI_tesourosPegos	:uint;
-		private var FH_tesouroHUD		:TesouroHUD;
+		private var UI_qtdTesouros	:uint;
+		private var UI_contTesouros	:uint;
+		private var UI_tesourosPegos:uint;
+		private var FH_tesouroHUD	:TesouroHUD;
 		
 		//Pontos da Fase
-		private var UI_pontos			:uint;
-		private var FH_pontosHUD		:PontosHUD;
+		private var UI_pontos		:uint;
+		private var FH_pontosHUD	:PontosHUD;
 		
 		//HUD de vida do Barco
-		private var FH_barcoHUD			:BarcoHeroiHUD;
+		private var FH_barcoHUD		:BarcoHeroiHUD;
 		
 		//HUD de munição
-		private var FH_municaoHUD		:MunicaoHUD;
+		private var FH_municaoHUD	:MunicaoHUD;
 		
 		public function FaseTesouro(_main:DisplayObjectContainer, _faseCtr:FaseControle, _faseID:uint, _nivel:uint) {
-			super(_main,_faseCtr,_faseID,_nivel);
+			super(_main, _faseCtr, _faseID, _nivel);
+			
+			//tamanho do mapa
+			UI_mapa_Largura	= param[FaseJogoParamentos.PARAM_FASE_TAMANHO_LARGURA];
+			UI_mapa_Altura	= param[FaseJogoParamentos.PARAM_FASE_TAMANHO_ALTURA];
+			
 			MC_backGround = geraMarFundo();
 			this.addChild(MC_backGround);
 			MC_backGround.x = -  MC_backGround.width / 2;
@@ -107,22 +116,22 @@ package Fases
 			RE_limGlob = new Rectangle( - ( this.width / 2 ) , - ( this.height / 2 ) ,  this.width , this.height);
 			
 			//inicializa controle de ilhas
-			UI_qtdIlhas = 15;
-			UI_qtdTesouros = 3;
-			UI_qtdBala = 4;
-			UI_qtdBarco = 4
-			UI_qtdPiratas = 4;
+			UI_qtdTesouros 	= param[FaseJogoParamentos.PARAM_FASE_QTD_ILHAS_TESOURO];
+			UI_qtdBala 		= param[FaseJogoParamentos.PARAM_FASE_QTD_ILHAS_MUNICAO];
+			UI_qtdBarco 	= param[FaseJogoParamentos.PARAM_FASE_QTD_ILHAS_VIDA];
+			UI_qtdPiratas 	= param[FaseJogoParamentos.PARAM_FASE_QTD_ILHAS_CANHAO];
+			UI_qtdIlhas 	= UI_qtdTesouros + UI_qtdBala + UI_qtdBarco + UI_qtdPiratas ;
 			VT_ilhas = new Vector.<IlhaAtor>;
 			
 			//inicializa Inimigos
-			UI_qtdMaxInimigos = 5;
+			UI_qtdMaxInimigos = param[FaseJogoParamentos.PARAM_FASE_QTD_INIMIGOS];
 			
 			//cpntrole de ZOOM e VISÃO
-			NU_escala =  stage.stageWidth / MAPA_LARGURA;
+			NU_escala =  stage.stageWidth / UI_mapa_Largura;
 			BO_centralizado = true;
 			
 			//hud de Tesouros
-			FH_tesouroHUD = new TesouroHUD(this);
+			FH_tesouroHUD = new TesouroHUD();
 			adicionaHUD(FH_tesouroHUD);
 			
 			//HUD do barco
@@ -172,7 +181,7 @@ package Fases
 			montaMapa(new Point(50, 50), vg);
 			
 			//coloca quadrados vermelhos marcando o mapeamento
-			//pintaQuadradosDebugMapa()
+			pintaQuadradosDebugMapa()
 			
 			geraInimigo();
 			
@@ -398,10 +407,10 @@ package Fases
 			sp.graphics.lineStyle();
 			//sp.graphics.beginFill(0X0099C, 1);
 			sp.graphics.beginBitmapFill(new seawaterbmp);
-			sp.graphics.drawRect(0, 0, MAPA_LARGURA, MAPA_ALTURA);
+			sp.graphics.drawRect(0, 0, UI_mapa_Largura, UI_mapa_Altura);
 			sp.graphics.endFill();
 			sp.graphics.beginFill(0X0099C, 0.5);
-			sp.graphics.drawRect(0, 0, MAPA_LARGURA, MAPA_ALTURA);
+			sp.graphics.drawRect(0, 0, UI_mapa_Largura, UI_mapa_Altura);
 			sp.graphics.endFill();
 			return sp;
 		}
@@ -480,8 +489,13 @@ package Fases
 			UI_pontos += _pts;
 			avisoPontos(_dobj, _pts);
 		}
-
 		
+		public function destruiCanhao(_dobj:DisplayObject) {
+			var pts:uint = param[FaseJogoParamentos.PARAM_PONTOS_CANHAO_ILHA];
+			UI_pontos += pts;
+			avisoPontos(_dobj, pts);
+		}
+
 		public function destruiBarco(_dobj:DisplayObject) {
 			var pts:uint = param[FaseJogoParamentos.PARAM_PONTOS_BARCO_INIMIGO];
 			UI_pontos += pts;

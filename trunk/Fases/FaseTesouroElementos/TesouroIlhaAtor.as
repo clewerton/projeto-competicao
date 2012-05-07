@@ -107,8 +107,8 @@ package Fases.FaseTesouroElementos
 		
 		private function atualizaBarradeTesouro():void 
 		{
-			SP_barraPontos.x = this.x + this.width  ;
-			SP_barraPontos.y = this.y + 5; 
+			SP_barraPontos.x = this.x + this.width - 15  ;
+			SP_barraPontos.y = this.y + 20; 
 			faseAtor.setChildIndex(SP_barraPontos, faseAtor.numChildren - 1);
 			if ( UI_pontos != UI_pontosBarra ) {
 				UI_pontosBarra = UI_pontos
