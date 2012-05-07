@@ -435,7 +435,7 @@ package TangoGames.Atores
 			return teste;
 		}*/
 
-		protected function testeHitShapeAtor(_ator:AtorBase):Boolean {
+		protected function testeHitShapeAtor2(_ator:AtorBase):Boolean {
 			calculaClipBmpData();
 			
 			_ator.calculaClipBmpData();
@@ -477,6 +477,71 @@ package TangoGames.Atores
 				BD_clipBitmap.draw(DO_hitObject, targetXform);
 			}
 		}
+		
+		private function testeHitShapeAtor ( _ator:AtorBase ):Boolean {
+			
+			this.calculaClipBmpData()		
+
+			_ator.calculaClipBmpData()
+			
+			var recinter:Rectangle = this.clipRectan.intersection(_ator.clipRectan);
+
+			recinter.left	= Math.ceil(recinter.left);
+			recinter.top	= Math.ceil(recinter.top);
+			recinter.width  = Math.ceil(recinter.width);
+			recinter.height = Math.ceil(recinter.height);
+			
+			if (recinter.width <=2 || recinter.height <=2 ) return false;
+			
+			var corte1:Rectangle = new Rectangle();
+
+			corte1.left   = Math.ceil(recinter.left - this.clipRectan.left);
+			corte1.top    = Math.ceil(recinter.top - this.clipRectan.top);
+			corte1.width  = recinter.width;
+			corte1.height = recinter.height;
+			
+			
+			var rt1:Rectangle = this.clipBitmap.rect
+			
+			if (rt1.left > corte1.left) corte1.left = Math.ceil(rt1.left);
+			if (rt1.top > corte1.top) corte1.top = Math.ceil(rt1.top);
+			if (rt1.right < corte1.right) corte1.right = Math.ceil(rt1.right);
+			if (rt1.bottom < corte1.bottom) corte1.bottom = Math.ceil(rt1.bottom);
+						
+			var img1:BitmapData = new BitmapData(corte1.width, corte1.height, true, 0);
+			
+			img1.copyPixels( this.clipBitmap, corte1, new Point(0,0));
+			
+			var corte2:Rectangle = new Rectangle();
+
+			corte2.left   = Math.ceil(recinter.left - _ator.clipRectan.left);
+			corte2.top    = Math.ceil(recinter.top - _ator.clipRectan.top);
+			corte2.width  = recinter.width;
+			corte2.height = recinter.height;
+			
+			var rt2:Rectangle = _ator.clipBitmap.rect
+			
+			if (rt2.left > corte2.left) corte2.left = Math.ceil(rt2.left);
+			if (rt2.top > corte2.top) corte2.top = Math.ceil(rt2.top);
+			if (rt2.right < corte2.right) corte2.right = Math.ceil(rt2.right);
+			if (rt2.bottom < corte2.bottom) corte2.bottom = Math.ceil(rt2.bottom);
+						
+			var img2:BitmapData = new BitmapData(corte2.width, corte2.height, true, 0);
+			
+			img2.copyPixels( _ator.clipBitmap, corte2, new Point(0,0));
+			
+			var ok:Boolean = false
+			
+			if (img1.hitTest(new Point(0,0), 255, img2, new Point(0,0),	255	) ) ok = true;
+			
+			img1.dispose();
+			
+			img2.dispose();
+			
+			return ok;
+		}
+
+		
 
 		//***********************************************************************************************
 		//**********              gera evento para os limites do stage                 ******************

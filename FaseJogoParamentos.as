@@ -99,8 +99,8 @@ package
 			this[PARAM_FASE_TAMANHO_ALTURA]		= 2400;
 			
 			// quantidade de ilhas
-			this[PARAM_FASE_QTD_ILHAS_TESOURO]	= 5;
-			this[PARAM_FASE_QTD_ILHAS_CANHAO]	= 3;
+			this[PARAM_FASE_QTD_ILHAS_TESOURO]	= 2;
+			this[PARAM_FASE_QTD_ILHAS_CANHAO]	= 1;
 			this[PARAM_FASE_QTD_ILHAS_MUNICAO]	= 1;
 			this[PARAM_FASE_QTD_ILHAS_VIDA]		= 1;
 			
