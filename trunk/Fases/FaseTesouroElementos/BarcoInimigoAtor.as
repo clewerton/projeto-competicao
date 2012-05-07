@@ -238,7 +238,13 @@ package Fases.FaseTesouroElementos
 			switch (UI_estado) 
 			{
 				case ESTADO_AGUARDANDO:
-					if (NU_distancia < UI_distPersegue ) UI_estado = ESTADO_PERSEGUINDO_HEROI; 
+					if (NU_distancia < UI_distPersegue ) {
+						UI_estado = ESTADO_PERSEGUINDO_HEROI;
+						break;
+					}
+					var dx:Number = PT_origem.x - this.x;
+					var dy:Number = PT_origem.y - this.y;
+					if ( Math.sqrt( ( dx * dx ) + ( dy * dy ) ) > 100 ) UI_estado = ESTADO_VOLTANDO_ORIGEM;
 				break;
 				case ESTADO_PERSEGUINDO_HEROI:				
 					perseguindoAlvo();
@@ -254,8 +260,8 @@ package Fases.FaseTesouroElementos
 			
 			this.x += ( NU_direX * NU_veloABS ) + NU_impacX;
 			this.y += ( NU_direY * NU_veloABS ) + NU_impacY;
-			NU_impacX = 0 ;
-			NU_impacY = 0;
+			NU_impacX *= 0.5 ;
+			NU_impacY *= 0.5 ;
 			
 			NU_veloABS *= NU_friccaoVel;
 			
@@ -587,7 +593,7 @@ package Fases.FaseTesouroElementos
 			var dy:Number = ( ret.top  + ( ret.height / 2 ) ) - this.y;
 			var dx:Number = ( ret.left + ( ret.width  / 2 ) ) - this.x;
 			var ang:Number =  Math.atan2(dy, dx);
-			var impact:Number = Math.max(NU_veloABS * 1.1,1);
+			var impact:Number = Math.max(NU_veloABS * 0.9,1);
 			NU_impacY -= ( Math.sin(ang) * impact ) ;
 			NU_impacX -= ( Math.cos(ang) * impact ) ;
 			BO_bateuIlha = true;
