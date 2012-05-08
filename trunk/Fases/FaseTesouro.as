@@ -181,7 +181,7 @@ package Fases
 			montaMapa(new Point(50, 50), vg);
 			
 			//coloca quadrados vermelhos marcando o mapeamento
-			pintaQuadradosDebugMapa()
+			//pintaQuadradosDebugMapa()
 			
 			geraInimigo();
 			

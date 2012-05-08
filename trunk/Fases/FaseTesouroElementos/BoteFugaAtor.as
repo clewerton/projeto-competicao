@@ -161,8 +161,8 @@ package Fases.FaseTesouroElementos
 			
 			this.x += ( NU_direX * NU_veloABS ) + NU_impacX;
 			this.y += ( NU_direY * NU_veloABS ) + NU_impacY;
-			NU_impacX = 0 ;
-			NU_impacY = 0;
+			NU_impacX *= 0.6;
+			NU_impacY *= 0.6;
 			
 		}
 		
@@ -192,11 +192,13 @@ package Fases.FaseTesouroElementos
 				removeChild (MC_captura);
 			}
 			
-			if ( UI_colidiuIlha > 12 ) {
+			if ( UI_colidiuIlha > 0 ) {
 				//alvo
-				PT_PontoFuga = selecionaPontodeFuga();
-				verificaCaminho();
-				UI_colidiuIlha = 0
+				if (UI_colidiuIlha > 12) { 
+					PT_PontoFuga = selecionaPontodeFuga();
+					UI_colidiuIlha = 0
+				}
+				if (BO_colidiu) verificaCaminho();
 				BO_colidiu = false;
 			}
 			
@@ -388,11 +390,14 @@ package Fases.FaseTesouroElementos
 			var dy:Number = ret.y - this.y;
 			var dx:Number = ret.x - this.x;
 			var ang:Number =  Math.atan2(dy, dx);
-			var impact:Number = Math.max(NU_veloABS * 1.1,1);
+			var impact:Number = Math.max(NU_veloABS * 0.9,1);
 			NU_impacY -= ( Math.sin(ang) * impact ) ;
 			NU_impacX -= ( Math.cos(ang) * impact ) ;
-			if (C is IlhaAtor) UI_colidiuIlha++;
-			BO_colidiu = true;
+			if (C is IlhaAtor) {
+				UI_colidiuIlha++;
+				BO_colidiu = true;
+				NU_veloABS = 0;
+			}
 			if (UI_estado == ESTADO_EM_CAPTURA) {
 				if (C is BarcoHeroiAtor ) {
 					SC_canal  = Sound(new SomCaptura).play(0);
