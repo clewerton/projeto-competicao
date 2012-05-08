@@ -22,24 +22,27 @@ package TangoGames.Atores
 	 */
 	public class AtorBase extends Sprite {
 		//variaveis de representação visual da classe Ator
-		private var SP_figurino:DisplayObject;
+		private var SP_figurino			:DisplayObject;
 		
 		//variavel para controlar a remoção automática do objeto AtorBase
-		private var BO_marcadoRemocao:Boolean;
+		private var BO_marcadoRemocao	:Boolean;
 		
 		//variavel para acoplar a funcionalizade de teste de teclado na classe AtorBase
-		private var FC_funcaoTeclas:Function;
+		private var FC_funcaoTeclas		:Function;
 		
 		//variavel para guardar a referencia a classe FaseBase que o AtorBase pertence
-		private var FB_faseAtor:FaseBase;
+		private var FB_faseAtor			:FaseBase;
 		
 		//Variaveis para controle do hittest da classe AtorBase
-		private var VT_hitGrupos: Vector.<Class>;
-		private var DO_hitObject:DisplayObject;
-		private var BO_cacheBitmap:Boolean;
-		private var BD_clipBitmap:BitmapData;
-		private var RT_clipRectan:Rectangle;
-		
+		private var VT_hitGrupos		:Vector.<Class>;
+		private var DO_hitObject		:DisplayObject;
+		private var BO_cacheBitmap		:Boolean;
+		private var BD_clipBitmap		:BitmapData;
+		private var RT_clipRectan		:Rectangle;
+		private var UI_clipX		 	:int;
+		private var UI_clipY		 	:int;
+		private var UI_clipRotation	 	:int;
+				
 		//Variaveis de controle de entrada e saida do Stage
 		private var RE_Bordas:Rectangle;
 		private var BO_tododentro:Boolean = false;
@@ -81,9 +84,12 @@ package TangoGames.Atores
 			BO_marcadoRemocao = false;
 			
 			//Inicializa variaveis para o hitTeste 
-			VT_hitGrupos = new Vector.<Class>;
-			DO_hitObject = SP_figurino;
-			BO_cacheBitmap =  false;
+			VT_hitGrupos 	= new Vector.<Class>;
+			DO_hitObject 	= SP_figurino;
+			BO_cacheBitmap 	=  false;
+			UI_clipX		= 0;
+			UI_clipY		= 0;
+			UI_clipRotation	= 0;
 			
 			//Inicializa controle de teclas
 			OB_teclas = new Object;
@@ -462,19 +468,30 @@ package TangoGames.Atores
 		public function calculaClipBmpData():void {
 			if (!BO_cacheBitmap) {
 				BO_cacheBitmap = true;
+				if ( UI_clipX != this.x || UI_clipY != this.y || UI_clipRotation != this.rotation ) {
+					
+					// atualiza situacao
+					UI_clipX = this.x;
+					UI_clipY = this.y;
+					UI_clipRotation = this.rotation;
+					
+					//retangulo do clip
+					RT_clipRectan = DO_hitObject.getBounds(faseAtor);
 				
-				RT_clipRectan = DO_hitObject.getBounds(faseAtor);
-				
-				// calculate the transform for the display object relative to the common parent
-				var parentXformInvert:Matrix = faseAtor.transform.concatenatedMatrix.clone();
-				parentXformInvert.invert();
-				var targetXform:Matrix = DO_hitObject.transform.concatenatedMatrix.clone();
-				targetXform.concat(parentXformInvert);
-				// translate the target into the rect's space
-				targetXform.translate( -RT_clipRectan.x, -RT_clipRectan.y);
-				
-				BD_clipBitmap = new BitmapData(RT_clipRectan.width, RT_clipRectan.height, true, 0);
-				BD_clipBitmap.draw(DO_hitObject, targetXform);
+					// calculate the transform for the display object relative to the common parent
+					var parentXformInvert:Matrix = faseAtor.transform.concatenatedMatrix.clone();
+					parentXformInvert.invert();
+					var targetXform:Matrix = DO_hitObject.transform.concatenatedMatrix.clone();
+					targetXform.concat(parentXformInvert);
+					
+					// translate the target into the rect's space
+					targetXform.translate( -RT_clipRectan.x, -RT_clipRectan.y);
+					
+					// cria clip bitmap
+					BD_clipBitmap = new BitmapData(RT_clipRectan.width, RT_clipRectan.height, true, 0);
+					BD_clipBitmap.draw(DO_hitObject, targetXform);
+					
+				}
 			}
 		}
 		
@@ -486,8 +503,8 @@ package TangoGames.Atores
 			
 			var recinter:Rectangle = this.clipRectan.intersection(_ator.clipRectan);
 
-			recinter.left	= Math.ceil(recinter.left);
-			recinter.top	= Math.ceil(recinter.top);
+			recinter.left	= recinter.left;
+			recinter.top	= recinter.top;
 			recinter.width  = Math.ceil(recinter.width);
 			recinter.height = Math.ceil(recinter.height);
 			
@@ -503,10 +520,10 @@ package TangoGames.Atores
 			
 			var rt1:Rectangle = this.clipBitmap.rect
 			
-			if (rt1.left > corte1.left) corte1.left = Math.ceil(rt1.left);
-			if (rt1.top > corte1.top) corte1.top = Math.ceil(rt1.top);
-			if (rt1.right < corte1.right) corte1.right = Math.ceil(rt1.right);
-			if (rt1.bottom < corte1.bottom) corte1.bottom = Math.ceil(rt1.bottom);
+			if (rt1.left > corte1.left) corte1.left = rt1.left;
+			if (rt1.top > corte1.top) corte1.top = rt1.top;
+			if (rt1.right < corte1.right) corte1.right = rt1.right;
+			if (rt1.bottom < corte1.bottom) corte1.bottom = rt1.bottom;
 						
 			var img1:BitmapData = new BitmapData(corte1.width, corte1.height, true, 0);
 			
@@ -514,17 +531,17 @@ package TangoGames.Atores
 			
 			var corte2:Rectangle = new Rectangle();
 
-			corte2.left   = Math.ceil(recinter.left - _ator.clipRectan.left);
-			corte2.top    = Math.ceil(recinter.top - _ator.clipRectan.top);
+			corte2.left   = recinter.left - _ator.clipRectan.left;
+			corte2.top    = recinter.top - _ator.clipRectan.top;
 			corte2.width  = recinter.width;
 			corte2.height = recinter.height;
 			
 			var rt2:Rectangle = _ator.clipBitmap.rect
 			
-			if (rt2.left > corte2.left) corte2.left = Math.ceil(rt2.left);
-			if (rt2.top > corte2.top) corte2.top = Math.ceil(rt2.top);
-			if (rt2.right < corte2.right) corte2.right = Math.ceil(rt2.right);
-			if (rt2.bottom < corte2.bottom) corte2.bottom = Math.ceil(rt2.bottom);
+			if (rt2.left > corte2.left) corte2.left = rt2.left;
+			if (rt2.top > corte2.top) corte2.top = rt2.top;
+			if (rt2.right < corte2.right) corte2.right = rt2.right;
+			if (rt2.bottom < corte2.bottom) corte2.bottom = rt2.bottom;
 						
 			var img2:BitmapData = new BitmapData(corte2.width, corte2.height, true, 0);
 			
