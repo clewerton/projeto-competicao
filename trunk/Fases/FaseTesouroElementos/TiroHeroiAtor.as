@@ -24,9 +24,6 @@ package Fases.FaseTesouroElementos
 		public static const TTRO_HEROI_NIVEL1:uint  = 1;
 		public static const TTRO_HEROI_NIVEL2:uint  = 2;
 
-		//tipo de tiro
-		var UI_tipo			:uint;
-
 		//imagem do tiro
 		var MC_Tiro:MovieClip;
 		
@@ -62,46 +59,32 @@ package Fases.FaseTesouroElementos
 		 * @param   _deslocY  
 		 * componente Y de velocidade de delocamento
 		 */
-		public function TiroHeroiAtor(  _tiro:uint, _pontoIni:Point, _direcao:Number, _deslocX:Number = 0, _deslocY:Number = 0 ) 
+		public function TiroHeroiAtor(  _upgrades:BarcoHeroiUpgrades , _pontoIni:Point, _direcao:Number, _deslocX:Number = 0, _deslocY:Number = 0 ) 
 		{
 			//inverte
 			NU_direcao = _direcao + Math.PI;
 			
-			//tipo do tiro
-			UI_tipo = _tiro;
-
 			//coloca no ponto inicial
 			this.x = _pontoIni.x;
 			this.y = _pontoIni.y;
 			
-			//cria o movie clip do tiro
-			switch (UI_tipo) 
-			{
-				case TTRO_HEROI_NIVEL0:
-					MC_Tiro =  new BalaCanhao;
-					NU_VelABS = 8;
-					UI_alcance = Utils.Rnd( 200, 250 );
-					NU_dano = 10;
-				break;
-				case TTRO_HEROI_NIVEL1:
-					MC_Tiro =  new BalaCanhao;
-					NU_VelABS = 10;
-					UI_alcance = Utils.Rnd( 250, 300 );
-					NU_dano = 15;
-				break;
-				case TTRO_HEROI_NIVEL2:
-					MC_Tiro =  new BalaCanhao;
-					NU_VelABS = 12;
-					UI_alcance = Utils.Rnd( 300, 400 );
-					NU_dano = 20;
-				break;
-				default:
-			}
+			//imagem 
+			MC_Tiro =  new BalaCanhao;
 			
+			//Velocidade
+			NU_VelABS = 10
+			
+			//alcance
+			UI_alcance = _upgrades.alcanceTiro
+			//variacao de alcance 10% + e 10%-
+			UI_alcance *= ( (Math.random() * 0.2 ) + 0.9 );
+			
+			//dano do tiro
+			NU_dano = _upgrades.danoTiro;
+
 			//imagem do tiro
 			MC_Tiro.rotation = NU_direcao * Utils.RADIANOS_TO_GRAUS;
 			super(MC_Tiro);
-			
 			
 			//calcula os compenentes de velocidade
 			NU_VeloX = ( Math.cos(direcao) * NU_VelABS ) + _deslocX;
