@@ -9,22 +9,22 @@ package
 	public class FaseJogoParamentos extends FaseParamentos 
 	{
 		//Paramentros de tamanho do Mapa
-		public static const PARAM_FASE_TAMANHO_ALTURA 	= "FASE_TAMANHO_ALTURA";
-		public static const PARAM_FASE_TAMANHO_LARGURA 	= "FASE_TAMANHO_LARGURA";
+		public static const PARAM_FASE_TAMANHO_ALTURA 		= "FASE_TAMANHO_ALTURA";
+		public static const PARAM_FASE_TAMANHO_LARGURA 		= "FASE_TAMANHO_LARGURA";
 		
 		//Paramentros do Ilhas da Fase
-		public static const PARAM_FASE_QTD_ILHAS_TESOURO= "FASE_QTD_ILHAS_TESOURO";
-		public static const PARAM_FASE_QTD_ILHAS_CANHAO	= "FASE_QTD_ILHAS_CANHAO";
-		public static const PARAM_FASE_QTD_ILHAS_MUNICAO= "FASE_QTD_ILHAS_MUNICA";
-		public static const PARAM_FASE_QTD_ILHAS_VIDA	= "FASE_QTD_ILHAS_VIDA";
+		public static const PARAM_FASE_QTD_ILHAS_TESOURO	= "FASE_QTD_ILHAS_TESOURO";
+		public static const PARAM_FASE_QTD_ILHAS_CANHAO		= "FASE_QTD_ILHAS_CANHAO";
+		public static const PARAM_FASE_QTD_ILHAS_MUNICAO	= "FASE_QTD_ILHAS_MUNICA";
+		public static const PARAM_FASE_QTD_ILHAS_VIDA		= "FASE_QTD_ILHAS_VIDA";
 		
 		//Paramentros quantidades de inimigos da Fase
-		public static const PARAM_FASE_QTD_INIMIGOS		= "FASE_QTD_INIMIGOS";
+		public static const PARAM_FASE_QTD_INIMIGOS			= "FASE_QTD_INIMIGOS";
 		
 		//Parametros da Pontuacao Fase
-		public static const PARAM_PONTOS_BARCO_INIMIGO 	= "PONTOS_BARCO_INIMIGO";
-		public static const PARAM_PONTOS_CAPTURA_BOTE 	= "PONTOS_CAPTURA_BOTE";
-		public static const PARAM_PONTOS_CANHAO_ILHA 	= "PONTOS_CANHAO_ILHA";
+		public static const PARAM_PONTOS_BARCO_INIMIGO 		= "PONTOS_BARCO_INIMIGO";
+		public static const PARAM_PONTOS_CAPTURA_BOTE 		= "PONTOS_CAPTURA_BOTE";
+		public static const PARAM_PONTOS_CANHAO_ILHA 		= "PONTOS_CANHAO_ILHA";
 		
 		//Parametros do inimigo
 		public static const PARAM_INIMIGO_VELOC_MAX			= "INIMIGO_VELOC_MAX";
@@ -99,10 +99,10 @@ package
 			this[PARAM_FASE_TAMANHO_ALTURA]		= 2400;
 			
 			// quantidade de ilhas
-			this[PARAM_FASE_QTD_ILHAS_TESOURO]	= 2;
-			this[PARAM_FASE_QTD_ILHAS_CANHAO]	= 1;
-			this[PARAM_FASE_QTD_ILHAS_MUNICAO]	= 1;
-			this[PARAM_FASE_QTD_ILHAS_VIDA]		= 1;
+			this[PARAM_FASE_QTD_ILHAS_TESOURO]	= 3;
+			this[PARAM_FASE_QTD_ILHAS_CANHAO]	= 2;
+			this[PARAM_FASE_QTD_ILHAS_MUNICAO]	= 2;
+			this[PARAM_FASE_QTD_ILHAS_VIDA]		= 2;
 			
 			// quantidade de inimigos
 			this[PARAM_FASE_QTD_INIMIGOS] 		= 1;
