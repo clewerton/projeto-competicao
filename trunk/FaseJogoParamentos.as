@@ -80,27 +80,44 @@ package
 		{
 			super(_faseID, _nivel);
 			
-			//inicializa pontuacao de tesouros e barcos
-			fase();
-			
-			//caracteristicas do inimigo
-			inimigo();
-			
-			//parametros das ilhas
-			ilhas();
-			
+			switch (_faseID) 
+			{
+				case 1:
+					fase01();
+				break;
+				case 2:
+					fase02();
+				break;
+				case 3:
+					fase03();
+				break;
+				case 4:
+					fase04();
+				break;
+				case 5:
+					fase05();
+				break;
+				case 6:
+					fase06();
+				break;
+				case 7:
+					fase07();
+				break;
+				default:
+			}
 		}
+		
 		/**
-		 * Fase
+		 * Parametros da fase 01
 		 */
-		private function fase() {
+		private function fase01():void {		
 			//tamanho do mapa : manter a relacao 800X600 valor bom 5000 X 3750
-			this[PARAM_FASE_TAMANHO_LARGURA]    = 3200;
-			this[PARAM_FASE_TAMANHO_ALTURA]		= 2400;
+			this[PARAM_FASE_TAMANHO_LARGURA]    = 5000;
+			this[PARAM_FASE_TAMANHO_ALTURA]		= 3750;
 			
 			// quantidade de ilhas
-			this[PARAM_FASE_QTD_ILHAS_TESOURO]	= 3;
-			this[PARAM_FASE_QTD_ILHAS_CANHAO]	= 2;
+			this[PARAM_FASE_QTD_ILHAS_TESOURO]	= 7;
+			this[PARAM_FASE_QTD_ILHAS_CANHAO]	= 7;
 			this[PARAM_FASE_QTD_ILHAS_MUNICAO]	= 2;
 			this[PARAM_FASE_QTD_ILHAS_VIDA]		= 2;
 			
@@ -111,27 +128,21 @@ package
 			this[PARAM_PONTOS_BARCO_INIMIGO] 	= 600;
 			this[PARAM_PONTOS_CAPTURA_BOTE] 	= 300;
 			this[PARAM_PONTOS_CANHAO_ILHA] 		= 1000;
-		}
-		
-		/**
-		 * Parametros da ilha
-		 */
-		private function ilhas():void 
-		{
-			//vida
+
+			//ilha de vida
 			this[PARAM_ILHA_PONTOS_POR_VIDA] 	= 1;
 			this[PARAM_ILHA_QTD_VIDA_LOTE] 		= 10;
 			
-			//municao
+			//ilhas de municao
 			this[PARAM_ILHA_PONTOS_POR_MUNICAO] = 10;
 			this[PARAM_ILHA_QTD_MUNICAO_LOTE] 	= 2;
 			
-			//tesouro
+			//ilhas tesouro
 			this[PARAM_ILHA_TOTAL_PONTOS] 		= 2000;
 			this[PARAM_ILHA_QTD_PONTOS_LOTE] 	= 50;
 			this[PARAM_ILHA_QTD_MAX_INI_DEFESA]	= 1;
 			
-			//canhao da ilha
+			//ilha do canhao
 			this[PARAM_ILHA_CANHAO_FREQ_TIRO]	 = 96;	
 			this[PARAM_ILHA_CANHAO_MAX_VIDA]	 = 50;
 			this[PARAM_ILHA_CANHAO_PRECISAO]	 = 0;
@@ -142,12 +153,427 @@ package
 			this[PARAM_TIRO_ILHA_VELOCID]		= 8;
 			this[PARAM_TIRO_ILHA_DANO]			= 50;
 			this[PARAM_TIRO_ILHA_ALCANCE]		= 500;
+
+			//barco inimigo
+			this[PARAM_INIMIGO_MAXIMO_VIDA]		= 100;
+			this[PARAM_INIMIGO_VELOC_MAX]		= 5;
+			
+			//canhões do barco inimigo
+			this[PARAM_INIMIGO_QTD_CANHOES] 	= 1;
+			this[PARAM_INIMIGO_FREQ_TIRO] 		= 48;	//EM FRAMES	
+			
+			//Precisão do barco inimigo 	
+			this[PARAM_INIMIGO_PRECISAO]	 	= 100;   //0% a100%
+			this[PARAM_INIMIGO_MIRA_PRECISA] 	= 1;   // (0) = NÃO ANTECIPA A MIRA  (1) = ANTECIPA
+			this[PARAM_INIMIGO_ANG_DISPERSAO]	= 30;  //GRAUS DE DISPERSÃO DO TIRO IMPRECISO
+			
+			//tiro do barco inimigo
+			this[PARAM_TIRO_INIMIGO_VELOCID]	= 10;
+			this[PARAM_TIRO_INIMIGO_DANO]		= 10;
+			this[PARAM_TIRO_INIMIGO_ALCANCE]	= 350;
+			
+			//bote de fuga
+			this[PARAM_BOTE_FUGA_VELOC_MAX]     = 3;
 			
 		}
+		
 		/**
-		 * Parametros do inimigo
+		 * Parametros da fase 02
+		 */		
+		private function fase02():void {		
+			//tamanho do mapa : manter a relacao 800X600 valor bom 5000 X 3750
+			this[PARAM_FASE_TAMANHO_LARGURA]    = 5000;
+			this[PARAM_FASE_TAMANHO_ALTURA]		= 3750;
+			
+			// quantidade de ilhas
+			this[PARAM_FASE_QTD_ILHAS_TESOURO]	= 7;
+			this[PARAM_FASE_QTD_ILHAS_CANHAO]	= 7;
+			this[PARAM_FASE_QTD_ILHAS_MUNICAO]	= 2;
+			this[PARAM_FASE_QTD_ILHAS_VIDA]		= 2;
+			
+			// quantidade de inimigos
+			this[PARAM_FASE_QTD_INIMIGOS] 		= 1;
+			
+			//pontuacao
+			this[PARAM_PONTOS_BARCO_INIMIGO] 	= 600;
+			this[PARAM_PONTOS_CAPTURA_BOTE] 	= 300;
+			this[PARAM_PONTOS_CANHAO_ILHA] 		= 1000;
+
+			//ilha de vida
+			this[PARAM_ILHA_PONTOS_POR_VIDA] 	= 1;
+			this[PARAM_ILHA_QTD_VIDA_LOTE] 		= 10;
+			
+			//ilhas de municao
+			this[PARAM_ILHA_PONTOS_POR_MUNICAO] = 10;
+			this[PARAM_ILHA_QTD_MUNICAO_LOTE] 	= 2;
+			
+			//ilhas tesouro
+			this[PARAM_ILHA_TOTAL_PONTOS] 		= 2000;
+			this[PARAM_ILHA_QTD_PONTOS_LOTE] 	= 50;
+			this[PARAM_ILHA_QTD_MAX_INI_DEFESA]	= 1;
+			
+			//ilha do canhao
+			this[PARAM_ILHA_CANHAO_FREQ_TIRO]	 = 96;	
+			this[PARAM_ILHA_CANHAO_MAX_VIDA]	 = 50;
+			this[PARAM_ILHA_CANHAO_PRECISAO]	 = 0;
+			this[PARAM_ILHA_CANHAO_MIRA_PRECISA] = 0;
+			this[PARAM_ILHA_CANHAO_ANG_DISPERSAO]= 45;
+			
+			//Tiro Canhão Ilha
+			this[PARAM_TIRO_ILHA_VELOCID]		= 8;
+			this[PARAM_TIRO_ILHA_DANO]			= 50;
+			this[PARAM_TIRO_ILHA_ALCANCE]		= 500;
+
+			//barco inimigo
+			this[PARAM_INIMIGO_MAXIMO_VIDA]		= 100;
+			this[PARAM_INIMIGO_VELOC_MAX]		= 5;
+			
+			//canhões do barco inimigo
+			this[PARAM_INIMIGO_QTD_CANHOES] 	= 1;
+			this[PARAM_INIMIGO_FREQ_TIRO] 		= 48;	//EM FRAMES	
+			
+			//Precisão do barco inimigo 	
+			this[PARAM_INIMIGO_PRECISAO]	 	= 100;   //0% a100%
+			this[PARAM_INIMIGO_MIRA_PRECISA] 	= 1;   // (0) = NÃO ANTECIPA A MIRA  (1) = ANTECIPA
+			this[PARAM_INIMIGO_ANG_DISPERSAO]	= 30;  //GRAUS DE DISPERSÃO DO TIRO IMPRECISO
+			
+			//tiro do barco inimigo
+			this[PARAM_TIRO_INIMIGO_VELOCID]	= 10;
+			this[PARAM_TIRO_INIMIGO_DANO]		= 10;
+			this[PARAM_TIRO_INIMIGO_ALCANCE]	= 350;
+			
+			//bote de fuga
+			this[PARAM_BOTE_FUGA_VELOC_MAX]     = 3;
+			
+		}
+
+		/**
+		 * Parametros da fase 03
 		 */
-		private function inimigo() {
+		private function fase03():void {		
+			//tamanho do mapa : manter a relacao 800X600 valor bom 5000 X 3750
+			this[PARAM_FASE_TAMANHO_LARGURA]    = 5000;
+			this[PARAM_FASE_TAMANHO_ALTURA]		= 3750;
+			
+			// quantidade de ilhas
+			this[PARAM_FASE_QTD_ILHAS_TESOURO]	= 7;
+			this[PARAM_FASE_QTD_ILHAS_CANHAO]	= 7;
+			this[PARAM_FASE_QTD_ILHAS_MUNICAO]	= 2;
+			this[PARAM_FASE_QTD_ILHAS_VIDA]		= 2;
+			
+			// quantidade de inimigos
+			this[PARAM_FASE_QTD_INIMIGOS] 		= 1;
+			
+			//pontuacao
+			this[PARAM_PONTOS_BARCO_INIMIGO] 	= 600;
+			this[PARAM_PONTOS_CAPTURA_BOTE] 	= 300;
+			this[PARAM_PONTOS_CANHAO_ILHA] 		= 1000;
+
+			//ilha de vida
+			this[PARAM_ILHA_PONTOS_POR_VIDA] 	= 1;
+			this[PARAM_ILHA_QTD_VIDA_LOTE] 		= 10;
+			
+			//ilhas de municao
+			this[PARAM_ILHA_PONTOS_POR_MUNICAO] = 10;
+			this[PARAM_ILHA_QTD_MUNICAO_LOTE] 	= 2;
+			
+			//ilhas tesouro
+			this[PARAM_ILHA_TOTAL_PONTOS] 		= 2000;
+			this[PARAM_ILHA_QTD_PONTOS_LOTE] 	= 50;
+			this[PARAM_ILHA_QTD_MAX_INI_DEFESA]	= 1;
+			
+			//ilha do canhao
+			this[PARAM_ILHA_CANHAO_FREQ_TIRO]	 = 96;	
+			this[PARAM_ILHA_CANHAO_MAX_VIDA]	 = 50;
+			this[PARAM_ILHA_CANHAO_PRECISAO]	 = 0;
+			this[PARAM_ILHA_CANHAO_MIRA_PRECISA] = 0;
+			this[PARAM_ILHA_CANHAO_ANG_DISPERSAO]= 45;
+			
+			//Tiro Canhão Ilha
+			this[PARAM_TIRO_ILHA_VELOCID]		= 8;
+			this[PARAM_TIRO_ILHA_DANO]			= 50;
+			this[PARAM_TIRO_ILHA_ALCANCE]		= 500;
+
+			//barco inimigo
+			this[PARAM_INIMIGO_MAXIMO_VIDA]		= 100;
+			this[PARAM_INIMIGO_VELOC_MAX]		= 5;
+			
+			//canhões do barco inimigo
+			this[PARAM_INIMIGO_QTD_CANHOES] 	= 1;
+			this[PARAM_INIMIGO_FREQ_TIRO] 		= 48;	//EM FRAMES	
+			
+			//Precisão do barco inimigo 	
+			this[PARAM_INIMIGO_PRECISAO]	 	= 100;   //0% a100%
+			this[PARAM_INIMIGO_MIRA_PRECISA] 	= 1;   // (0) = NÃO ANTECIPA A MIRA  (1) = ANTECIPA
+			this[PARAM_INIMIGO_ANG_DISPERSAO]	= 30;  //GRAUS DE DISPERSÃO DO TIRO IMPRECISO
+			
+			//tiro do barco inimigo
+			this[PARAM_TIRO_INIMIGO_VELOCID]	= 10;
+			this[PARAM_TIRO_INIMIGO_DANO]		= 10;
+			this[PARAM_TIRO_INIMIGO_ALCANCE]	= 350;
+			
+			//bote de fuga
+			this[PARAM_BOTE_FUGA_VELOC_MAX]     = 3;
+			
+		}
+		
+		/**
+		 * Parametros da fase 04
+		 */
+		private function fase04():void {		
+			//tamanho do mapa : manter a relacao 800X600 valor bom 5000 X 3750
+			this[PARAM_FASE_TAMANHO_LARGURA]    = 5000;
+			this[PARAM_FASE_TAMANHO_ALTURA]		= 3750;
+			
+			// quantidade de ilhas
+			this[PARAM_FASE_QTD_ILHAS_TESOURO]	= 7;
+			this[PARAM_FASE_QTD_ILHAS_CANHAO]	= 7;
+			this[PARAM_FASE_QTD_ILHAS_MUNICAO]	= 2;
+			this[PARAM_FASE_QTD_ILHAS_VIDA]		= 2;
+			
+			// quantidade de inimigos
+			this[PARAM_FASE_QTD_INIMIGOS] 		= 1;
+			
+			//pontuacao
+			this[PARAM_PONTOS_BARCO_INIMIGO] 	= 600;
+			this[PARAM_PONTOS_CAPTURA_BOTE] 	= 300;
+			this[PARAM_PONTOS_CANHAO_ILHA] 		= 1000;
+
+			//ilha de vida
+			this[PARAM_ILHA_PONTOS_POR_VIDA] 	= 1;
+			this[PARAM_ILHA_QTD_VIDA_LOTE] 		= 10;
+			
+			//ilhas de municao
+			this[PARAM_ILHA_PONTOS_POR_MUNICAO] = 10;
+			this[PARAM_ILHA_QTD_MUNICAO_LOTE] 	= 2;
+			
+			//ilhas tesouro
+			this[PARAM_ILHA_TOTAL_PONTOS] 		= 2000;
+			this[PARAM_ILHA_QTD_PONTOS_LOTE] 	= 50;
+			this[PARAM_ILHA_QTD_MAX_INI_DEFESA]	= 1;
+			
+			//ilha do canhao
+			this[PARAM_ILHA_CANHAO_FREQ_TIRO]	 = 96;	
+			this[PARAM_ILHA_CANHAO_MAX_VIDA]	 = 50;
+			this[PARAM_ILHA_CANHAO_PRECISAO]	 = 0;
+			this[PARAM_ILHA_CANHAO_MIRA_PRECISA] = 0;
+			this[PARAM_ILHA_CANHAO_ANG_DISPERSAO]= 45;
+			
+			//Tiro Canhão Ilha
+			this[PARAM_TIRO_ILHA_VELOCID]		= 8;
+			this[PARAM_TIRO_ILHA_DANO]			= 50;
+			this[PARAM_TIRO_ILHA_ALCANCE]		= 500;
+
+			//barco inimigo
+			this[PARAM_INIMIGO_MAXIMO_VIDA]		= 100;
+			this[PARAM_INIMIGO_VELOC_MAX]		= 5;
+			
+			//canhões do barco inimigo
+			this[PARAM_INIMIGO_QTD_CANHOES] 	= 1;
+			this[PARAM_INIMIGO_FREQ_TIRO] 		= 48;	//EM FRAMES	
+			
+			//Precisão do barco inimigo 	
+			this[PARAM_INIMIGO_PRECISAO]	 	= 100;   //0% a100%
+			this[PARAM_INIMIGO_MIRA_PRECISA] 	= 1;   // (0) = NÃO ANTECIPA A MIRA  (1) = ANTECIPA
+			this[PARAM_INIMIGO_ANG_DISPERSAO]	= 30;  //GRAUS DE DISPERSÃO DO TIRO IMPRECISO
+			
+			//tiro do barco inimigo
+			this[PARAM_TIRO_INIMIGO_VELOCID]	= 10;
+			this[PARAM_TIRO_INIMIGO_DANO]		= 10;
+			this[PARAM_TIRO_INIMIGO_ALCANCE]	= 350;
+			
+			//bote de fuga
+			this[PARAM_BOTE_FUGA_VELOC_MAX]     = 3;
+			
+		}
+		
+		/**
+		 * Parametros da fase 5
+		 */
+		private function fase05():void {		
+			//tamanho do mapa : manter a relacao 800X600 valor bom 5000 X 3750
+			this[PARAM_FASE_TAMANHO_LARGURA]    = 5000;
+			this[PARAM_FASE_TAMANHO_ALTURA]		= 3750;
+			
+			// quantidade de ilhas
+			this[PARAM_FASE_QTD_ILHAS_TESOURO]	= 7;
+			this[PARAM_FASE_QTD_ILHAS_CANHAO]	= 7;
+			this[PARAM_FASE_QTD_ILHAS_MUNICAO]	= 2;
+			this[PARAM_FASE_QTD_ILHAS_VIDA]		= 2;
+			
+			// quantidade de inimigos
+			this[PARAM_FASE_QTD_INIMIGOS] 		= 1;
+			
+			//pontuacao
+			this[PARAM_PONTOS_BARCO_INIMIGO] 	= 600;
+			this[PARAM_PONTOS_CAPTURA_BOTE] 	= 300;
+			this[PARAM_PONTOS_CANHAO_ILHA] 		= 1000;
+
+			//ilha de vida
+			this[PARAM_ILHA_PONTOS_POR_VIDA] 	= 1;
+			this[PARAM_ILHA_QTD_VIDA_LOTE] 		= 10;
+			
+			//ilhas de municao
+			this[PARAM_ILHA_PONTOS_POR_MUNICAO] = 10;
+			this[PARAM_ILHA_QTD_MUNICAO_LOTE] 	= 2;
+			
+			//ilhas tesouro
+			this[PARAM_ILHA_TOTAL_PONTOS] 		= 2000;
+			this[PARAM_ILHA_QTD_PONTOS_LOTE] 	= 50;
+			this[PARAM_ILHA_QTD_MAX_INI_DEFESA]	= 1;
+			
+			//ilha do canhao
+			this[PARAM_ILHA_CANHAO_FREQ_TIRO]	 = 96;	
+			this[PARAM_ILHA_CANHAO_MAX_VIDA]	 = 50;
+			this[PARAM_ILHA_CANHAO_PRECISAO]	 = 0;
+			this[PARAM_ILHA_CANHAO_MIRA_PRECISA] = 0;
+			this[PARAM_ILHA_CANHAO_ANG_DISPERSAO]= 45;
+			
+			//Tiro Canhão Ilha
+			this[PARAM_TIRO_ILHA_VELOCID]		= 8;
+			this[PARAM_TIRO_ILHA_DANO]			= 50;
+			this[PARAM_TIRO_ILHA_ALCANCE]		= 500;
+
+			//barco inimigo
+			this[PARAM_INIMIGO_MAXIMO_VIDA]		= 100;
+			this[PARAM_INIMIGO_VELOC_MAX]		= 5;
+			
+			//canhões do barco inimigo
+			this[PARAM_INIMIGO_QTD_CANHOES] 	= 1;
+			this[PARAM_INIMIGO_FREQ_TIRO] 		= 48;	//EM FRAMES	
+			
+			//Precisão do barco inimigo 	
+			this[PARAM_INIMIGO_PRECISAO]	 	= 100;   //0% a100%
+			this[PARAM_INIMIGO_MIRA_PRECISA] 	= 1;   // (0) = NÃO ANTECIPA A MIRA  (1) = ANTECIPA
+			this[PARAM_INIMIGO_ANG_DISPERSAO]	= 30;  //GRAUS DE DISPERSÃO DO TIRO IMPRECISO
+			
+			//tiro do barco inimigo
+			this[PARAM_TIRO_INIMIGO_VELOCID]	= 10;
+			this[PARAM_TIRO_INIMIGO_DANO]		= 10;
+			this[PARAM_TIRO_INIMIGO_ALCANCE]	= 350;
+			
+			//bote de fuga
+			this[PARAM_BOTE_FUGA_VELOC_MAX]     = 3;
+			
+		}
+		
+		/**
+		 * Parametros da fase 06
+		 */
+		private function fase01():void {		
+			//tamanho do mapa : manter a relacao 800X600 valor bom 5000 X 3750
+			this[PARAM_FASE_TAMANHO_LARGURA]    = 5000;
+			this[PARAM_FASE_TAMANHO_ALTURA]		= 3750;
+			
+			// quantidade de ilhas
+			this[PARAM_FASE_QTD_ILHAS_TESOURO]	= 7;
+			this[PARAM_FASE_QTD_ILHAS_CANHAO]	= 7;
+			this[PARAM_FASE_QTD_ILHAS_MUNICAO]	= 2;
+			this[PARAM_FASE_QTD_ILHAS_VIDA]		= 2;
+			
+			// quantidade de inimigos
+			this[PARAM_FASE_QTD_INIMIGOS] 		= 1;
+			
+			//pontuacao
+			this[PARAM_PONTOS_BARCO_INIMIGO] 	= 600;
+			this[PARAM_PONTOS_CAPTURA_BOTE] 	= 300;
+			this[PARAM_PONTOS_CANHAO_ILHA] 		= 1000;
+
+			//ilha de vida
+			this[PARAM_ILHA_PONTOS_POR_VIDA] 	= 1;
+			this[PARAM_ILHA_QTD_VIDA_LOTE] 		= 10;
+			
+			//ilhas de municao
+			this[PARAM_ILHA_PONTOS_POR_MUNICAO] = 10;
+			this[PARAM_ILHA_QTD_MUNICAO_LOTE] 	= 2;
+			
+			//ilhas tesouro
+			this[PARAM_ILHA_TOTAL_PONTOS] 		= 2000;
+			this[PARAM_ILHA_QTD_PONTOS_LOTE] 	= 50;
+			this[PARAM_ILHA_QTD_MAX_INI_DEFESA]	= 1;
+			
+			//ilha do canhao
+			this[PARAM_ILHA_CANHAO_FREQ_TIRO]	 = 96;	
+			this[PARAM_ILHA_CANHAO_MAX_VIDA]	 = 50;
+			this[PARAM_ILHA_CANHAO_PRECISAO]	 = 0;
+			this[PARAM_ILHA_CANHAO_MIRA_PRECISA] = 0;
+			this[PARAM_ILHA_CANHAO_ANG_DISPERSAO]= 45;
+			
+			//Tiro Canhão Ilha
+			this[PARAM_TIRO_ILHA_VELOCID]		= 8;
+			this[PARAM_TIRO_ILHA_DANO]			= 50;
+			this[PARAM_TIRO_ILHA_ALCANCE]		= 500;
+
+			//barco inimigo
+			this[PARAM_INIMIGO_MAXIMO_VIDA]		= 100;
+			this[PARAM_INIMIGO_VELOC_MAX]		= 5;
+			
+			//canhões do barco inimigo
+			this[PARAM_INIMIGO_QTD_CANHOES] 	= 1;
+			this[PARAM_INIMIGO_FREQ_TIRO] 		= 48;	//EM FRAMES	
+			
+			//Precisão do barco inimigo 	
+			this[PARAM_INIMIGO_PRECISAO]	 	= 100;   //0% a100%
+			this[PARAM_INIMIGO_MIRA_PRECISA] 	= 1;   // (0) = NÃO ANTECIPA A MIRA  (1) = ANTECIPA
+			this[PARAM_INIMIGO_ANG_DISPERSAO]	= 30;  //GRAUS DE DISPERSÃO DO TIRO IMPRECISO
+			
+			//tiro do barco inimigo
+			this[PARAM_TIRO_INIMIGO_VELOCID]	= 10;
+			this[PARAM_TIRO_INIMIGO_DANO]		= 10;
+			this[PARAM_TIRO_INIMIGO_ALCANCE]	= 350;
+			
+			//bote de fuga
+			this[PARAM_BOTE_FUGA_VELOC_MAX]     = 3;
+			
+		}
+		
+		/**
+		 * Parametros da fase 07
+		 */
+		private function fase07():void {		
+			//tamanho do mapa : manter a relacao 800X600 valor bom 5000 X 3750
+			this[PARAM_FASE_TAMANHO_LARGURA]    = 5000;
+			this[PARAM_FASE_TAMANHO_ALTURA]		= 3750;
+			
+			// quantidade de ilhas
+			this[PARAM_FASE_QTD_ILHAS_TESOURO]	= 7;
+			this[PARAM_FASE_QTD_ILHAS_CANHAO]	= 7;
+			this[PARAM_FASE_QTD_ILHAS_MUNICAO]	= 2;
+			this[PARAM_FASE_QTD_ILHAS_VIDA]		= 2;
+			
+			// quantidade de inimigos
+			this[PARAM_FASE_QTD_INIMIGOS] 		= 1;
+			
+			//pontuacao
+			this[PARAM_PONTOS_BARCO_INIMIGO] 	= 600;
+			this[PARAM_PONTOS_CAPTURA_BOTE] 	= 300;
+			this[PARAM_PONTOS_CANHAO_ILHA] 		= 1000;
+
+			//ilha de vida
+			this[PARAM_ILHA_PONTOS_POR_VIDA] 	= 1;
+			this[PARAM_ILHA_QTD_VIDA_LOTE] 		= 10;
+			
+			//ilhas de municao
+			this[PARAM_ILHA_PONTOS_POR_MUNICAO] = 10;
+			this[PARAM_ILHA_QTD_MUNICAO_LOTE] 	= 2;
+			
+			//ilhas tesouro
+			this[PARAM_ILHA_TOTAL_PONTOS] 		= 2000;
+			this[PARAM_ILHA_QTD_PONTOS_LOTE] 	= 50;
+			this[PARAM_ILHA_QTD_MAX_INI_DEFESA]	= 1;
+			
+			//ilha do canhao
+			this[PARAM_ILHA_CANHAO_FREQ_TIRO]	 = 96;	
+			this[PARAM_ILHA_CANHAO_MAX_VIDA]	 = 50;
+			this[PARAM_ILHA_CANHAO_PRECISAO]	 = 0;
+			this[PARAM_ILHA_CANHAO_MIRA_PRECISA] = 0;
+			this[PARAM_ILHA_CANHAO_ANG_DISPERSAO]= 45;
+			
+			//Tiro Canhão Ilha
+			this[PARAM_TIRO_ILHA_VELOCID]		= 8;
+			this[PARAM_TIRO_ILHA_DANO]			= 50;
+			this[PARAM_TIRO_ILHA_ALCANCE]		= 500;
+
 			//barco inimigo
 			this[PARAM_INIMIGO_MAXIMO_VIDA]		= 100;
 			this[PARAM_INIMIGO_VELOC_MAX]		= 5;

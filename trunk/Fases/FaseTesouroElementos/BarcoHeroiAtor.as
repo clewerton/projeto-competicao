@@ -23,9 +23,9 @@
 		public static const UPGRADE_CANHOES_NIVEL2:uint = 3;
 		
 		//Upgrade de tempo de recarga
-		public static const UPGRADE_RECARGA_NIVEL0:uint = 48;
-		public static const UPGRADE_RECARGA_NIVEL1:uint = 36;
-		public static const UPGRADE_RECARGA_NIVEL2:uint = 24;
+		public static const UPGRADE_RECARGA_NIVEL0:uint = 72;
+		public static const UPGRADE_RECARGA_NIVEL1:uint = 48;
+		public static const UPGRADE_RECARGA_NIVEL2:uint = 36;
 		
 		//Upgrate do tipo tiro
 		public static const UPGRADE_TIRO_NIVEL0:uint = 0;
@@ -168,7 +168,7 @@
 			//upgrades
 			UI_nivelCanhoes = UPGRADE_CANHOES_NIVEL0;
 			
-			UI_nivelRecarga = UPGRADE_RECARGA_NIVEL0;
+			UI_nivelRecarga = UPGRADE_RECARGA_NIVEL2;
 			
 			UI_tempoRecarga = UI_nivelRecarga;
 			
