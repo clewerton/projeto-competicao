@@ -16,46 +16,22 @@
 	import TangoGames.Utils;
 	
 	public class BarcoHeroiAtor extends AtorBase implements AtorInterface
-	{
-		//Upgrade canhão
-		public static const UPGRADE_CANHOES_NIVEL0:uint = 1;
-		public static const UPGRADE_CANHOES_NIVEL1:uint = 2;
-		public static const UPGRADE_CANHOES_NIVEL2:uint = 3;
-		
-		//Upgrade de tempo de recarga
-		public static const UPGRADE_RECARGA_NIVEL0:uint = 72;
-		public static const UPGRADE_RECARGA_NIVEL1:uint = 48;
-		public static const UPGRADE_RECARGA_NIVEL2:uint = 36;
-		
-		//Upgrate do tipo tiro
-		public static const UPGRADE_TIRO_NIVEL0:uint = 0;
-		public static const UPGRADE_TIRO_NIVEL1:uint = 1;
-		public static const UPGRADE_TIRO_NIVEL2:uint = 2;
-
-		//Upgrate do tipo navio
-		public static const UPGRADE_CASCO_NIVEL0:uint = 500;
-		public static const UPGRADE_CASCO_NIVEL1:uint = 1000;
-		public static const UPGRADE_CASCO_NIVEL2:uint = 2000;
-		
-		//Upgrate de qtd de municao
-		public static const UPGRADE_MUNICAO_NIVEL0:uint = 50;
-		public static const UPGRADE_MUNICAO_NIVEL1:uint = 100;
-		public static const UPGRADE_MUNICAO_NIVEL2:uint = 200;
-		
-		
-		
+	{		
 		//Imagem do Barco
 		private var MC_Barco			:MovieClip;
-		private var MC_velas			:MovieClip
+		private var MC_velas			:MovieClip;
+		
+		//Barco Heroi upgrades
+		private var UP_upgrades			:BarcoHeroiUpgrades;
 
 		//Controle de vida do Barco
 		private var NU_vidaAtual		:Number;
 		private var NU_vidaMaxima		:Number;
 		
 		//Situacao Upgrades
-		private var UI_nivelCanhoes		:uint
-		private var UI_nivelRecarga		:uint
-		private var UI_nivelTiro		:uint
+		private var UI_qtdCanhoes		:uint
+		//private var UI_nivelRecarga		:uint
+		//private var UI_nivelTiro		:uint
 
 		
 		//Direcao do barco em radianos
@@ -122,9 +98,13 @@
 			MC_Barco = new BarcoHeroiCasco;
 			super(MC_Barco);
 			
+			//Recupera upgrades
+			UP_upgrades = new BarcoHeroiUpgrades;
+			
 			//anexa a imagem da Vela
 			MC_velas = new BarcoHeroiVelas;
 			this.addChild(MC_velas)
+			
 			//posiciona da vela no slot
 			MC_velas.x = MC_Barco.slotVela.x;
 			MC_velas.y = MC_Barco.slotVela.y;
@@ -166,19 +146,19 @@
 		private function iniciaUpgrades():void
 		{
 			//upgrades
-			UI_nivelCanhoes = UPGRADE_CANHOES_NIVEL0;
+			UI_qtdCanhoes 	= UP_upgrades.qtdCanhoes;
 			
-			UI_nivelRecarga = UPGRADE_RECARGA_NIVEL2;
+			//UI_nivelRecarga = UP_upgrades.
 			
-			UI_tempoRecarga = UI_nivelRecarga;
+			UI_tempoRecarga = UP_upgrades.tempoRecarga;
 			
-			UI_nivelTiro    = UPGRADE_TIRO_NIVEL0;
+			//UI_nivelTiro    = UPGRADE_TIRO_NIVEL0;
 			
 			//inicializa a quantidade de vida
-			NU_vidaMaxima   = UPGRADE_CASCO_NIVEL0;
+			NU_vidaMaxima   = UP_upgrades.vidaNavio;
 			
 			//municao
-			UI_muniMax      =  UPGRADE_MUNICAO_NIVEL0;
+			UI_muniMax      =  UP_upgrades.capacidadeMunicao;
 			
 		}
 		
@@ -274,11 +254,11 @@
 		{
 			//TIRA SO PARA TESTE
 			if (pressTecla1(Keyboard.NUMBER_1))
-				UI_nivelCanhoes = UPGRADE_CANHOES_NIVEL0;
+				UI_qtdCanhoes = BarcoHeroiUpgrades.UPGRADE_CANHOES_NIVEL0;
 			if (pressTecla1(Keyboard.NUMBER_2))
-				UI_nivelCanhoes = UPGRADE_CANHOES_NIVEL1;
+				UI_qtdCanhoes = BarcoHeroiUpgrades.UPGRADE_CANHOES_NIVEL1;
 			if (pressTecla1(Keyboard.NUMBER_3))
-				UI_nivelCanhoes = UPGRADE_CANHOES_NIVEL2;
+				UI_qtdCanhoes = BarcoHeroiUpgrades.UPGRADE_CANHOES_NIVEL2;
 			
 			//Tecla de interacao com a Ilha
 			if (pressTecla1(Keyboard.E)) {
@@ -366,7 +346,7 @@
 			
 			this[_seqTiro]++;
 			
-			if (this[_seqTiro] > UI_nivelCanhoes)
+			if (this[_seqTiro] > UI_qtdCanhoes)
 			{
 				this[_seqTiro] = 0;
 				return true;
@@ -390,7 +370,7 @@
 			//identifica posicao do canhao que ira atirar
 			var mcCanhao:MovieClip = MovieClip(MC_Barco.getChildByName(canhao))
 			rt = MovieClip(mcCanhao).getBounds(faseAtor);
-			faseAtor.adicionaAtor(new TiroHeroiAtor(UI_nivelTiro, new Point(rt.x, rt.y), ang, NU_veloX, NU_veloY));
+			faseAtor.adicionaAtor(new TiroHeroiAtor(UP_upgrades, new Point(rt.x, rt.y), ang, NU_veloX, NU_veloY));
 			
 			//cria efeito audiovisual do tiro
 			var mcExp:AtorAnimacao = new ExplosaoCanhao();
