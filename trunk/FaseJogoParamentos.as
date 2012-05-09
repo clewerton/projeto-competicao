@@ -80,6 +80,10 @@ package
 		{
 			super(_faseID, _nivel);
 			
+			//define valores padrao
+			padrao();
+			
+			//define valores específico de cada fase
 			switch (_faseID) 
 			{
 				case 1:
@@ -106,24 +110,10 @@ package
 				default:
 			}
 		}
-		
 		/**
-		 * Parametros da fase 01
+		 * Valores comuns das Fases
 		 */
-		private function fase01():void {		
-			//tamanho do mapa : manter a relacao 800X600 valor bom 5000 X 3750
-			this[PARAM_FASE_TAMANHO_LARGURA]    = 5000;
-			this[PARAM_FASE_TAMANHO_ALTURA]		= 3750;
-			
-			// quantidade de ilhas
-			this[PARAM_FASE_QTD_ILHAS_TESOURO]	= 7;
-			this[PARAM_FASE_QTD_ILHAS_CANHAO]	= 7;
-			this[PARAM_FASE_QTD_ILHAS_MUNICAO]	= 2;
-			this[PARAM_FASE_QTD_ILHAS_VIDA]		= 2;
-			
-			// quantidade de inimigos
-			this[PARAM_FASE_QTD_INIMIGOS] 		= 1;
-			
+		private function padrao():void {
 			//pontuacao
 			this[PARAM_PONTOS_BARCO_INIMIGO] 	= 600;
 			this[PARAM_PONTOS_CAPTURA_BOTE] 	= 300;
@@ -178,21 +168,39 @@ package
 		}
 		
 		/**
+		 * Parametros da fase 01
+		 */
+		private function fase01():void {		
+			//tamanho do mapa : manter a relacao 800X600 valor bom 5000 X 3750
+			this[PARAM_FASE_TAMANHO_LARGURA]    = 3200;
+			this[PARAM_FASE_TAMANHO_ALTURA]		= 2400;
+			
+			// quantidade de ilhas
+			this[PARAM_FASE_QTD_ILHAS_TESOURO]	= 1;
+			this[PARAM_FASE_QTD_ILHAS_CANHAO]	= 3;
+			this[PARAM_FASE_QTD_ILHAS_MUNICAO]	= 0;
+			this[PARAM_FASE_QTD_ILHAS_VIDA]		= 1;
+			
+			// quantidade de inimigos
+			this[PARAM_FASE_QTD_INIMIGOS] 		= 2;
+		}
+		
+		/**
 		 * Parametros da fase 02
 		 */		
 		private function fase02():void {		
 			//tamanho do mapa : manter a relacao 800X600 valor bom 5000 X 3750
-			this[PARAM_FASE_TAMANHO_LARGURA]    = 5000;
-			this[PARAM_FASE_TAMANHO_ALTURA]		= 3750;
+			this[PARAM_FASE_TAMANHO_LARGURA]    = 3200;
+			this[PARAM_FASE_TAMANHO_ALTURA]		= 2400;
 			
 			// quantidade de ilhas
-			this[PARAM_FASE_QTD_ILHAS_TESOURO]	= 7;
-			this[PARAM_FASE_QTD_ILHAS_CANHAO]	= 7;
-			this[PARAM_FASE_QTD_ILHAS_MUNICAO]	= 2;
-			this[PARAM_FASE_QTD_ILHAS_VIDA]		= 2;
+			this[PARAM_FASE_QTD_ILHAS_TESOURO]	= 2;
+			this[PARAM_FASE_QTD_ILHAS_CANHAO]	= 3;
+			this[PARAM_FASE_QTD_ILHAS_MUNICAO]	= 1;
+			this[PARAM_FASE_QTD_ILHAS_VIDA]		= 1;
 			
 			// quantidade de inimigos
-			this[PARAM_FASE_QTD_INIMIGOS] 		= 1;
+			this[PARAM_FASE_QTD_INIMIGOS] 		= 3;
 			
 			//pontuacao
 			this[PARAM_PONTOS_BARCO_INIMIGO] 	= 600;
@@ -252,14 +260,14 @@ package
 		 */
 		private function fase03():void {		
 			//tamanho do mapa : manter a relacao 800X600 valor bom 5000 X 3750
-			this[PARAM_FASE_TAMANHO_LARGURA]    = 5000;
-			this[PARAM_FASE_TAMANHO_ALTURA]		= 3750;
+			this[PARAM_FASE_TAMANHO_LARGURA]    = 4000;
+			this[PARAM_FASE_TAMANHO_ALTURA]		= 3000;
 			
 			// quantidade de ilhas
-			this[PARAM_FASE_QTD_ILHAS_TESOURO]	= 7;
-			this[PARAM_FASE_QTD_ILHAS_CANHAO]	= 7;
-			this[PARAM_FASE_QTD_ILHAS_MUNICAO]	= 2;
-			this[PARAM_FASE_QTD_ILHAS_VIDA]		= 2;
+			this[PARAM_FASE_QTD_ILHAS_TESOURO]	= 3;
+			this[PARAM_FASE_QTD_ILHAS_CANHAO]	= 4;
+			this[PARAM_FASE_QTD_ILHAS_MUNICAO]	= 1;
+			this[PARAM_FASE_QTD_ILHAS_VIDA]		= 1;
 			
 			// quantidade de inimigos
 			this[PARAM_FASE_QTD_INIMIGOS] 		= 1;
@@ -322,13 +330,13 @@ package
 		 */
 		private function fase04():void {		
 			//tamanho do mapa : manter a relacao 800X600 valor bom 5000 X 3750
-			this[PARAM_FASE_TAMANHO_LARGURA]    = 5000;
-			this[PARAM_FASE_TAMANHO_ALTURA]		= 3750;
+			this[PARAM_FASE_TAMANHO_LARGURA]    = 4000;
+			this[PARAM_FASE_TAMANHO_ALTURA]		= 3000;
 			
 			// quantidade de ilhas
-			this[PARAM_FASE_QTD_ILHAS_TESOURO]	= 7;
-			this[PARAM_FASE_QTD_ILHAS_CANHAO]	= 7;
-			this[PARAM_FASE_QTD_ILHAS_MUNICAO]	= 2;
+			this[PARAM_FASE_QTD_ILHAS_TESOURO]	= 4;
+			this[PARAM_FASE_QTD_ILHAS_CANHAO]	= 5;
+			this[PARAM_FASE_QTD_ILHAS_MUNICAO]	= 1;
 			this[PARAM_FASE_QTD_ILHAS_VIDA]		= 2;
 			
 			// quantidade de inimigos
@@ -396,9 +404,9 @@ package
 			this[PARAM_FASE_TAMANHO_ALTURA]		= 3750;
 			
 			// quantidade de ilhas
-			this[PARAM_FASE_QTD_ILHAS_TESOURO]	= 7;
-			this[PARAM_FASE_QTD_ILHAS_CANHAO]	= 7;
-			this[PARAM_FASE_QTD_ILHAS_MUNICAO]	= 2;
+			this[PARAM_FASE_QTD_ILHAS_TESOURO]	= 5;
+			this[PARAM_FASE_QTD_ILHAS_CANHAO]	= 6;
+			this[PARAM_FASE_QTD_ILHAS_MUNICAO]	= 1;
 			this[PARAM_FASE_QTD_ILHAS_VIDA]		= 2;
 			
 			// quantidade de inimigos
@@ -460,14 +468,14 @@ package
 		/**
 		 * Parametros da fase 06
 		 */
-		private function fase01():void {		
+		private function fase06():void {		
 			//tamanho do mapa : manter a relacao 800X600 valor bom 5000 X 3750
 			this[PARAM_FASE_TAMANHO_LARGURA]    = 5000;
 			this[PARAM_FASE_TAMANHO_ALTURA]		= 3750;
 			
 			// quantidade de ilhas
-			this[PARAM_FASE_QTD_ILHAS_TESOURO]	= 7;
-			this[PARAM_FASE_QTD_ILHAS_CANHAO]	= 7;
+			this[PARAM_FASE_QTD_ILHAS_TESOURO]	= 6;
+			this[PARAM_FASE_QTD_ILHAS_CANHAO]	= 6;
 			this[PARAM_FASE_QTD_ILHAS_MUNICAO]	= 2;
 			this[PARAM_FASE_QTD_ILHAS_VIDA]		= 2;
 			
