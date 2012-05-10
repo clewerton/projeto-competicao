@@ -8,7 +8,7 @@ package
 	public class FasesDados
 	{
 		//armazena objetos
-		private var SO_evolucao			:SharedObject;
+		private var SO_dados			:SharedObject;
 		
 		//total de pontos
 		private var UI_totalPontos		:uint;
@@ -20,6 +20,8 @@ package
 		{
 			UI_totalPontos		= 0;
 			UI_faseLiberada		= 1;
+			//
+			SO_dados	 = SharedObject.getLocal( "fasesdados" );
 			carregaDados();
 		}
 		
@@ -27,17 +29,19 @@ package
 		 * Carrega dados Salvos
 		 */
 		public function carregaDados():void {
-			for (upnome in SO_evolucao.data) this[upnome] = SO_evolucao.data[upnome];
+			if (SO_dados.data.gamedata != undefined) {
+				for (var nome in SO_dados.data.gamedata) this[nome] = SO_dados.data.gamedata[nome];
+			}
 		}
 		
 		/**
 		 * Salva dados carregados
 		 */
 		public function salvaDados():void {
-			SO_evolucao.data = {
+			SO_dados.data.gamedata= {
 				totalPontos				:UI_totalPontos
 			}
-			SO_evolucao.flush();
+			SO_dados.flush();
 		}
 		
 		public function get totalPontos():uint 
