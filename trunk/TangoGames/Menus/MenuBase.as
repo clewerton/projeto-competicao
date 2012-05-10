@@ -36,6 +36,8 @@ package TangoGames.Menus
 		private	var DS_filt_shadow:DropShadowFilter;
 		private	var DS_filt_shadow_select:DropShadowFilter;
 		private var BF_filt_blur: BlurFilter;
+		
+		private var BO_semFundo		:Boolean;
 
 		/**
 		 * MenuBase é uma classe de apoio para construção de Menus
@@ -61,6 +63,8 @@ package TangoGames.Menus
 			configuraEfeitos();
 			
 			addEventListener(Event.ADDED_TO_STAGE, adicionadoStage, false, 0, true);
+			
+			BO_semFundo = false;
 		}
 		
 		/***************************************************************************
@@ -73,8 +77,10 @@ package TangoGames.Menus
 		 */
 		private function adicionadoStage(e:Event):void {
 			removeEventListener(Event.ADDED_TO_STAGE, adicionadoStage);
-			if (SPR_Fundo == null) SPR_Fundo =  geraSprite(stage.stageWidth, stage.stageHeight, 0X0000FF, 1);
-			this.addChildAt (SPR_Fundo, 0);
+			if (!BO_semFundo) {
+				if (SPR_Fundo == null) SPR_Fundo =  geraSprite(stage.stageWidth, stage.stageHeight, 0X0000FF, 1);
+				this.addChildAt (SPR_Fundo, 0);
+			}
 			construirMenu();
 			addEventListener(Event.REMOVED_FROM_STAGE, removidoStage);
 		}
@@ -86,7 +92,7 @@ package TangoGames.Menus
 		 */		
 		private function removidoStage(e:Event):void {
 			destruirMenu();
-			this.removeChild(SPR_Fundo);
+			if (!BO_semFundo) this.removeChild(SPR_Fundo);
 			removeEventListener(Event.REMOVED_FROM_STAGE, removidoStage);
 			addEventListener(Event.ADDED_TO_STAGE, adicionadoStage, false, 0, true);
 		}
@@ -331,6 +337,16 @@ package TangoGames.Menus
 		public function get fundo():Sprite 
 		{
 			return SPR_Fundo;
+		}
+		
+		public function get semFundo():Boolean 
+		{
+			return BO_semFundo;
+		}
+		
+		public function set semFundo(value:Boolean):void 
+		{
+			BO_semFundo = value;
 		}
 	}
 }
