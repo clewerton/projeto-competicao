@@ -32,8 +32,10 @@ package
 			switch (_menuCor.ID_Menu) {
 				
 				case MenuPrincipal.MENU_PRINCIPAL:
-					fases.inicia();
-					return true;
+					if (_opcao.valorRetorno == 1) {
+						fases.inicia();
+						return true;
+					}
 				break;
 				case MenuPrincipal.MENU_CONTROLE_FASES:
 					fases.iniciaFase(_opcao.faseID, _opcao.valorRetorno);
