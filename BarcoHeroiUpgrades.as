@@ -80,14 +80,15 @@ package
 		 * Carrega dados Salvos
 		 */
 		public function carregaDados():void {
-			for (var upnome in SO_upgrades.data) this[upnome] = SO_upgrades.data[upnome];
+			if (SO_upgrades.data.gamedata != undefined)
+				for (var upnome in SO_upgrades.data.gamedata) this[upnome] = SO_upgrades.data.gamedata[upnome];
 		}
 		
 		/**
 		 * Salva dados carregados
 		 */
 		public function salvaDados():void {
-/*			SO_upgrades.data = {
+			SO_upgrades.data.gamedata = {
 				nivelNavio				:UI_nivelNavio,
 				nivelVela				:UI_nivelVela,
 				nivelCanhao				:UI_nivelCanhao,
@@ -96,7 +97,7 @@ package
 				nivelFrequencia			:UI_nivelFrequenciaTiro,
 				nivelCapacidadeMunicao	:UI_nivelCapacidadeMunicao
 			}
-			SO_upgrades.flush();*/
+			SO_upgrades.flush();
 		}
 		
 		/**
