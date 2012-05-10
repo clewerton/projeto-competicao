@@ -2,12 +2,16 @@
 	
 	import flash.display.MovieClip;
 	import flash.events.MouseEvent;
+	import flash.filters.GlowFilter;
 	import TangoGames.Menus.MenuBase;
 	import TangoGames.Menus.MenuOpcao;
 	
 	
 	public class MenuUpgrades extends MenuBase {
 		
+		
+		//VARIAVEIS DE EFEITO
+		private var GF_filt:GlowFilter = new GlowFilter();
 		
 		// variáveis de criação dos butões
 		private var navio1:MovieClip;
@@ -49,6 +53,7 @@
 
 			super(_idMenu);
 			
+						
 			adicionaBotao();
 			
 		}
@@ -74,6 +79,10 @@
 			navio2 = this.navionivel1;
 			navio2.buttonMode = true;
 			navio2.useHandCursor = true;
+			//aplicando o blur
+			
+			aplica_blur(navio2);
+			
 			navio2.addEventListener(MouseEvent.CLICK, clicouUpgrade, false, 0, true);
 			
 			navio3 = this.navionivel2;
@@ -183,17 +192,126 @@
 			
 			
 			
+			
+			
 		}
 		
 		private function clicouUpgrade(e:MouseEvent):void {
-			
-			if (e.currentTarget == navio2) {
-				trace("clicou");
+						
+			switch (e.currentTarget) 
+			{
+				case navio2:
+					
+					trace("navio2");
+				break;
+				
+				
+				case navio3:
+				
+				break;
+				
+				
+				
+				case vela2:
+				
+				break;
+				
+				
+				
+				case vela3:
+				
+				break;
+				
+				
+				
+				case canhao2:
+				
+				break;
+				
+				
+				
+				case canhao3:
+				
+				break;
+				
+				
+				
+				case quantMunicao2:
+				
+				break;
+				
+				
+				
+				
+				case quantMunicao3:
+				
+				break;
+				
+				
+				
+				case municao2:
+				
+				break;
+				
+				
+				
+				case municao3:
+				
+				break;
+				
+				
+				
+				case velocidadeTiro2:
+				
+				break;
+				
+				
+				
+				
+				case velocidadeTiro3:
+				
+				break;
+				
+				
+				
+				
+				case potenciadoTiro2:
+				
+				break;
+				
+				
+				
+				
+				case potenciadoTiro3:
+				
+				break;
+				
+				
+				
+				
 			}
 			
 			trace("clicou");
 			
 		}
+		
+		
+		
+		
+		private function aplica_blur(MC:MovieClip):void {
+			
+			//GF_filt.color = 0XFF0000;
+			GF_filt.color = 0X00FF00;
+			GF_filt.blurX = 14;  
+			GF_filt.blurY = 14;
+			
+			MC.filter = [GF_filt];
+			
+		}
+		
+		
+		
+		
 		
 		
 
