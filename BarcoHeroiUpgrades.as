@@ -158,7 +158,7 @@ package
 			return UI_nivelVela;
 		}
 		
-		public function set nivelvela(value:uint):void 
+		public function set nivelVela(value:uint):void 
 		{
 			UI_nivelVela = value;
 		}
@@ -201,6 +201,16 @@ package
 		public function set nivelCapacidadeMunicao(value:uint):void 
 		{
 			UI_nivelCapacidadeMunicao = value;
+		}
+		
+		public function get nivelDanoTiro():uint 
+		{
+			return UI_nivelDanoTiro;
+		}
+		
+		public function set nivelDanoTiro(value:uint):void 
+		{
+			UI_nivelDanoTiro = value;
 		}
 		
 	}
