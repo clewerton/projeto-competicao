@@ -74,6 +74,7 @@
 			this.addEventListener(MouseEvent.MOUSE_OVER, mouseSobre, false, 0, true);
 			this.addEventListener(MouseEvent.MOUSE_OUT , mouseSobre, false, 0, true);
 			
+			atualizaTotais();
 			
 		}
 		
