@@ -24,7 +24,7 @@
 		
 		//vectores
 		private var VT_ativo			:Vector.<MovieClip>;
-		private var VT_nomes			:Vector.<String>;
+		private var VT_config			:Array;
 		private var VT_atual			:Vector.<MovieClip>;
 		
 		//UPGRADES
@@ -32,6 +32,13 @@
 		
 		//Controle Fases
 		private var FC_faseDados		:FasesDados;
+		
+		//Campos dos valores Total e custo
+		private var TF_total:TextField;
+		private var TF_custo:TextField; 
+		
+		//custo dos upgrade compra;
+		private var UI_custo			:uint;
 		
 		public function MenuUpgrades( _idMenu:String ) {
 
@@ -43,6 +50,12 @@
 			//controle de fase
 			FC_faseDados	= new FasesDados();
 			
+			//campos de total e custo
+			TF_total = this.totalvalor;
+			TF_custo = this.custovalor;
+			
+			UI_custo = 0;
+			
 			VT_navioNivel	= new Vector.<MovieClip>;
 			VT_velaNivel	= new Vector.<MovieClip>;
 			VT_canhaoNivel	= new Vector.<MovieClip>;
@@ -53,7 +66,7 @@
 			
 			VT_ativo 		= new Vector.<MovieClip>;
 			VT_atual 		= new Vector.<MovieClip>;
-			VT_nomes 		= new Vector.<String> ;
+			VT_config 		= new Array
 			
 			adicionaBotao();
 			
@@ -68,14 +81,15 @@
 		{
 			if (e.target is MovieClip) {
 				var mc:MovieClip = MovieClip (e.target);
-				if (VT_ativo.indexOf(mc)> -1) {
+				var index:int = VT_ativo.indexOf(mc);
+				if ( index > -1) {
 					switch (e.type) 
 					{
 						case MouseEvent.MOUSE_OVER:
 							ligaDeslBlur(mc);
 						break;
-						case MouseEvent.MOUSE_OUT:
-							ligaDeslBlur(mc,false);						
+					case MouseEvent.MOUSE_OUT:
+							if (!VT_config[index].comprar) ligaDeslBlur(mc,false);						
 						break;
 						default:
 					}
@@ -95,6 +109,8 @@
 		}
 		
 		private function adicionaBotao():void {
+			
+			
 			
 			configuraBotao(VT_navioNivel	, "nivelNavio"				, BC_upgrades.nivelNavio				);
 			
@@ -117,8 +133,27 @@
 			if (e.target is MovieClip) {
 				var mc:MovieClip = MovieClip (e.target);
 				var index:int = VT_ativo.indexOf(mc);
+				var custo:uint;
+				var select:Boolean;
+				var nomeUp:String;
 				if (index > -1) {
-					trace(VT_nomes[index]);
+					select 	= VT_config[index].comprar;
+					custo 	= VT_config[index].custo;
+					nomeUp  = VT_config[index].nome;
+					for (var i:uint = 0 ; i < VT_config.length; i++) {
+						if (VT_config[i].nome == nomeUp && VT_config[i].comprar) {
+							UI_custo -= VT_config[i].custo;
+							VT_config[i].comprar = false;
+							ligaDeslBlur(VT_ativo[i], false);
+						}
+					}
+					if (!select) {
+						UI_custo += custo;
+						VT_config[index].comprar = true;
+						ligaDeslBlur(VT_ativo[index], true)
+					}
+					
+					atualizaTotais();
 				}
 			}
 		}
@@ -128,6 +163,7 @@
 			var nomeUp:String;
 			var nomeVlr:String;
 			var TF_valor:TextField;
+			var custo:uint
 			
 			nomeUp 	= 	_nomeMC;
 			_VT = new Vector.< MovieClip>;
@@ -136,16 +172,16 @@
 			for (var i:uint = 0 ; i <= 2 ; i++) {
 				nomeMC = _nomeMC + i.toString();
 				_VT.push(this[nomeMC]);
+				custo = BC_upgrades.custoUpgrade(nomeUp, i);
 				if ( i > _valorNV ) {
 					if (FC_faseDados.faseLiberada < BC_upgrades.faseLiberaUpgrade(nomeUp , i)) desabilitado( _VT[i] );
-					else disponivel(_VT[i], _nomeMC);
+					else disponivel(_VT[i], nomeUp , i ,custo );
 				}
 				if (i > 0) {
-					nomeVlr 	= nomeMC + "valor";
-					TF_valor	= this[nomeVlr];
-					TF_valor.text = "$" + BC_upgrades.custoUpgrade(nomeUp, i).toString() ;
+					nomeVlr 		= nomeMC + "valor";
+					TF_valor		= this[nomeVlr];
+					TF_valor.text 	= "$" + custo.toString() ;
 				}
-
 			}
 			
 			nivelAtual (_VT[_valorNV]);
@@ -157,9 +193,9 @@
 			ligaDeslBlur(_MC, true, 0X00FF00);
 		}
 
-		private function disponivel(_MC:MovieClip, _nome:String):void {
+		private function disponivel(_MC:MovieClip, _nome:String, _nivel:uint, _custo:uint):void {
 			VT_ativo.push(_MC);
-			VT_nomes.push(_nome);
+			VT_config.push({nome:_nome,nivel:_nivel,custo:_custo,comprar:false});
 			_MC.buttonMode = true;
 			_MC.useHandCursor = true;
 		}
@@ -179,12 +215,16 @@
 		}
 		
 		private function desabilitado(_MC:MovieClip):void {
-			
 			var BF_filt_blur:BlurFilter = new BlurFilter;			
 			BF_filt_blur.blurX = 2;
 			BF_filt_blur.blurY = 2;
 			BF_filt_blur.quality = BitmapFilterQuality.HIGH;
 			_MC.filters = [BF_filt_blur];
+		}
+		
+		private function atualizaTotais():void {
+			TF_total.text = "$" + FC_faseDados.totalPontos, toString();
+			TF_custo.text = "$" + UI_custo.toString();
 		}
 	}
 }
