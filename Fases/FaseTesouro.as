@@ -40,6 +40,9 @@ package Fases
 		private var UI_mapa_Largura	:uint; 
 		private var UI_mapa_Altura	:uint; 
 		
+		//Fase Dados
+		private var FC_faseDados	:FasesDados
+		
 		//barco heroi
 		private var AB_barcoHeroi	:BarcoHeroiAtor;
 		
@@ -90,6 +93,9 @@ package Fases
 		
 		public function FaseTesouro(_main:DisplayObjectContainer, _faseCtr:FaseControle, _faseID:uint, _nivel:uint) {
 			super(_main, _faseCtr, _faseID, _nivel);
+			
+			//Fase dados
+			FC_faseDados = new FasesDados;
 			
 			//tamanho do mapa
 			UI_mapa_Largura	= param[FaseJogoParamentos.PARAM_FASE_TAMANHO_LARGURA];
@@ -163,7 +169,7 @@ package Fases
 			
 			//controle de tesouros
 			UI_tesourosPegos = 0;
-			UI_pontos = 0;
+			UI_pontos = FC_faseDados.totalPontos;
 			
 			BO_zoom = false;
 			BO_limites = false;
@@ -197,6 +203,11 @@ package Fases
 
 			//ganhou o jogo
 			if ( UI_tesourosPegos >= UI_qtdTesouros) {
+				
+				//Atualiza total de pontos
+				FC_faseDados.totalPontos = UI_pontos;
+				FC_faseDados.salvaDados();
+				
 				concluidaFase();
 				return;
 			}
