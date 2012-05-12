@@ -122,33 +122,33 @@ package
 
 			//configura upgrades vela ( custo, fase Liberada)
 			VT_nivelVela.push(				new ValoresNivel(0, 0))
-			VT_nivelVela.push(				new ValoresNivel(0, 0))
-			VT_nivelVela.push(				new ValoresNivel(0, 0))
+			VT_nivelVela.push(				new ValoresNivel(2500, 2))
+			VT_nivelVela.push(				new ValoresNivel(5000, 4))
 
 			//configura upgrades canhao ( custo, fase Liberada)
 			VT_nivelCanhao.push(			new ValoresNivel(0, 0))
-			VT_nivelCanhao.push(			new ValoresNivel(0, 0))
-			VT_nivelCanhao.push(			new ValoresNivel(0, 0))
+			VT_nivelCanhao.push(			new ValoresNivel(5000, 1))
+			VT_nivelCanhao.push(			new ValoresNivel(10000, 3))
 
 			//configura upgrades alcance ( custo, fase Liberada)
 			VT_nivelAlcanceTiro.push(		new ValoresNivel(0, 0))
-			VT_nivelAlcanceTiro.push(		new ValoresNivel(0, 0))
-			VT_nivelAlcanceTiro.push(		new ValoresNivel(0, 0))
+			VT_nivelAlcanceTiro.push(		new ValoresNivel(1000, 1))
+			VT_nivelAlcanceTiro.push(		new ValoresNivel(2000, 2))
 
 			//configura upgrades dano ( custo, fase Liberada)
 			VT_nivelDanoTiro.push(			new ValoresNivel(0, 0))
-			VT_nivelDanoTiro.push(			new ValoresNivel(0, 0))
-			VT_nivelDanoTiro.push(			new ValoresNivel(0, 0))
+			VT_nivelDanoTiro.push(			new ValoresNivel(2000, 2))
+			VT_nivelDanoTiro.push(			new ValoresNivel(5000, 4))
 			
 			//configura upgrades frequencia ( custo, fase Liberada)
 			VT_nivelFrequenciaTiro.push(	new ValoresNivel(0, 0))
-			VT_nivelFrequenciaTiro.push(	new ValoresNivel(0, 0))
-			VT_nivelFrequenciaTiro.push(	new ValoresNivel(0, 0))
+			VT_nivelFrequenciaTiro.push(	new ValoresNivel(5000, 4))
+			VT_nivelFrequenciaTiro.push(	new ValoresNivel(10000, 5))
 
 			//configura upgrades capaciade de municao( custo, fase Liberada)
 			VT_nivelCapacidadeMunicao.push(	new ValoresNivel(0, 0))
-			VT_nivelCapacidadeMunicao.push(	new ValoresNivel(0, 0))
-			VT_nivelCapacidadeMunicao.push(	new ValoresNivel(0, 0))
+			VT_nivelCapacidadeMunicao.push(	new ValoresNivel(1000, 2))
+			VT_nivelCapacidadeMunicao.push(	new ValoresNivel(3000, 4))
 		}
 		
 		public function custoUpgrade(_nomeUp:String, _nivel:uint):uint {

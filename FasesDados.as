@@ -19,7 +19,7 @@ package
 		public function FasesDados() 
 		{
 			UI_totalPontos		= 0;
-			UI_faseLiberada		= 1;
+			UI_faseLiberada		= 4;
 			//
 			SO_dados	 = SharedObject.getLocal( "fasesdados" );
 			carregaDados();
