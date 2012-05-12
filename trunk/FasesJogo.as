@@ -34,7 +34,7 @@ package
 			//adicionaNivel(2, "Dificil", 2);
 			
 			//desbloquea fase 2
-			if (FD_dados.faseLiberada >= 2) faseBloqueada(1, false);
+			if (FD_dados.faseLiberada >= 2) faseBloqueada(2, false);
 			
 			//adiciona terceira fase
 			adicionaFase(3, "3 - Mar Morto", FaseTesouro);
