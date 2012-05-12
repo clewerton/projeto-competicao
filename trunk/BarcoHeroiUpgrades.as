@@ -57,12 +57,27 @@ package
 		
 		//niveis de upgrade
 		private var UI_nivelNavio:uint;
+		private var VT_nivelNavio:Vector.<ValoresNivel>;
+		
 		private var UI_nivelVela:uint;
+		private var VT_nivelVela:Vector.<ValoresNivel>;
+		
 		private var UI_nivelCanhao:uint;
+		private var VT_nivelCanhao:Vector.<ValoresNivel>;
+		
 		private var UI_nivelAlcanceTiro:uint;
+		private var VT_nivelAlcanceTiro:Vector.<ValoresNivel>;
+
+		
 		private var UI_nivelDanoTiro:uint;
+		private var VT_nivelDanoTiro:Vector.<ValoresNivel>;
+
 		private var UI_nivelFrequenciaTiro:uint;
+		private var VT_nivelFrequenciaTiro:Vector.<ValoresNivel>;
+
+		
 		private var UI_nivelCapacidadeMunicao:uint;
+		private var VT_nivelCapacidadeMunicao:Vector.<ValoresNivel>;
 		
 		public function BarcoHeroiUpgrades() 
 		{
@@ -74,6 +89,11 @@ package
 			UI_nivelFrequenciaTiro		=	0;
 			UI_nivelCapacidadeMunicao	=	0;
 			SO_upgrades = SharedObject.getLocal( "upgradesBarcoHeroi" );
+			
+			//configura custo e liberacaode upgrades
+			configuraUpgrades();
+			
+			//carrega informacao armazenada
 			carregaDados();
 		}
 		/**
@@ -82,6 +102,64 @@ package
 		public function carregaDados():void {
 			if (SO_upgrades.data.gamedata != undefined)
 				for (var upnome in SO_upgrades.data.gamedata) this[upnome] = SO_upgrades.data.gamedata[upnome];
+		}
+		/**
+		 * configura dados dos niveis
+		 */
+		private function configuraUpgrades():void {
+			VT_nivelNavio 				= new Vector.<ValoresNivel>;
+			VT_nivelVela				= new Vector.<ValoresNivel>;
+			VT_nivelCanhao				= new Vector.<ValoresNivel>;
+			VT_nivelAlcanceTiro			= new Vector.<ValoresNivel>;
+			VT_nivelDanoTiro			= new Vector.<ValoresNivel>;
+			VT_nivelFrequenciaTiro		= new Vector.<ValoresNivel>;
+			VT_nivelCapacidadeMunicao	= new Vector.<ValoresNivel>;
+			
+			//configura upgrades navio ( custo, fase Liberada)
+			VT_nivelNavio.push(				new ValoresNivel(	  0 ,	0 ))
+			VT_nivelNavio.push(				new ValoresNivel( 20000	, 	2 ))
+			VT_nivelNavio.push(				new ValoresNivel( 50000	, 	5 ))
+
+			//configura upgrades vela ( custo, fase Liberada)
+			VT_nivelVela.push(				new ValoresNivel(0, 0))
+			VT_nivelVela.push(				new ValoresNivel(0, 0))
+			VT_nivelVela.push(				new ValoresNivel(0, 0))
+
+			//configura upgrades canhao ( custo, fase Liberada)
+			VT_nivelCanhao.push(			new ValoresNivel(0, 0))
+			VT_nivelCanhao.push(			new ValoresNivel(0, 0))
+			VT_nivelCanhao.push(			new ValoresNivel(0, 0))
+
+			//configura upgrades alcance ( custo, fase Liberada)
+			VT_nivelAlcanceTiro.push(		new ValoresNivel(0, 0))
+			VT_nivelAlcanceTiro.push(		new ValoresNivel(0, 0))
+			VT_nivelAlcanceTiro.push(		new ValoresNivel(0, 0))
+
+			//configura upgrades dano ( custo, fase Liberada)
+			VT_nivelDanoTiro.push(			new ValoresNivel(0, 0))
+			VT_nivelDanoTiro.push(			new ValoresNivel(0, 0))
+			VT_nivelDanoTiro.push(			new ValoresNivel(0, 0))
+			
+			//configura upgrades frequencia ( custo, fase Liberada)
+			VT_nivelFrequenciaTiro.push(	new ValoresNivel(0, 0))
+			VT_nivelFrequenciaTiro.push(	new ValoresNivel(0, 0))
+			VT_nivelFrequenciaTiro.push(	new ValoresNivel(0, 0))
+
+			//configura upgrades capaciade de municao( custo, fase Liberada)
+			VT_nivelCapacidadeMunicao.push(	new ValoresNivel(0, 0))
+			VT_nivelCapacidadeMunicao.push(	new ValoresNivel(0, 0))
+			VT_nivelCapacidadeMunicao.push(	new ValoresNivel(0, 0))
+		}
+		
+		public function custoUpgrade(_nomeUp:String, _nivel:uint):uint {
+			var nomeVT:String = "VT_" + _nomeUp
+			var VT:Vector.<ValoresNivel> = this[nomeVT]
+			return VT[_nivel].custo;
+		}
+		public function faseLiberaUpgrade(_nomeUp:String, _nivel:uint):uint {
+			var nomeVT:String = "VT_" + _nomeUp
+			var VT:Vector.<ValoresNivel> = this[nomeVT]
+			return VT[_nivel].faseLibera;
 		}
 		
 		/**
@@ -211,8 +289,15 @@ package
 		public function set nivelDanoTiro(value:uint):void 
 		{
 			UI_nivelDanoTiro = value;
-		}
-		
+		}	
 	}
+}
 
+internal class ValoresNivel {
+	public var custo:uint;
+	public var faseLibera:uint;
+	public function ValoresNivel(_custo:uint, _fase:uint) {
+		custo 		= _custo;
+		faseLibera 	= _fase; 
+	}
 }

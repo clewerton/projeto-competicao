@@ -3,7 +3,10 @@
 	import adobe.utils.CustomActions;
 	import flash.display.MovieClip;
 	import flash.events.MouseEvent;
+	import flash.filters.BitmapFilterQuality;
+	import flash.filters.BlurFilter;
 	import flash.filters.GlowFilter;
+	import flash.text.TextField;
 	import TangoGames.Menus.MenuBase;
 	import TangoGames.Menus.MenuOpcao;
 	
@@ -27,11 +30,18 @@
 		//UPGRADES
 		private var BC_upgrades			:BarcoHeroiUpgrades;
 		
+		//Controle Fases
+		private var FC_faseDados		:FasesDados;
+		
 		public function MenuUpgrades( _idMenu:String ) {
 
 			super(_idMenu);
 			
+			//controle de ugrades do barco
 			BC_upgrades 	= new BarcoHeroiUpgrades();
+			
+			//controle de fase
+			FC_faseDados	= new FasesDados();
 			
 			VT_navioNivel	= new Vector.<MovieClip>;
 			VT_velaNivel	= new Vector.<MovieClip>;
@@ -86,19 +96,19 @@
 		
 		private function adicionaBotao():void {
 			
-			configuraBotao(VT_navioNivel	, "navionivel"		, BC_upgrades.nivelNavio				);
+			configuraBotao(VT_navioNivel	, "nivelNavio"				, BC_upgrades.nivelNavio				);
 			
-			configuraBotao(VT_velaNivel		, "velasnivel"		, BC_upgrades.nivelVela					);
+			configuraBotao(VT_velaNivel		, "nivelVela"				, BC_upgrades.nivelVela					);
 			
-			configuraBotao(VT_canhaoNivel	, "canhoesnivel"	, BC_upgrades.nivelCanhao				);
+			configuraBotao(VT_canhaoNivel	, "nivelCanhao"				, BC_upgrades.nivelCanhao				);
 
-			configuraBotao(VT_capacMunicao	, "capacidadenivel" , BC_upgrades.nivelCapacidadeMunicao	);
+			configuraBotao(VT_capacMunicao	, "nivelCapacidadeMunicao"	, BC_upgrades.nivelCapacidadeMunicao	);
 			
-			configuraBotao(VT_tipoMunicao  	, "municaonivel"	, BC_upgrades.nivelDanoTiro				);
+			configuraBotao(VT_tipoMunicao  	, "nivelDanoTiro"			, BC_upgrades.nivelDanoTiro				);
 			
-			configuraBotao(VT_frequenTiro  	, "frequencianivel"	, BC_upgrades.nivelFrequenciaTiro		);
+			configuraBotao(VT_frequenTiro  	, "nivelFrequenciaTiro"		, BC_upgrades.nivelFrequenciaTiro		);
 			
-			configuraBotao(VT_alcanceTiro  	, "alcancenivel"	, BC_upgrades.nivelAlcanceTiro			);
+			configuraBotao(VT_alcanceTiro  	, "nivelAlcanceTiro"		, BC_upgrades.nivelAlcanceTiro			);
 			
 		}
 		
@@ -115,13 +125,27 @@
 			
 		private function configuraBotao (_VT:Vector.< MovieClip>, _nomeMC:String, _valorNV:uint ):void {
 			var nomeMC:String;
+			var nomeUp:String;
+			var nomeVlr:String;
+			var TF_valor:TextField;
 			
+			nomeUp 	= 	_nomeMC;
 			_VT = new Vector.< MovieClip>;
+			
 			
 			for (var i:uint = 0 ; i <= 2 ; i++) {
 				nomeMC = _nomeMC + i.toString();
 				_VT.push(this[nomeMC]);
-				if ( i > _valorNV ) disponivel(_VT[i],_nomeMC);
+				if ( i > _valorNV ) {
+					if (FC_faseDados.faseLiberada < BC_upgrades.faseLiberaUpgrade(nomeUp , i)) desabilitado( _VT[i] );
+					else disponivel(_VT[i], _nomeMC);
+				}
+				if (i > 0) {
+					nomeVlr 	= nomeMC + "valor";
+					TF_valor	= this[nomeVlr];
+					TF_valor.text = "$" + BC_upgrades.custoUpgrade(nomeUp, i).toString() ;
+				}
+
 			}
 			
 			nivelAtual (_VT[_valorNV]);
@@ -154,6 +178,13 @@
 			
 		}
 		
+		private function desabilitado(_MC:MovieClip):void {
+			
+			var BF_filt_blur:BlurFilter = new BlurFilter;			
+			BF_filt_blur.blurX = 2;
+			BF_filt_blur.blurY = 2;
+			BF_filt_blur.quality = BitmapFilterQuality.HIGH;
+			_MC.filters = [BF_filt_blur];
+		}
 	}
-	
 }
