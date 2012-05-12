@@ -125,7 +125,7 @@ package
 			
 			//ilhas de municao
 			this[PARAM_ILHA_PONTOS_POR_MUNICAO] = 10;
-			this[PARAM_ILHA_QTD_MUNICAO_LOTE] 	= 2;
+			this[PARAM_ILHA_QTD_MUNICAO_LOTE] 	= 5;
 			
 			//ilhas tesouro
 			this[PARAM_ILHA_TOTAL_PONTOS] 		= 2000;
@@ -213,7 +213,7 @@ package
 			
 			//ilhas de municao
 			this[PARAM_ILHA_PONTOS_POR_MUNICAO] = 10;
-			this[PARAM_ILHA_QTD_MUNICAO_LOTE] 	= 2;
+			this[PARAM_ILHA_QTD_MUNICAO_LOTE] 	= 5;
 			
 			//ilhas tesouro
 			this[PARAM_ILHA_TOTAL_PONTOS] 		= 2000;
@@ -283,7 +283,7 @@ package
 			
 			//ilhas de municao
 			this[PARAM_ILHA_PONTOS_POR_MUNICAO] = 10;
-			this[PARAM_ILHA_QTD_MUNICAO_LOTE] 	= 2;
+			this[PARAM_ILHA_QTD_MUNICAO_LOTE] 	= 5;
 			
 			//ilhas tesouro
 			this[PARAM_ILHA_TOTAL_PONTOS] 		= 2000;
@@ -353,7 +353,7 @@ package
 			
 			//ilhas de municao
 			this[PARAM_ILHA_PONTOS_POR_MUNICAO] = 10;
-			this[PARAM_ILHA_QTD_MUNICAO_LOTE] 	= 2;
+			this[PARAM_ILHA_QTD_MUNICAO_LOTE] 	= 5;
 			
 			//ilhas tesouro
 			this[PARAM_ILHA_TOTAL_PONTOS] 		= 2000;
@@ -423,7 +423,7 @@ package
 			
 			//ilhas de municao
 			this[PARAM_ILHA_PONTOS_POR_MUNICAO] = 10;
-			this[PARAM_ILHA_QTD_MUNICAO_LOTE] 	= 2;
+			this[PARAM_ILHA_QTD_MUNICAO_LOTE] 	= 5;
 			
 			//ilhas tesouro
 			this[PARAM_ILHA_TOTAL_PONTOS] 		= 2000;
@@ -493,7 +493,7 @@ package
 			
 			//ilhas de municao
 			this[PARAM_ILHA_PONTOS_POR_MUNICAO] = 10;
-			this[PARAM_ILHA_QTD_MUNICAO_LOTE] 	= 2;
+			this[PARAM_ILHA_QTD_MUNICAO_LOTE] 	= 5;
 			
 			//ilhas tesouro
 			this[PARAM_ILHA_TOTAL_PONTOS] 		= 2000;
@@ -563,7 +563,7 @@ package
 			
 			//ilhas de municao
 			this[PARAM_ILHA_PONTOS_POR_MUNICAO] = 10;
-			this[PARAM_ILHA_QTD_MUNICAO_LOTE] 	= 2;
+			this[PARAM_ILHA_QTD_MUNICAO_LOTE] 	= 5;
 			
 			//ilhas tesouro
 			this[PARAM_ILHA_TOTAL_PONTOS] 		= 2000;
