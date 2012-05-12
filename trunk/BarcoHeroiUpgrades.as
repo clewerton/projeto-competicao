@@ -100,6 +100,7 @@ package
 		 * Carrega dados Salvos
 		 */
 		public function carregaDados():void {
+			//SO_upgrades.clear();
 			if (SO_upgrades.data.gamedata != undefined)
 				for (var upnome in SO_upgrades.data.gamedata) this[upnome] = SO_upgrades.data.gamedata[upnome];
 		}
@@ -116,39 +117,40 @@ package
 			VT_nivelCapacidadeMunicao	= new Vector.<ValoresNivel>;
 			
 			//configura upgrades navio ( custo, fase Liberada)
-			VT_nivelNavio.push(				new ValoresNivel(	  0 ,	0 ))
-			VT_nivelNavio.push(				new ValoresNivel( 20000	, 	2 ))
-			VT_nivelNavio.push(				new ValoresNivel( 50000	, 	5 ))
+			VT_nivelNavio.push(				new ValoresNivel(		0 	,	0	));
+			VT_nivelNavio.push(				new ValoresNivel( 	20000	,	2	));
+			VT_nivelNavio.push(				new ValoresNivel( 	50000	, 	5	));
 
 			//configura upgrades vela ( custo, fase Liberada)
-			VT_nivelVela.push(				new ValoresNivel(0, 0))
-			VT_nivelVela.push(				new ValoresNivel(2500, 2))
-			VT_nivelVela.push(				new ValoresNivel(5000, 4))
+			VT_nivelVela.push(				new ValoresNivel(		0	,	0	));
+			VT_nivelVela.push(				new ValoresNivel(	 2500	,	2	));
+			VT_nivelVela.push(				new ValoresNivel(	 5000	,	4	));
 
 			//configura upgrades canhao ( custo, fase Liberada)
-			VT_nivelCanhao.push(			new ValoresNivel(0, 0))
-			VT_nivelCanhao.push(			new ValoresNivel(5000, 1))
-			VT_nivelCanhao.push(			new ValoresNivel(10000, 3))
+			VT_nivelCanhao.push(			new ValoresNivel(		0   , 	0	));
+			VT_nivelCanhao.push(			new ValoresNivel(	 5000	,	1	));
+			VT_nivelCanhao.push(			new ValoresNivel(	10000	,	3	));
 
 			//configura upgrades alcance ( custo, fase Liberada)
-			VT_nivelAlcanceTiro.push(		new ValoresNivel(0, 0))
-			VT_nivelAlcanceTiro.push(		new ValoresNivel(1000, 1))
-			VT_nivelAlcanceTiro.push(		new ValoresNivel(2000, 2))
+			VT_nivelAlcanceTiro.push(		new ValoresNivel(		0	,	0	));
+			VT_nivelAlcanceTiro.push(		new ValoresNivel(	 1000	,	1	));
+			VT_nivelAlcanceTiro.push(		new ValoresNivel(	 2000	,	2	));
 
 			//configura upgrades dano ( custo, fase Liberada)
-			VT_nivelDanoTiro.push(			new ValoresNivel(0, 0))
-			VT_nivelDanoTiro.push(			new ValoresNivel(2000, 2))
-			VT_nivelDanoTiro.push(			new ValoresNivel(5000, 4))
+			VT_nivelDanoTiro.push(			new ValoresNivel(		0	,	0	));
+			VT_nivelDanoTiro.push(			new ValoresNivel(	 2000	,	4	));
+			VT_nivelDanoTiro.push(			new ValoresNivel(	 5000	,	5	));
 			
 			//configura upgrades frequencia ( custo, fase Liberada)
-			VT_nivelFrequenciaTiro.push(	new ValoresNivel(0, 0))
-			VT_nivelFrequenciaTiro.push(	new ValoresNivel(5000, 4))
-			VT_nivelFrequenciaTiro.push(	new ValoresNivel(10000, 5))
+			VT_nivelFrequenciaTiro.push(	new ValoresNivel(		0	, 	0	));
+			VT_nivelFrequenciaTiro.push(	new ValoresNivel(	 5000	,	2	));
+			VT_nivelFrequenciaTiro.push(	new ValoresNivel(	10000	,	4	));
 
 			//configura upgrades capaciade de municao( custo, fase Liberada)
-			VT_nivelCapacidadeMunicao.push(	new ValoresNivel(0, 0))
-			VT_nivelCapacidadeMunicao.push(	new ValoresNivel(1000, 2))
-			VT_nivelCapacidadeMunicao.push(	new ValoresNivel(3000, 4))
+			VT_nivelCapacidadeMunicao.push(	new ValoresNivel(		0	,	0	));
+			VT_nivelCapacidadeMunicao.push(	new ValoresNivel(	 1000	, 	2	));
+			VT_nivelCapacidadeMunicao.push(	new ValoresNivel(	 3000	,	4	));
+			
 		}
 		
 		public function custoUpgrade(_nomeUp:String, _nivel:uint):uint {
@@ -170,9 +172,9 @@ package
 				nivelNavio				:UI_nivelNavio,
 				nivelVela				:UI_nivelVela,
 				nivelCanhao				:UI_nivelCanhao,
-				nivelAlcance			:UI_nivelAlcanceTiro,
+				nivelAlcanceTiro		:UI_nivelAlcanceTiro,
 				nivelDanoTiro			:UI_nivelDanoTiro,
-				nivelFrequencia			:UI_nivelFrequenciaTiro,
+				nivelFrequenciaTiro		:UI_nivelFrequenciaTiro,
 				nivelCapacidadeMunicao	:UI_nivelCapacidadeMunicao
 			}
 			SO_upgrades.flush();

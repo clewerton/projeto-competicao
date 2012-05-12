@@ -383,7 +383,7 @@ package Fases.FaseTesouroElementos
 			else {
 				PT_objetivo = faseAtor.mapa.convertePontoMapa(caminho[1]);
 			}			
-			geraQuadradosDebugCaminho(caminho);
+			//geraQuadradosDebugCaminho(caminho);
 		}
 		
 		/**
@@ -562,7 +562,7 @@ package Fases.FaseTesouroElementos
 				PT_objetivo = faseAtor.mapa.convertePontoMapa(caminho[1]);
 			}	
 			
-			geraQuadradosDebugCaminho(caminho);
+			//geraQuadradosDebugCaminho(caminho);
 
 			calculaRotaAlvo()
 			

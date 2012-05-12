@@ -19,7 +19,7 @@ package
 		public function FasesDados() 
 		{
 			UI_totalPontos		= 0;
-			UI_faseLiberada		= 4;
+			UI_faseLiberada		= 0;
 			//
 			SO_dados	 = SharedObject.getLocal( "fasesdados" );
 			carregaDados();
@@ -29,6 +29,7 @@ package
 		 * Carrega dados Salvos
 		 */
 		public function carregaDados():void {
+			//SO_dados.clear;
 			if (SO_dados.data.gamedata != undefined) {
 				for (var nome in SO_dados.data.gamedata) this[nome] = SO_dados.data.gamedata[nome];
 			}
