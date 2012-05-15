@@ -117,7 +117,7 @@
 			//pontuacao
 			this[PARAM_PONTOS_BARCO_INIMIGO] 	= 600;
 			this[PARAM_PONTOS_CAPTURA_BOTE] 	= 300;
-			this[PARAM_PONTOS_CANHAO_ILHA] 		= 1000;
+			this[PARAM_PONTOS_CANHAO_ILHA] 		= 1500;
 
 			//ilha de vida
 			this[PARAM_ILHA_PONTOS_POR_VIDA] 	= 1.5;
@@ -141,7 +141,7 @@
 			
 			//Tiro Canhão Ilha
 			this[PARAM_TIRO_ILHA_VELOCID]		= 8;
-			this[PARAM_TIRO_ILHA_DANO]			= 50;
+			this[PARAM_TIRO_ILHA_DANO]			= 200;
 			this[PARAM_TIRO_ILHA_ALCANCE]		= 500;
 
 			//barco inimigo
@@ -187,7 +187,7 @@
 			//pontuacao
 			this[PARAM_PONTOS_BARCO_INIMIGO] 	= 600;
 			this[PARAM_PONTOS_CAPTURA_BOTE] 	= 300;
-			this[PARAM_PONTOS_CANHAO_ILHA] 		= 1000;
+			this[PARAM_PONTOS_CANHAO_ILHA] 		= 1500;
 
 			//ilha de vida
 			this[PARAM_ILHA_PONTOS_POR_VIDA] 	= 1.5;
@@ -211,7 +211,7 @@
 			
 			//Tiro Canhão Ilha
 			this[PARAM_TIRO_ILHA_VELOCID]		= 8;
-			this[PARAM_TIRO_ILHA_DANO]			= 100;
+			this[PARAM_TIRO_ILHA_DANO]			= 200;
 			this[PARAM_TIRO_ILHA_ALCANCE]		= 500;
 
 			//barco inimigo
@@ -256,7 +256,7 @@
 			//pontuacao
 			this[PARAM_PONTOS_BARCO_INIMIGO] 	= 600;
 			this[PARAM_PONTOS_CAPTURA_BOTE] 	= 300;
-			this[PARAM_PONTOS_CANHAO_ILHA] 		= 1000;
+			this[PARAM_PONTOS_CANHAO_ILHA] 		= 1500;
 
 			//ilha de vida
 			this[PARAM_ILHA_PONTOS_POR_VIDA] 	= 1.5;
@@ -280,7 +280,7 @@
 			
 			//Tiro Canhão Ilha
 			this[PARAM_TIRO_ILHA_VELOCID]		= 8;
-			this[PARAM_TIRO_ILHA_DANO]			= 010;
+			this[PARAM_TIRO_ILHA_DANO]			= 200;
 			this[PARAM_TIRO_ILHA_ALCANCE]		= 500;
 
 			//barco inimigo
@@ -326,7 +326,7 @@
 			//pontuacao
 			this[PARAM_PONTOS_BARCO_INIMIGO] 	= 600;
 			this[PARAM_PONTOS_CAPTURA_BOTE] 	= 300;
-			this[PARAM_PONTOS_CANHAO_ILHA] 		= 1000;
+			this[PARAM_PONTOS_CANHAO_ILHA] 		= 1500;
 
 			//ilha de vida
 			this[PARAM_ILHA_PONTOS_POR_VIDA] 	= 1.5;
@@ -350,7 +350,7 @@
 			
 			//Tiro Canhão Ilha
 			this[PARAM_TIRO_ILHA_VELOCID]		= 8;
-			this[PARAM_TIRO_ILHA_DANO]			= 100;
+			this[PARAM_TIRO_ILHA_DANO]			= 200;
 			this[PARAM_TIRO_ILHA_ALCANCE]		= 500;
 
 			//barco inimigo
@@ -396,7 +396,7 @@
 			//pontuacao
 			this[PARAM_PONTOS_BARCO_INIMIGO] 	= 600;
 			this[PARAM_PONTOS_CAPTURA_BOTE] 	= 300;
-			this[PARAM_PONTOS_CANHAO_ILHA] 		= 1000;
+			this[PARAM_PONTOS_CANHAO_ILHA] 		= 1500;
 
 			//ilha de vida
 			this[PARAM_ILHA_PONTOS_POR_VIDA] 	= 1.5;
@@ -420,7 +420,7 @@
 			
 			//Tiro Canhão Ilha
 			this[PARAM_TIRO_ILHA_VELOCID]		= 8;
-			this[PARAM_TIRO_ILHA_DANO]			= 100;
+			this[PARAM_TIRO_ILHA_DANO]			= 200;
 			this[PARAM_TIRO_ILHA_ALCANCE]		= 500;
 
 			//barco inimigo
@@ -466,7 +466,7 @@
 			//pontuacao
 			this[PARAM_PONTOS_BARCO_INIMIGO] 	= 600;
 			this[PARAM_PONTOS_CAPTURA_BOTE] 	= 300;
-			this[PARAM_PONTOS_CANHAO_ILHA] 		= 1000;
+			this[PARAM_PONTOS_CANHAO_ILHA] 		= 1500;
 
 			//ilha de vida
 			this[PARAM_ILHA_PONTOS_POR_VIDA] 	= 1.5;
@@ -490,7 +490,7 @@
 			
 			//Tiro Canhão Ilha
 			this[PARAM_TIRO_ILHA_VELOCID]		= 8;
-			this[PARAM_TIRO_ILHA_DANO]			= 100;
+			this[PARAM_TIRO_ILHA_DANO]			= 200;
 			this[PARAM_TIRO_ILHA_ALCANCE]		= 500;
 
 			//barco inimigo
@@ -535,7 +535,7 @@
 			//pontuacao
 			this[PARAM_PONTOS_BARCO_INIMIGO] 	= 600;
 			this[PARAM_PONTOS_CAPTURA_BOTE] 	= 300;
-			this[PARAM_PONTOS_CANHAO_ILHA] 		= 1000;
+			this[PARAM_PONTOS_CANHAO_ILHA] 		= 1500;
 
 			//ilha de vida
 			this[PARAM_ILHA_PONTOS_POR_VIDA] 	= 1.5;
@@ -559,7 +559,7 @@
 			
 			//Tiro Canhão Ilha
 			this[PARAM_TIRO_ILHA_VELOCID]		= 8;
-			this[PARAM_TIRO_ILHA_DANO]			= 100;
+			this[PARAM_TIRO_ILHA_DANO]			= 200;
 			this[PARAM_TIRO_ILHA_ALCANCE]		= 500;
 
 			//barco inimigo
@@ -605,7 +605,7 @@
 			//pontuacao
 			this[PARAM_PONTOS_BARCO_INIMIGO] 	= 600;
 			this[PARAM_PONTOS_CAPTURA_BOTE] 	= 300;
-			this[PARAM_PONTOS_CANHAO_ILHA] 		= 1000;
+			this[PARAM_PONTOS_CANHAO_ILHA] 		= 1500;
 
 			//ilha de vida
 			this[PARAM_ILHA_PONTOS_POR_VIDA] 	= 1.5;
@@ -629,7 +629,7 @@
 			
 			//Tiro Canhão Ilha
 			this[PARAM_TIRO_ILHA_VELOCID]		= 8;
-			this[PARAM_TIRO_ILHA_DANO]			= 100;
+			this[PARAM_TIRO_ILHA_DANO]			= 200;
 			this[PARAM_TIRO_ILHA_ALCANCE]		= 500;
 
 			//barco inimigo
