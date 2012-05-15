@@ -35,7 +35,7 @@ package
 			
 			trace("faseliberada:", FD_dados.faseLiberada);
 			//desbloquea fase 2
-			if (FD_dados.faseLiberada >= 2) faseBloqueada(2, false);
+			if (FD_dados.faseLiberada >= 1) faseBloqueada(2, false);
 			
 			//adiciona terceira fase
 			adicionaFase(3, "3 - Mar Morto", FaseTesouro);
@@ -44,7 +44,7 @@ package
 			//adicionaNivel(3, "Dificil", 2);
 			
 			//desbloquea fase 3
-			if (FD_dados.faseLiberada >= 3) faseBloqueada(3, false);
+			if (FD_dados.faseLiberada >= 2) faseBloqueada(3, false);
 			
 			//adiciona quarta fase
 			adicionaFase(4, "4 - Mar Egeu", FaseTesouro);
@@ -53,7 +53,7 @@ package
 			//adicionaNivel(4, "Dificil", 2);
 			
 			//desbloquea fase 4
-			if (FD_dados.faseLiberada >= 4) faseBloqueada(4, false)
+			if (FD_dados.faseLiberada >= 3) faseBloqueada(4, false)
 			
 			//adiciona quinta fase
 			adicionaFase(5, "5 - Mar Caspio", FaseTesouro);
@@ -62,7 +62,7 @@ package
 			//adicionaNivel(5, "Dificil", 2);
 
 			//desbloquea fase 5
-			if (FD_dados.faseLiberada >= 5) faseBloqueada(5, false)
+			if (FD_dados.faseLiberada >= 4) faseBloqueada(5, false)
 			
 			//adiciona sexta fase
 			adicionaFase(6, "6 - Mar Golfo Pérsico", FaseTesouro);
@@ -71,7 +71,7 @@ package
 			//adicionaNivel(6, "Dificil", 2);
 
 			//desbloquea fase 6
-			if (FD_dados.faseLiberada >= 6) faseBloqueada(6, false)
+			if (FD_dados.faseLiberada >= 5) faseBloqueada(6, false)
 					
 			//adiciona setima fase
 			adicionaFase(7, "7 - Mar Mediterâneo", FaseTesouro);
@@ -80,7 +80,7 @@ package
 			//adicionaNivel(7, "Dificil", 2);
 			
 			//desbloquea fase 6
-			if (FD_dados.faseLiberada >= 7) faseBloqueada(7, false)
+			if (FD_dados.faseLiberada >= 6) faseBloqueada(7, false)
 		}	
 		
 		override public function carregaFaseParametros(_faseID:uint, _nivel:uint):FaseParamentos
