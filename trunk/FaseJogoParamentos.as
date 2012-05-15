@@ -1,4 +1,4 @@
-package  
+﻿package  
 {
 	import TangoGames.Fases.FaseParamentos;
 	
@@ -120,12 +120,12 @@ package
 			this[PARAM_PONTOS_CANHAO_ILHA] 		= 1000;
 
 			//ilha de vida
-			this[PARAM_ILHA_PONTOS_POR_VIDA] 	= 1;
-			this[PARAM_ILHA_QTD_VIDA_LOTE] 		= 10;
+			this[PARAM_ILHA_PONTOS_POR_VIDA] 	= 1.5;
+			this[PARAM_ILHA_QTD_VIDA_LOTE] 		= 20;
 			
 			//ilhas de municao
-			this[PARAM_ILHA_PONTOS_POR_MUNICAO] = 10;
-			this[PARAM_ILHA_QTD_MUNICAO_LOTE] 	= 5;
+			this[PARAM_ILHA_PONTOS_POR_MUNICAO] = 8;
+			this[PARAM_ILHA_QTD_MUNICAO_LOTE] 	= 3;
 			
 			//ilhas tesouro
 			this[PARAM_ILHA_TOTAL_PONTOS] 		= 2000;
@@ -153,7 +153,7 @@ package
 			this[PARAM_INIMIGO_FREQ_TIRO] 		= 48;	//EM FRAMES	
 			
 			//Precisão do barco inimigo 	
-			this[PARAM_INIMIGO_PRECISAO]	 	= 100;   //0% a100%
+			this[PARAM_INIMIGO_PRECISAO]	 	= 80;   //0% a100%
 			this[PARAM_INIMIGO_MIRA_PRECISA] 	= 1;   // (0) = NÃO ANTECIPA A MIRA  (1) = ANTECIPA
 			this[PARAM_INIMIGO_ANG_DISPERSAO]	= 30;  //GRAUS DE DISPERSÃO DO TIRO IMPRECISO
 			
@@ -163,7 +163,7 @@ package
 			this[PARAM_TIRO_INIMIGO_ALCANCE]	= 350;
 			
 			//bote de fuga
-			this[PARAM_BOTE_FUGA_VELOC_MAX]     = 3;
+			this[PARAM_BOTE_FUGA_VELOC_MAX]     = 5;
 			
 		}
 		
@@ -177,12 +177,63 @@ package
 			
 			// quantidade de ilhas
 			this[PARAM_FASE_QTD_ILHAS_TESOURO]	= 1;
-			this[PARAM_FASE_QTD_ILHAS_CANHAO]	= 3;
-			this[PARAM_FASE_QTD_ILHAS_MUNICAO]	= 0;
+			this[PARAM_FASE_QTD_ILHAS_CANHAO]	= 2;
+			this[PARAM_FASE_QTD_ILHAS_MUNICAO]	= 1;
 			this[PARAM_FASE_QTD_ILHAS_VIDA]		= 1;
 			
 			// quantidade de inimigos
 			this[PARAM_FASE_QTD_INIMIGOS] 		= 2;
+			
+			//pontuacao
+			this[PARAM_PONTOS_BARCO_INIMIGO] 	= 600;
+			this[PARAM_PONTOS_CAPTURA_BOTE] 	= 300;
+			this[PARAM_PONTOS_CANHAO_ILHA] 		= 1000;
+
+			//ilha de vida
+			this[PARAM_ILHA_PONTOS_POR_VIDA] 	= 1.5;
+			this[PARAM_ILHA_QTD_VIDA_LOTE] 		= 20;
+			
+			//ilhas de municao
+			this[PARAM_ILHA_PONTOS_POR_MUNICAO] = 10;
+			this[PARAM_ILHA_QTD_MUNICAO_LOTE] 	= 5;
+			
+			//ilhas tesouro
+			this[PARAM_ILHA_TOTAL_PONTOS] 		= 2000;
+			this[PARAM_ILHA_QTD_PONTOS_LOTE] 	= 50;
+			this[PARAM_ILHA_QTD_MAX_INI_DEFESA]	= 1;
+			
+			//ilha do canhao
+			this[PARAM_ILHA_CANHAO_FREQ_TIRO]	 = 96;	
+			this[PARAM_ILHA_CANHAO_MAX_VIDA]	 = 50;
+			this[PARAM_ILHA_CANHAO_PRECISAO]	 = 0;
+			this[PARAM_ILHA_CANHAO_MIRA_PRECISA] = 0;
+			this[PARAM_ILHA_CANHAO_ANG_DISPERSAO]= 45;
+			
+			//Tiro Canhão Ilha
+			this[PARAM_TIRO_ILHA_VELOCID]		= 8;
+			this[PARAM_TIRO_ILHA_DANO]			= 010;
+			this[PARAM_TIRO_ILHA_ALCANCE]		= 500;
+
+			//barco inimigo
+			this[PARAM_INIMIGO_MAXIMO_VIDA]		= 100;
+			this[PARAM_INIMIGO_VELOC_MAX]		= 5;
+			
+			//canhões do barco inimigo
+			this[PARAM_INIMIGO_QTD_CANHOES] 	= 1;
+			this[PARAM_INIMIGO_FREQ_TIRO] 		= 42;	//EM FRAMES	
+			
+			//Precisão do barco inimigo 	
+			this[PARAM_INIMIGO_PRECISAO]	 	= 60;   //0% a100%
+			this[PARAM_INIMIGO_MIRA_PRECISA] 	= 1;   // (0) = NÃO ANTECIPA A MIRA  (1) = ANTECIPA
+			this[PARAM_INIMIGO_ANG_DISPERSAO]	= 30;  //GRAUS DE DISPERSÃO DO TIRO IMPRECISO
+			
+			//tiro do barco inimigo
+			this[PARAM_TIRO_INIMIGO_VELOCID]	= 10;
+			this[PARAM_TIRO_INIMIGO_DANO]		= 30;
+			this[PARAM_TIRO_INIMIGO_ALCANCE]	= 350;
+			
+			//bote de fuga
+			this[PARAM_BOTE_FUGA_VELOC_MAX]     = 3;
 		}
 		
 		/**
@@ -208,8 +259,8 @@ package
 			this[PARAM_PONTOS_CANHAO_ILHA] 		= 1000;
 
 			//ilha de vida
-			this[PARAM_ILHA_PONTOS_POR_VIDA] 	= 1;
-			this[PARAM_ILHA_QTD_VIDA_LOTE] 		= 10;
+			this[PARAM_ILHA_PONTOS_POR_VIDA] 	= 1.5;
+			this[PARAM_ILHA_QTD_VIDA_LOTE] 		= 20;
 			
 			//ilhas de municao
 			this[PARAM_ILHA_PONTOS_POR_MUNICAO] = 10;
@@ -229,7 +280,7 @@ package
 			
 			//Tiro Canhão Ilha
 			this[PARAM_TIRO_ILHA_VELOCID]		= 8;
-			this[PARAM_TIRO_ILHA_DANO]			= 50;
+			this[PARAM_TIRO_ILHA_DANO]			= 010;
 			this[PARAM_TIRO_ILHA_ALCANCE]		= 500;
 
 			//barco inimigo
@@ -238,16 +289,16 @@ package
 			
 			//canhões do barco inimigo
 			this[PARAM_INIMIGO_QTD_CANHOES] 	= 1;
-			this[PARAM_INIMIGO_FREQ_TIRO] 		= 48;	//EM FRAMES	
+			this[PARAM_INIMIGO_FREQ_TIRO] 		= 42;	//EM FRAMES	
 			
 			//Precisão do barco inimigo 	
-			this[PARAM_INIMIGO_PRECISAO]	 	= 100;   //0% a100%
+			this[PARAM_INIMIGO_PRECISAO]	 	= 60;   //0% a100%
 			this[PARAM_INIMIGO_MIRA_PRECISA] 	= 1;   // (0) = NÃO ANTECIPA A MIRA  (1) = ANTECIPA
 			this[PARAM_INIMIGO_ANG_DISPERSAO]	= 30;  //GRAUS DE DISPERSÃO DO TIRO IMPRECISO
 			
 			//tiro do barco inimigo
 			this[PARAM_TIRO_INIMIGO_VELOCID]	= 10;
-			this[PARAM_TIRO_INIMIGO_DANO]		= 10;
+			this[PARAM_TIRO_INIMIGO_DANO]		= 30;
 			this[PARAM_TIRO_INIMIGO_ALCANCE]	= 350;
 			
 			//bote de fuga
@@ -270,7 +321,7 @@ package
 			this[PARAM_FASE_QTD_ILHAS_VIDA]		= 1;
 			
 			// quantidade de inimigos
-			this[PARAM_FASE_QTD_INIMIGOS] 		= 1;
+			this[PARAM_FASE_QTD_INIMIGOS] 		= 4;
 			
 			//pontuacao
 			this[PARAM_PONTOS_BARCO_INIMIGO] 	= 600;
@@ -278,8 +329,8 @@ package
 			this[PARAM_PONTOS_CANHAO_ILHA] 		= 1000;
 
 			//ilha de vida
-			this[PARAM_ILHA_PONTOS_POR_VIDA] 	= 1;
-			this[PARAM_ILHA_QTD_VIDA_LOTE] 		= 10;
+			this[PARAM_ILHA_PONTOS_POR_VIDA] 	= 1.5;
+			this[PARAM_ILHA_QTD_VIDA_LOTE] 		= 20;
 			
 			//ilhas de municao
 			this[PARAM_ILHA_PONTOS_POR_MUNICAO] = 10;
@@ -299,7 +350,7 @@ package
 			
 			//Tiro Canhão Ilha
 			this[PARAM_TIRO_ILHA_VELOCID]		= 8;
-			this[PARAM_TIRO_ILHA_DANO]			= 50;
+			this[PARAM_TIRO_ILHA_DANO]			= 100;
 			this[PARAM_TIRO_ILHA_ALCANCE]		= 500;
 
 			//barco inimigo
@@ -307,17 +358,17 @@ package
 			this[PARAM_INIMIGO_VELOC_MAX]		= 5;
 			
 			//canhões do barco inimigo
-			this[PARAM_INIMIGO_QTD_CANHOES] 	= 1;
-			this[PARAM_INIMIGO_FREQ_TIRO] 		= 48;	//EM FRAMES	
+			this[PARAM_INIMIGO_QTD_CANHOES] 	= 2;
+			this[PARAM_INIMIGO_FREQ_TIRO] 		= 42;	//EM FRAMES	
 			
 			//Precisão do barco inimigo 	
-			this[PARAM_INIMIGO_PRECISAO]	 	= 100;   //0% a100%
+			this[PARAM_INIMIGO_PRECISAO]	 	= 70;   //0% a100%
 			this[PARAM_INIMIGO_MIRA_PRECISA] 	= 1;   // (0) = NÃO ANTECIPA A MIRA  (1) = ANTECIPA
 			this[PARAM_INIMIGO_ANG_DISPERSAO]	= 30;  //GRAUS DE DISPERSÃO DO TIRO IMPRECISO
 			
 			//tiro do barco inimigo
 			this[PARAM_TIRO_INIMIGO_VELOCID]	= 10;
-			this[PARAM_TIRO_INIMIGO_DANO]		= 10;
+			this[PARAM_TIRO_INIMIGO_DANO]		= 30;
 			this[PARAM_TIRO_INIMIGO_ALCANCE]	= 350;
 			
 			//bote de fuga
@@ -340,7 +391,7 @@ package
 			this[PARAM_FASE_QTD_ILHAS_VIDA]		= 2;
 			
 			// quantidade de inimigos
-			this[PARAM_FASE_QTD_INIMIGOS] 		= 1;
+			this[PARAM_FASE_QTD_INIMIGOS] 		= 4;
 			
 			//pontuacao
 			this[PARAM_PONTOS_BARCO_INIMIGO] 	= 600;
@@ -348,8 +399,8 @@ package
 			this[PARAM_PONTOS_CANHAO_ILHA] 		= 1000;
 
 			//ilha de vida
-			this[PARAM_ILHA_PONTOS_POR_VIDA] 	= 1;
-			this[PARAM_ILHA_QTD_VIDA_LOTE] 		= 10;
+			this[PARAM_ILHA_PONTOS_POR_VIDA] 	= 1.5;
+			this[PARAM_ILHA_QTD_VIDA_LOTE] 		= 20;
 			
 			//ilhas de municao
 			this[PARAM_ILHA_PONTOS_POR_MUNICAO] = 10;
@@ -369,7 +420,7 @@ package
 			
 			//Tiro Canhão Ilha
 			this[PARAM_TIRO_ILHA_VELOCID]		= 8;
-			this[PARAM_TIRO_ILHA_DANO]			= 50;
+			this[PARAM_TIRO_ILHA_DANO]			= 100;
 			this[PARAM_TIRO_ILHA_ALCANCE]		= 500;
 
 			//barco inimigo
@@ -377,21 +428,21 @@ package
 			this[PARAM_INIMIGO_VELOC_MAX]		= 5;
 			
 			//canhões do barco inimigo
-			this[PARAM_INIMIGO_QTD_CANHOES] 	= 1;
-			this[PARAM_INIMIGO_FREQ_TIRO] 		= 48;	//EM FRAMES	
+			this[PARAM_INIMIGO_QTD_CANHOES] 	= 2;
+			this[PARAM_INIMIGO_FREQ_TIRO] 		= 42;	//EM FRAMES	
 			
 			//Precisão do barco inimigo 	
-			this[PARAM_INIMIGO_PRECISAO]	 	= 100;   //0% a100%
+			this[PARAM_INIMIGO_PRECISAO]	 	= 80;   //0% a100%
 			this[PARAM_INIMIGO_MIRA_PRECISA] 	= 1;   // (0) = NÃO ANTECIPA A MIRA  (1) = ANTECIPA
 			this[PARAM_INIMIGO_ANG_DISPERSAO]	= 30;  //GRAUS DE DISPERSÃO DO TIRO IMPRECISO
 			
 			//tiro do barco inimigo
 			this[PARAM_TIRO_INIMIGO_VELOCID]	= 10;
-			this[PARAM_TIRO_INIMIGO_DANO]		= 10;
+			this[PARAM_TIRO_INIMIGO_DANO]		= 30;
 			this[PARAM_TIRO_INIMIGO_ALCANCE]	= 350;
 			
 			//bote de fuga
-			this[PARAM_BOTE_FUGA_VELOC_MAX]     = 3;
+			this[PARAM_BOTE_FUGA_VELOC_MAX]     = 4;
 			
 		}
 		
@@ -410,7 +461,7 @@ package
 			this[PARAM_FASE_QTD_ILHAS_VIDA]		= 2;
 			
 			// quantidade de inimigos
-			this[PARAM_FASE_QTD_INIMIGOS] 		= 1;
+			this[PARAM_FASE_QTD_INIMIGOS] 		= 4;
 			
 			//pontuacao
 			this[PARAM_PONTOS_BARCO_INIMIGO] 	= 600;
@@ -418,8 +469,8 @@ package
 			this[PARAM_PONTOS_CANHAO_ILHA] 		= 1000;
 
 			//ilha de vida
-			this[PARAM_ILHA_PONTOS_POR_VIDA] 	= 1;
-			this[PARAM_ILHA_QTD_VIDA_LOTE] 		= 10;
+			this[PARAM_ILHA_PONTOS_POR_VIDA] 	= 1.5;
+			this[PARAM_ILHA_QTD_VIDA_LOTE] 		= 20;
 			
 			//ilhas de municao
 			this[PARAM_ILHA_PONTOS_POR_MUNICAO] = 10;
@@ -439,7 +490,7 @@ package
 			
 			//Tiro Canhão Ilha
 			this[PARAM_TIRO_ILHA_VELOCID]		= 8;
-			this[PARAM_TIRO_ILHA_DANO]			= 50;
+			this[PARAM_TIRO_ILHA_DANO]			= 100;
 			this[PARAM_TIRO_ILHA_ALCANCE]		= 500;
 
 			//barco inimigo
@@ -447,21 +498,21 @@ package
 			this[PARAM_INIMIGO_VELOC_MAX]		= 5;
 			
 			//canhões do barco inimigo
-			this[PARAM_INIMIGO_QTD_CANHOES] 	= 1;
-			this[PARAM_INIMIGO_FREQ_TIRO] 		= 48;	//EM FRAMES	
+			this[PARAM_INIMIGO_QTD_CANHOES] 	= 3;
+			this[PARAM_INIMIGO_FREQ_TIRO] 		= 42;	//EM FRAMES	
 			
 			//Precisão do barco inimigo 	
-			this[PARAM_INIMIGO_PRECISAO]	 	= 100;   //0% a100%
+			this[PARAM_INIMIGO_PRECISAO]	 	= 80;   //0% a100%
 			this[PARAM_INIMIGO_MIRA_PRECISA] 	= 1;   // (0) = NÃO ANTECIPA A MIRA  (1) = ANTECIPA
 			this[PARAM_INIMIGO_ANG_DISPERSAO]	= 30;  //GRAUS DE DISPERSÃO DO TIRO IMPRECISO
 			
 			//tiro do barco inimigo
 			this[PARAM_TIRO_INIMIGO_VELOCID]	= 10;
-			this[PARAM_TIRO_INIMIGO_DANO]		= 10;
+			this[PARAM_TIRO_INIMIGO_DANO]		= 30;
 			this[PARAM_TIRO_INIMIGO_ALCANCE]	= 350;
 			
 			//bote de fuga
-			this[PARAM_BOTE_FUGA_VELOC_MAX]     = 3;
+			this[PARAM_BOTE_FUGA_VELOC_MAX]     = 4;
 			
 		}
 		
@@ -480,7 +531,7 @@ package
 			this[PARAM_FASE_QTD_ILHAS_VIDA]		= 2;
 			
 			// quantidade de inimigos
-			this[PARAM_FASE_QTD_INIMIGOS] 		= 1;
+			this[PARAM_FASE_QTD_INIMIGOS] 		= 5;
 			
 			//pontuacao
 			this[PARAM_PONTOS_BARCO_INIMIGO] 	= 600;
@@ -488,8 +539,8 @@ package
 			this[PARAM_PONTOS_CANHAO_ILHA] 		= 1000;
 
 			//ilha de vida
-			this[PARAM_ILHA_PONTOS_POR_VIDA] 	= 1;
-			this[PARAM_ILHA_QTD_VIDA_LOTE] 		= 10;
+			this[PARAM_ILHA_PONTOS_POR_VIDA] 	= 1.5;
+			this[PARAM_ILHA_QTD_VIDA_LOTE] 		= 20;
 			
 			//ilhas de municao
 			this[PARAM_ILHA_PONTOS_POR_MUNICAO] = 10;
@@ -509,7 +560,7 @@ package
 			
 			//Tiro Canhão Ilha
 			this[PARAM_TIRO_ILHA_VELOCID]		= 8;
-			this[PARAM_TIRO_ILHA_DANO]			= 50;
+			this[PARAM_TIRO_ILHA_DANO]			= 100;
 			this[PARAM_TIRO_ILHA_ALCANCE]		= 500;
 
 			//barco inimigo
@@ -517,8 +568,8 @@ package
 			this[PARAM_INIMIGO_VELOC_MAX]		= 5;
 			
 			//canhões do barco inimigo
-			this[PARAM_INIMIGO_QTD_CANHOES] 	= 1;
-			this[PARAM_INIMIGO_FREQ_TIRO] 		= 48;	//EM FRAMES	
+			this[PARAM_INIMIGO_QTD_CANHOES] 	= 3;
+			this[PARAM_INIMIGO_FREQ_TIRO] 		= 42;	//EM FRAMES	
 			
 			//Precisão do barco inimigo 	
 			this[PARAM_INIMIGO_PRECISAO]	 	= 100;   //0% a100%
@@ -527,11 +578,11 @@ package
 			
 			//tiro do barco inimigo
 			this[PARAM_TIRO_INIMIGO_VELOCID]	= 10;
-			this[PARAM_TIRO_INIMIGO_DANO]		= 10;
+			this[PARAM_TIRO_INIMIGO_DANO]		= 30;
 			this[PARAM_TIRO_INIMIGO_ALCANCE]	= 350;
 			
 			//bote de fuga
-			this[PARAM_BOTE_FUGA_VELOC_MAX]     = 3;
+			this[PARAM_BOTE_FUGA_VELOC_MAX]     = 5;
 			
 		}
 		
@@ -550,7 +601,7 @@ package
 			this[PARAM_FASE_QTD_ILHAS_VIDA]		= 2;
 			
 			// quantidade de inimigos
-			this[PARAM_FASE_QTD_INIMIGOS] 		= 1;
+			this[PARAM_FASE_QTD_INIMIGOS] 		= 5;
 			
 			//pontuacao
 			this[PARAM_PONTOS_BARCO_INIMIGO] 	= 600;
@@ -558,8 +609,8 @@ package
 			this[PARAM_PONTOS_CANHAO_ILHA] 		= 1000;
 
 			//ilha de vida
-			this[PARAM_ILHA_PONTOS_POR_VIDA] 	= 1;
-			this[PARAM_ILHA_QTD_VIDA_LOTE] 		= 10;
+			this[PARAM_ILHA_PONTOS_POR_VIDA] 	= 1.5;
+			this[PARAM_ILHA_QTD_VIDA_LOTE] 		= 20;
 			
 			//ilhas de municao
 			this[PARAM_ILHA_PONTOS_POR_MUNICAO] = 10;
@@ -579,7 +630,7 @@ package
 			
 			//Tiro Canhão Ilha
 			this[PARAM_TIRO_ILHA_VELOCID]		= 8;
-			this[PARAM_TIRO_ILHA_DANO]			= 50;
+			this[PARAM_TIRO_ILHA_DANO]			= 100;
 			this[PARAM_TIRO_ILHA_ALCANCE]		= 500;
 
 			//barco inimigo
@@ -587,8 +638,8 @@ package
 			this[PARAM_INIMIGO_VELOC_MAX]		= 5;
 			
 			//canhões do barco inimigo
-			this[PARAM_INIMIGO_QTD_CANHOES] 	= 1;
-			this[PARAM_INIMIGO_FREQ_TIRO] 		= 48;	//EM FRAMES	
+			this[PARAM_INIMIGO_QTD_CANHOES] 	= 3;
+			this[PARAM_INIMIGO_FREQ_TIRO] 		= 42;	//EM FRAMES	
 			
 			//Precisão do barco inimigo 	
 			this[PARAM_INIMIGO_PRECISAO]	 	= 100;   //0% a100%
@@ -597,11 +648,11 @@ package
 			
 			//tiro do barco inimigo
 			this[PARAM_TIRO_INIMIGO_VELOCID]	= 10;
-			this[PARAM_TIRO_INIMIGO_DANO]		= 10;
+			this[PARAM_TIRO_INIMIGO_DANO]		= 30;
 			this[PARAM_TIRO_INIMIGO_ALCANCE]	= 350;
 			
 			//bote de fuga
-			this[PARAM_BOTE_FUGA_VELOC_MAX]     = 3;
+			this[PARAM_BOTE_FUGA_VELOC_MAX]     = 5;
 			
 		}
 	}
