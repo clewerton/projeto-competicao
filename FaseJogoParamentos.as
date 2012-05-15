@@ -211,7 +211,7 @@
 			
 			//Tiro Canhão Ilha
 			this[PARAM_TIRO_ILHA_VELOCID]		= 8;
-			this[PARAM_TIRO_ILHA_DANO]			= 010;
+			this[PARAM_TIRO_ILHA_DANO]			= 100;
 			this[PARAM_TIRO_ILHA_ALCANCE]		= 500;
 
 			//barco inimigo
