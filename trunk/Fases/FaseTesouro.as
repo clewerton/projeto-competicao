@@ -215,7 +215,7 @@ package Fases
 			if ( UI_tesourosPegos >= UI_qtdTesouros) {
 				
 				//conclui fase 
-				if (FC_faseDados.faseLiberada < faseID ) FC_faseDados.faseLiberada = faseID;
+				if ( FC_faseDados.faseLiberada < faseID ) FC_faseDados.faseLiberada = faseID;
 				FC_faseDados.totalPontos = UI_pontos;
 				FC_faseDados.salvaDados();
 				
@@ -226,8 +226,7 @@ package Fases
 			//Pressionado pausa do Jogo
 			if (pressTecla1(Keyboard.P))
 			{
-				concluidaFase();
-				//pausaFase();
+				pausaFase();
 			}
 			
 			//troca camera
