@@ -33,6 +33,7 @@ package
 			//adicionaNivel(2, "Normal", 1);
 			//adicionaNivel(2, "Dificil", 2);
 			
+			trace("faseliberada:", FD_dados.faseLiberada);
 			//desbloquea fase 2
 			if (FD_dados.faseLiberada >= 2) faseBloqueada(2, false);
 			

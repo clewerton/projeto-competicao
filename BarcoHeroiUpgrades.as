@@ -81,13 +81,9 @@ package
 		
 		public function BarcoHeroiUpgrades() 
 		{
-			UI_nivelNavio 				=	0;
-			UI_nivelVela				=   0;
-			UI_nivelCanhao 				=	0;
-			UI_nivelAlcanceTiro 		=	0;
-			UI_nivelDanoTiro			=   0;
-			UI_nivelFrequenciaTiro		=	0;
-			UI_nivelCapacidadeMunicao	=	0;
+			//inicializa
+			inicializaValores()
+			
 			SO_upgrades = SharedObject.getLocal( "upgradesBarcoHeroi" );
 			
 			//configura custo e liberacaode upgrades
@@ -96,6 +92,20 @@ package
 			//carrega informacao armazenada
 			carregaDados();
 		}
+		
+		/**
+		 * inicializa valores dos upgrades
+		 */
+		private function inicializaValores() {
+			UI_nivelNavio 				=	0;
+			UI_nivelVela				=   0;
+			UI_nivelCanhao 				=	0;
+			UI_nivelAlcanceTiro 		=	0;
+			UI_nivelDanoTiro			=   0;
+			UI_nivelFrequenciaTiro		=	0;
+			UI_nivelCapacidadeMunicao	=	0;
+		}
+		
 		/**
 		 * Carrega dados Salvos
 		 */
@@ -180,6 +190,14 @@ package
 			SO_upgrades.flush();
 		}
 		
+		/**
+		 * Reinicializa upgrade
+		 */
+		public function zeraUpgrades():void {
+			inicializaValores();
+			salvaDados();
+		}
+		 
 		/**
 		 * Valores dos upgrades
 		 */

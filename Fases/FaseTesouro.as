@@ -42,6 +42,9 @@ package Fases
 		
 		//Fase Dados
 		private var FC_faseDados	:FasesDados
+
+		//Barco controle
+		private var BU_barcoUpgrade	:BarcoHeroiUpgrades;
 		
 		//barco heroi
 		private var AB_barcoHeroi	:BarcoHeroiAtor;
@@ -96,6 +99,9 @@ package Fases
 			
 			//Fase dados
 			FC_faseDados = new FasesDados;
+			
+			//Barco Upgrades
+			BU_barcoUpgrade = new BarcoHeroiUpgrades();
 			
 			//tamanho do mapa
 			UI_mapa_Largura	= param[FaseJogoParamentos.PARAM_FASE_TAMANHO_LARGURA];
@@ -197,14 +203,19 @@ package Fases
 		{	
 			//termina o jogo
 			if ( barcoHeroi.vidaAtual <= 0) {
-				terminoFase()
+				
+				//ZERA UPGRADES DO BARCO
+				BU_barcoUpgrade.zeraUpgrades();
+				
+				terminoFase();
 				return;
 			}
 
 			//ganhou o jogo
 			if ( UI_tesourosPegos >= UI_qtdTesouros) {
 				
-				//Atualiza total de pontos
+				//conclui fase 
+				if (FC_faseDados.faseLiberada < faseID ) FC_faseDados.faseLiberada = faseID;
 				FC_faseDados.totalPontos = UI_pontos;
 				FC_faseDados.salvaDados();
 				
@@ -215,7 +226,8 @@ package Fases
 			//Pressionado pausa do Jogo
 			if (pressTecla1(Keyboard.P))
 			{
-				pausaFase();
+				concluidaFase();
+				//pausaFase();
 			}
 			
 			//troca camera
