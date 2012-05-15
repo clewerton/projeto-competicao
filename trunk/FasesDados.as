@@ -40,7 +40,8 @@ package
 		 */
 		public function salvaDados():void {
 			SO_dados.data.gamedata= {
-				totalPontos				:UI_totalPontos
+				totalPontos		:UI_totalPontos,
+				faseLiberada	:UI_faseLiberada			
 			}
 			SO_dados.flush();
 		}
