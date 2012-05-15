@@ -194,8 +194,8 @@
 			this[PARAM_ILHA_QTD_VIDA_LOTE] 		= 20;
 			
 			//ilhas de municao
-			this[PARAM_ILHA_PONTOS_POR_MUNICAO] = 10;
-			this[PARAM_ILHA_QTD_MUNICAO_LOTE] 	= 5;
+			this[PARAM_ILHA_PONTOS_POR_MUNICAO] = 8;
+			this[PARAM_ILHA_QTD_MUNICAO_LOTE] 	= 3;
 			
 			//ilhas tesouro
 			this[PARAM_ILHA_TOTAL_PONTOS] 		= 2000;
@@ -211,7 +211,7 @@
 			
 			//Tiro Canhão Ilha
 			this[PARAM_TIRO_ILHA_VELOCID]		= 8;
-			this[PARAM_TIRO_ILHA_DANO]			= 200;
+			this[PARAM_TIRO_ILHA_DANO]			= 100;
 			this[PARAM_TIRO_ILHA_ALCANCE]		= 500;
 
 			//barco inimigo
@@ -263,8 +263,8 @@
 			this[PARAM_ILHA_QTD_VIDA_LOTE] 		= 20;
 			
 			//ilhas de municao
-			this[PARAM_ILHA_PONTOS_POR_MUNICAO] = 10;
-			this[PARAM_ILHA_QTD_MUNICAO_LOTE] 	= 5;
+			this[PARAM_ILHA_PONTOS_POR_MUNICAO] = 8;
+			this[PARAM_ILHA_QTD_MUNICAO_LOTE] 	= 3;
 			
 			//ilhas tesouro
 			this[PARAM_ILHA_TOTAL_PONTOS] 		= 2000;
@@ -333,8 +333,8 @@
 			this[PARAM_ILHA_QTD_VIDA_LOTE] 		= 20;
 			
 			//ilhas de municao
-			this[PARAM_ILHA_PONTOS_POR_MUNICAO] = 10;
-			this[PARAM_ILHA_QTD_MUNICAO_LOTE] 	= 5;
+			this[PARAM_ILHA_PONTOS_POR_MUNICAO] = 8;
+			this[PARAM_ILHA_QTD_MUNICAO_LOTE] 	= 3;
 			
 			//ilhas tesouro
 			this[PARAM_ILHA_TOTAL_PONTOS] 		= 2000;
@@ -403,8 +403,8 @@
 			this[PARAM_ILHA_QTD_VIDA_LOTE] 		= 20;
 			
 			//ilhas de municao
-			this[PARAM_ILHA_PONTOS_POR_MUNICAO] = 10;
-			this[PARAM_ILHA_QTD_MUNICAO_LOTE] 	= 5;
+			this[PARAM_ILHA_PONTOS_POR_MUNICAO] = 8;
+			this[PARAM_ILHA_QTD_MUNICAO_LOTE] 	= 3;
 			
 			//ilhas tesouro
 			this[PARAM_ILHA_TOTAL_PONTOS] 		= 2000;
@@ -473,8 +473,8 @@
 			this[PARAM_ILHA_QTD_VIDA_LOTE] 		= 20;
 			
 			//ilhas de municao
-			this[PARAM_ILHA_PONTOS_POR_MUNICAO] = 10;
-			this[PARAM_ILHA_QTD_MUNICAO_LOTE] 	= 5;
+			this[PARAM_ILHA_PONTOS_POR_MUNICAO] = 8;
+			this[PARAM_ILHA_QTD_MUNICAO_LOTE] 	= 3;
 			
 			//ilhas tesouro
 			this[PARAM_ILHA_TOTAL_PONTOS] 		= 2000;
@@ -542,8 +542,8 @@
 			this[PARAM_ILHA_QTD_VIDA_LOTE] 		= 20;
 			
 			//ilhas de municao
-			this[PARAM_ILHA_PONTOS_POR_MUNICAO] = 10;
-			this[PARAM_ILHA_QTD_MUNICAO_LOTE] 	= 5;
+			this[PARAM_ILHA_PONTOS_POR_MUNICAO] = 8;
+			this[PARAM_ILHA_QTD_MUNICAO_LOTE] 	= 3;
 			
 			//ilhas tesouro
 			this[PARAM_ILHA_TOTAL_PONTOS] 		= 2000;
@@ -612,8 +612,8 @@
 			this[PARAM_ILHA_QTD_VIDA_LOTE] 		= 20;
 			
 			//ilhas de municao
-			this[PARAM_ILHA_PONTOS_POR_MUNICAO] = 10;
-			this[PARAM_ILHA_QTD_MUNICAO_LOTE] 	= 5;
+			this[PARAM_ILHA_PONTOS_POR_MUNICAO] = 8;
+			this[PARAM_ILHA_QTD_MUNICAO_LOTE] 	= 3;
 			
 			//ilhas tesouro
 			this[PARAM_ILHA_TOTAL_PONTOS] 		= 2000;
