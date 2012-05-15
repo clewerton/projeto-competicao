@@ -513,7 +513,6 @@
 			
 			//bote de fuga
 			this[PARAM_BOTE_FUGA_VELOC_MAX]     = 4;
-			
 		}
 		
 		/**
