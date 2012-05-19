@@ -112,12 +112,12 @@ package Fases
 			MC_backGround.x = -  MC_backGround.width / 2;
 			MC_backGround.y = -  MC_backGround.height / 2;
 		}
-
+		
 		public function inicializacao():Boolean
 		{
 			//coloca medidor de FPS
 			FH_FPS = new FaseFPS();
-			adicionaHUD(FH_FPS);
+			//adicionaHUD(FH_FPS);
 			
 			//cria barco Heroi;
 			AB_barcoHeroi = new BarcoHeroiAtor;
