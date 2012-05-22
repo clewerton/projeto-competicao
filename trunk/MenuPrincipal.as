@@ -72,7 +72,7 @@ package
 		{
 			var mn:MenuBase = new MenuBase(MENU_PRINCIPAL, new MenuPrincipalFundo());
 			mn.adicionaOpcao("Novo Jogo", 1 );
-			mn.adicionaOpcao("Opções", 2,defineMenuOpcoes);
+			//mn.adicionaOpcao("Opções", 2,defineMenuOpcoes);
 			mn.adicionaOpcao("Selecionar Fase",3,defineMenuFases);
 			mn.adicionaOpcao("Upgrades",4, defineMenuUpgrades);
 			mn.formatacao = TF_txtForm;	
@@ -106,7 +106,7 @@ package
 		 * * @return
 		 * Retorna uma instancia do Menu do tipo MenuBase
 		 */
-		private function defineMenuOpcoes():MenuBase {
+	/*	private function defineMenuOpcoes():MenuBase {
 			var mn:MenuBase = new MenuBase("MenuOpcoes",new MenuPrincipalFundo());
 			mn.adicionaOpcao("Som", 1);
 			mn.adicionaOpcao("Video", 2);
@@ -114,7 +114,7 @@ package
 			mn.adicionaOpcao("Voltar", 2 , defineMenuInicial);			
 			mn.formatacao = TF_txtForm;
 			return mn;
-		}
+		}*/
 		
 		/**
 		 * Define Menu de níveis das fase do jogo
