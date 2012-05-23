@@ -133,9 +133,6 @@
 			NU_friccaoAnc = 0.75;
 			NU_impacFric = 0.75;
 			
-			//inicializa upgrades
-			iniciaUpgrades();
-			
 			reinicializa();
 			
 		}
@@ -167,6 +164,9 @@
 		 */
 		public function reinicializa():void
 		{
+			//inicializa upgrades
+			iniciaUpgrades();
+			
 			removeAnimacao(this);
 			
 			//centraliza barco no mapa
