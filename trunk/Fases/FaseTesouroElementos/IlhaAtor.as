@@ -76,7 +76,7 @@ package Fases.FaseTesouroElementos
 		
 		public function IlhaAtor() 
 		{
-			var sort:int = Utils.Rnd(1, 5);
+			var sort:int = Utils.Rnd(1, 7);
 			switch (sort) 
 			{
 				case 1:
@@ -93,6 +93,12 @@ package Fases.FaseTesouroElementos
 				break;
 				case 5:
 					MC_ilha = new IlhaBase05;
+				break;
+				case 6:
+					MC_ilha = new IlhaBase06;
+				break;
+				case 7:
+					MC_ilha = new IlhaBase07;
 				break;
 				default:
 					MC_ilha = new IlhaBase01;				
