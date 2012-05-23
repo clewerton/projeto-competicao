@@ -148,8 +148,8 @@ package
 
 			//configura upgrades dano ( custo, fase Liberada)
 			VT_nivelDanoTiro.push(			new ValoresNivel(		0	,	0	));
-			VT_nivelDanoTiro.push(			new ValoresNivel(	 2000	,	4	));
-			VT_nivelDanoTiro.push(			new ValoresNivel(	 5000	,	5	));
+			VT_nivelDanoTiro.push(			new ValoresNivel(	 3500	,	4	));
+			VT_nivelDanoTiro.push(			new ValoresNivel(	 7000	,	5	));
 			
 			//configura upgrades frequencia ( custo, fase Liberada)
 			VT_nivelFrequenciaTiro.push(	new ValoresNivel(		0	, 	0	));
@@ -158,8 +158,8 @@ package
 
 			//configura upgrades capaciade de municao( custo, fase Liberada)
 			VT_nivelCapacidadeMunicao.push(	new ValoresNivel(		0	,	0	));
-			VT_nivelCapacidadeMunicao.push(	new ValoresNivel(	 1000	, 	2	));
-			VT_nivelCapacidadeMunicao.push(	new ValoresNivel(	 3000	,	4	));
+			VT_nivelCapacidadeMunicao.push(	new ValoresNivel(	 1500	, 	2	));
+			VT_nivelCapacidadeMunicao.push(	new ValoresNivel(	 4000	,	4	));
 			
 		}
 		
