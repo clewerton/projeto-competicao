@@ -143,8 +143,8 @@ package
 
 			//configura upgrades alcance ( custo, fase Liberada)
 			VT_nivelAlcanceTiro.push(		new ValoresNivel(		0	,	0	));
-			VT_nivelAlcanceTiro.push(		new ValoresNivel(	 1000	,	1	));
-			VT_nivelAlcanceTiro.push(		new ValoresNivel(	 2000	,	2	));
+			VT_nivelAlcanceTiro.push(		new ValoresNivel(	 3000	,	1	));
+			VT_nivelAlcanceTiro.push(		new ValoresNivel(	 6000	,	2	));
 
 			//configura upgrades dano ( custo, fase Liberada)
 			VT_nivelDanoTiro.push(			new ValoresNivel(		0	,	0	));
