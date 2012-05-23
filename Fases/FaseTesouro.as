@@ -205,7 +205,7 @@ package Fases
 			if ( barcoHeroi.vidaAtual <= 0) {
 				
 				//ZERA UPGRADES DO BARCO
-				BU_barcoUpgrade.zeraUpgrades();
+				//BU_barcoUpgrade.zeraUpgrades();
 				
 				terminoFase();
 				return;
