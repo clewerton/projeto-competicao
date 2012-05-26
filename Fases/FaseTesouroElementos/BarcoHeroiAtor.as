@@ -105,13 +105,13 @@
 			switch (UP_upgrades.nivelVela)
 			{
 				case 0:
-					MC_velas = new BarcoHeroiVelas;
+					MC_velas = new BarcoHeroiVelas1;
 				break;
 				case 1:
-					MC_velas = new BarcoHeroiVelas;
+					MC_velas = new BarcoHeroiVelas2;
 				break;
 				case 2:
-					MC_velas = new BarcoHeroiVelas;
+					MC_velas = new BarcoHeroiVelas3;
 				break;
 				default:
 			} 
