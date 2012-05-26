@@ -12,6 +12,16 @@ package
 		public static const UPGRADE_TIPO_NAVIO_NIVEL1	:uint = 1;
 		public static const UPGRADE_TIPO_NAVIO_NIVEL2	:uint = 2;
 
+		//Upgrade navio VELOCIDADE
+		public static const UPGRADE_TIPO_NAVIO_VELOC_NORMAL_NIVEL0	:uint = 4;
+		public static const UPGRADE_TIPO_NAVIO_VELOC_NORMAL_NIVEL1	:uint = 3;
+		public static const UPGRADE_TIPO_NAVIO_VELOC_NORMAL_NIVEL2	:uint = 2;
+
+		//Upgrade navio VELOCIDADE
+		public static const UPGRADE_TIPO_NAVIO_VELOC_RETO_NIVEL0	:uint = 8;
+		public static const UPGRADE_TIPO_NAVIO_VELOC_RETO_NIVEL1	:uint = 6;
+		public static const UPGRADE_TIPO_NAVIO_VELOC_RETO_NIVEL2	:uint = 4;
+				
 		//Upgrade navio vida
 		public static const UPGRADE_VIDA_NAVIO_NIVEL0	:uint = 1000;
 		public static const UPGRADE_VIDA_NAVIO_NIVEL1	:uint = 2000;
@@ -51,7 +61,12 @@ package
 		public static const UPGRADE_ALCANCE_TIRO_NIVEL0	:uint =	 250;
 		public static const UPGRADE_ALCANCE_TIRO_NIVEL1	:uint =	 350;
 		public static const UPGRADE_ALCANCE_TIRO_NIVEL2	:uint =  450;
-		
+
+		//Upgrate velocidade 
+		public static const UPGRADE_SOMA_VELOCIDA_VELA_NIVEL0	:uint =	 0;
+		public static const UPGRADE_SOMA_VELOCIDA_VELA_NIVEL1	:uint =	 2;
+		public static const UPGRADE_SOMA_VELOCIDA_VELA_NIVEL2	:uint =  4;
+
 		//armazena objetos
 		private var SO_upgrades: SharedObject
 		
@@ -110,7 +125,7 @@ package
 		 * Carrega dados Salvos
 		 */
 		public function carregaDados():void {
-			//SO_upgrades.clear();
+			SO_upgrades.clear();
 			if (SO_upgrades.data.gamedata != undefined)
 				for (var upnome in SO_upgrades.data.gamedata) this[upnome] = SO_upgrades.data.gamedata[upnome];
 		}
@@ -234,6 +249,21 @@ package
 		public function get danoTiro():uint
 		{
 			var prop:String = "UPGRADE_DANO_TIRO_NIVEL" + UI_nivelDanoTiro;
+			return BarcoHeroiUpgrades[prop];
+		}
+		public function get velocidadeNormal():uint
+		{
+			var prop:String = "UPGRADE_TIPO_NAVIO_VELOC_NORMAL_NIVEL" + UI_nivelNavio;
+			return BarcoHeroiUpgrades[prop];
+		}
+		public function get velocidadeReto():uint
+		{
+			var prop:String = "UPGRADE_TIPO_NAVIO_VELOC_RETO_NIVEL" + UI_nivelNavio;
+			return BarcoHeroiUpgrades[prop];
+		}
+		public function get adicionaVelocidadeVelas():uint
+		{
+			var prop:String = "UPGRADE_SOMA_VELOCIDA_VELA_NIVEL" + UI_nivelVela;
 			return BarcoHeroiUpgrades[prop];
 		}
 		

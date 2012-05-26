@@ -102,7 +102,20 @@
 			UP_upgrades = new BarcoHeroiUpgrades;
 			
 			//anexa a imagem da Vela
-			MC_velas = new BarcoHeroiVelas;
+			switch (UP_upgrades.nivelVela)
+			{
+				case 0:
+					MC_velas = new BarcoHeroiVelas;
+				break;
+				case 1:
+					MC_velas = new BarcoHeroiVelas;
+				break;
+				case 2:
+					MC_velas = new BarcoHeroiVelas;
+				break;
+				default:
+			} 
+			
 			this.addChild(MC_velas)
 			
 			//posiciona da vela no slot
@@ -126,8 +139,6 @@
 			
 			NU_veloAngMax = Math.PI / 45;
 			NU_veloAngTax = Math.PI / 180;
-			NU_veloMaxNor = 10;
-			NU_veloMaxRod = 4;
 			NU_friccaoVel = 0.98;
 			NU_friccaoAng = 0.90;
 			NU_friccaoAnc = 0.75;
@@ -155,8 +166,11 @@
 			NU_vidaMaxima   = UP_upgrades.vidaNavio;
 			
 			//municao
-			UI_muniMax      =  UP_upgrades.capacidadeMunicao;
+			UI_muniMax      = UP_upgrades.capacidadeMunicao;
 			
+			//VELOCIDADES
+			NU_veloMaxNor 	= UP_upgrades.velocidadeReto    + UP_upgrades.adicionaVelocidadeVelas;
+			NU_veloMaxRod 	= UP_upgrades.velocidadeNormal  + UP_upgrades.adicionaVelocidadeVelas;
 		}
 		
 		/**
