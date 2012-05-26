@@ -14,6 +14,7 @@ package
 		//variaveis do menu principal
 		public static const MENU_PRINCIPAL:String =  "MenuPrincipal";
 		public static const MENU_UPGRADES:String  =  "MenuUpgrades";
+		public static const MENU_TUTORIAL:String  =  "MenuTutorial";
 		
 		private	var TF_txtForm:TextFormat;
 		private var FaseID:int;
@@ -74,7 +75,8 @@ package
 			mn.adicionaOpcao("Novo Jogo", 1 );
 			//mn.adicionaOpcao("Opções", 2,defineMenuOpcoes);
 			mn.adicionaOpcao("Selecionar Fase",3,defineMenuFases);
-			mn.adicionaOpcao("Upgrades",4, defineMenuUpgrades);
+			mn.adicionaOpcao("Upgrades", 4, defineMenuUpgrades);
+			mn.adicionaOpcao("Tutorial",5, defineMenuTutorial);
 			mn.formatacao = TF_txtForm;	
 			return mn;
 		}
@@ -95,6 +97,13 @@ package
 		private function defineMenuUpgrades():MenuBase {
 			var mn:MenuBase = new MenuUpgrades(MENU_PRINCIPAL);
 			mn.semFundo = true;
+			mn.adicionaOpcao("Voltar", 99 , defineMenuInicial);			
+			mn.formatacao = TF_txtForm;
+			return mn;
+		}
+		
+		private function defineMenuTutorial():MenuBase {
+			var mn:MenuBase = new MenuTutorial(MENU_TUTORIAL, new MenuPrincipalFundo());
 			mn.adicionaOpcao("Voltar", 99 , defineMenuInicial);			
 			mn.formatacao = TF_txtForm;
 			return mn;
