@@ -27,7 +27,6 @@ package  {
 				_op.y =  stage.stageHeight - _op.height;
 				return
 			}
-
 			super.posicionaOpcao(_op);
 		}
 	}
