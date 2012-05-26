@@ -125,7 +125,7 @@ package
 		 * Carrega dados Salvos
 		 */
 		public function carregaDados():void {
-			SO_upgrades.clear();
+			//SO_upgrades.clear();
 			if (SO_upgrades.data.gamedata != undefined)
 				for (var upnome in SO_upgrades.data.gamedata) this[upnome] = SO_upgrades.data.gamedata[upnome];
 		}
