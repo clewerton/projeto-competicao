@@ -1,4 +1,4 @@
-﻿package  
+package  
 {
 	import flash.net.SharedObject;
 	/**
@@ -18,7 +18,6 @@
 		
 		public function FasesDados() 
 		{
-			UI_totalPontos		= 1;
 			UI_faseLiberada		= 0;
 			//
 			SO_dados	 = SharedObject.getLocal( "fasesdados" );
