@@ -105,7 +105,7 @@
 					MC_Barco = new BarcoHeroiCasco;
 				break;
 				case 1:
-					MC_Barco = new BarcoHeroi3;
+					MC_Barco = new BarcoHeroiCasco;
 				break;
 				case 2:
 					MC_Barco = new BarcoHeroi3;
@@ -115,7 +115,7 @@
 			super(MC_Barco);
 			
 			//anexa a imagem da Vela
-			if (UP_upgrades.nivelNavio != 1)
+			if (UP_upgrades.nivelNavio != 2)
 			{
 				switch (UP_upgrades.nivelVela)
 				{
@@ -136,10 +136,6 @@
 				MC_velas.x = MC_Barco.slotVela.x;
 				MC_velas.y = MC_Barco.slotVela.y;
 			}
-			
-			
-			
-			
 			
 			
 		}
@@ -175,6 +171,8 @@
 		{
 			//upgrades
 			UI_qtdCanhoes 	= UP_upgrades.qtdCanhoes;
+			if (UP_upgrades.nivelNavio == 1) UI_qtdCanhoes -= 1;
+			
 			
 			//UI_nivelRecarga = UP_upgrades.
 			
@@ -287,12 +285,12 @@
 		private function controleTeclado():void
 		{
 			//TIRA SO PARA TESTE
-			if (pressTecla1(Keyboard.NUMBER_1))
+			/*if (pressTecla1(Keyboard.NUMBER_1))
 				UI_qtdCanhoes = BarcoHeroiUpgrades.UPGRADE_CANHOES_NIVEL0;
 			if (pressTecla1(Keyboard.NUMBER_2))
 				UI_qtdCanhoes = BarcoHeroiUpgrades.UPGRADE_CANHOES_NIVEL1;
 			if (pressTecla1(Keyboard.NUMBER_3))
-				UI_qtdCanhoes = BarcoHeroiUpgrades.UPGRADE_CANHOES_NIVEL2;
+				UI_qtdCanhoes = BarcoHeroiUpgrades.UPGRADE_CANHOES_NIVEL2;*/
 			
 			//Tecla de interacao com a Ilha
 			if (pressTecla1(Keyboard.E)) {
@@ -372,6 +370,7 @@
 		
 		private function atiraCanhoes(_bordo:uint, _tempoSalva:String, _seqTiro:String):Boolean
 		{
+			
 			this[_tempoSalva]++;
 			if (UI_municao <= 0) return false;
 			if (this[_tempoSalva] < Utils.Rnd(1, 8))
