@@ -105,7 +105,7 @@
 					MC_Barco = new BarcoHeroiCasco;
 				break;
 				case 1:
-					MC_Barco = new BarcoHeroiCasco;
+					MC_Barco = new BarcoHeroi2;
 				break;
 				case 2:
 					MC_Barco = new BarcoHeroi3;
@@ -171,7 +171,7 @@
 		{
 			//upgrades
 			UI_qtdCanhoes 	= UP_upgrades.qtdCanhoes;
-			if (UP_upgrades.nivelNavio == 1) UI_qtdCanhoes -= 1;
+			if (UP_upgrades.nivelNavio == 0 && UI_qtdCanhoes == 3) UI_qtdCanhoes -= 1;
 			
 			
 			//UI_nivelRecarga = UP_upgrades.
