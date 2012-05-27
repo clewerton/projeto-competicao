@@ -20,7 +20,7 @@ package
 		
 		//Musica
 		private var SC_canalSom		:SoundChannel;
-		private var BO_isPlaying	:Boolean;
+		private var SD_musicaAtual	:Sound;
 		
 		private	var TF_txtForm:TextFormat;
 		private var FaseID:int;
@@ -32,7 +32,7 @@ package
 			super(_main);
 			configuraFormatacao();
 			SC_canalSom = new SoundChannel
-			BO_isPlaying = false;
+			SD_musicaAtual = null;
 		}
 			
 		//****************************************************
@@ -66,7 +66,7 @@ package
 				return false;
 			}
 			SC_canalSom.stop();
-			BO_isPlaying = false;
+			SD_musicaAtual = null;
 			return MenuMainInterface( mainapp).manipulaMenuOpcaoSelecionada(Menu, Opcao); 
 		}
 		
@@ -79,10 +79,7 @@ package
 		 * Retorna uma instancia do Menu do tipo MenuBase
 		 */
 		override protected function defineMenuInicial():MenuBase 
-		{	if (!BO_isPlaying) {
-				BO_isPlaying = true;
-				SC_canalSom = Sound( new MusicaMenu).play(0, int.MAX_VALUE);
-			}
+		{	tocaMusica (new MusicaMenu);
 				
 			var mn:MenuBase = new MenuBase(MENU_PRINCIPAL, new MenuPrincipalFundo());
 			mn.adicionaOpcao("Novo Jogo", 1 );
@@ -100,10 +97,7 @@ package
 		 * Retorna uma instancia do Menu do tipo MenuBase
 		 */
 		private function defineMenuFases():MenuBase {
-			if (!BO_isPlaying) {
-				BO_isPlaying = true;
-				SC_canalSom = Sound( new MusicaMenu).play(0, int.MAX_VALUE);
-			}
+			tocaMusica (new MusicaMenu);
 			var mn:MenuBase = new MenuBase(MENU_CONTROLE_FASES , new MenuPrincipalFundo());
 			controleFase.adicionaOpcoesMenu(mn);
 			mn.adicionaOpcao("Voltar", 2 , defineMenuInicial);			
@@ -112,11 +106,8 @@ package
 		}
 
 		private function defineMenuUpgrades():MenuBase {
-			if (!BO_isPlaying) {
-				BO_isPlaying = true;
-				SC_canalSom = Sound( new MusicaMenu).play(0, int.MAX_VALUE);
-			}
-			var mn:MenuBase = new MenuUpgrades(MENU_PRINCIPAL);
+			tocaMusica (new MusicaUpgrade);
+			var mn:MenuBase = new MenuUpgrades(MENU_UPGRADES);
 			mn.semFundo = true;
 			mn.adicionaOpcao("Voltar", 99 , defineMenuInicial);			
 			mn.formatacao = TF_txtForm;
@@ -124,10 +115,7 @@ package
 		}
 		
 		private function defineMenuTutorial():MenuBase {
-			if (!BO_isPlaying) {
-				BO_isPlaying = true;
-				SC_canalSom = Sound( new MusicaMenu).play(0, int.MAX_VALUE);
-			}
+			tocaMusica (new MusicaCreditos);
 			var mn:MenuBase = new MenuTutorial(MENU_TUTORIAL, new MenuPrincipalFundo());
 			mn.adicionaOpcao("Voltar", 99 , defineMenuInicial);			
 			mn.formatacao = TF_txtForm;
@@ -156,7 +144,7 @@ package
 		 * Retorna uma instancia do Menu do tipo MenuBase
 		 */		
 		private function defineNivel():MenuBase {
-			SC_canalSom = Sound( new MusicaMenu).play(0, int.MAX_VALUE);
+			tocaMusica (new MusicaMenu);
 			var nome:String = ("menufase" + FaseID.toString());
 			var mn:MenuBase = new MenuBase(nome,new MenuPrincipalFundo());
 			mn.adicionaOpcao("Fácil", 1);
@@ -172,6 +160,17 @@ package
 			return MenuControle.MENU_CONTROLE_FASES;
 		}
 		
+		private function tocaMusica(_musica:Sound):void {
+			if (SD_musicaAtual == null) {
+				SD_musicaAtual = _musica;
+				SC_canalSom = SD_musicaAtual.play(0, int.MAX_VALUE);
+			}
+			else if (_musica != SD_musicaAtual ) {
+				SC_canalSom.stop();
+				SD_musicaAtual = _musica;
+				SC_canalSom = SD_musicaAtual.play(0, int.MAX_VALUE);
+			}
+		}
 		
 	}
 }
