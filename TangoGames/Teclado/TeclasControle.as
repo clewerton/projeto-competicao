@@ -6,7 +6,7 @@ package TangoGames.Teclado
 	/**
 	 * Controle de teclado para capturar os eventos KEYDOWN e KEYUP
 	 * dispoe do metodo pressTecla que infor se uma tecla esta pressionada
-	 * @author Arthur Figueirdo
+	 * 
 	 */
 	public class TeclasControle 
 	{

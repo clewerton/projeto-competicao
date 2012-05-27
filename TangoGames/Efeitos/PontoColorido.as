@@ -4,10 +4,6 @@ package TangoGames.Efeitos
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	
-	/**
-	 * ...
-	 * @author Arthur Figueirdo
-	 */
 	public class PontoColorido extends Sprite  {
 		// 
         private static var _QTD_ELLIPSE:int = 5;       	// Numero de elipses que formam um ponto colorido

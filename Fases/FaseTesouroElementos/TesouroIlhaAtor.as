@@ -8,10 +8,6 @@ package Fases.FaseTesouroElementos
 	import TangoGames.Atores.AtorBase;
 	import TangoGames.Atores.AtorInterface;
 	
-	/**
-	 * ...
-	 * @author Arthur Figueirdo
-	 */
 	public class TesouroIlhaAtor extends AtorBase implements AtorInterface 
 	{
 		//imagem do bau

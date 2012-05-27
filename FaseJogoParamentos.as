@@ -2,10 +2,6 @@
 {
 	import TangoGames.Fases.FaseParamentos;
 	
-	/**
-	 * ...
-	 * @author Arthur Figueirdo
-	 */
 	public class FaseJogoParamentos extends FaseParamentos 
 	{
 		//Paramentros de tamanho do Mapa

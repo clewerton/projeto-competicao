@@ -1,10 +1,7 @@
 package  
 {
 	import flash.net.SharedObject;
-	/**
-	 * ...
-	 * @author Arthur Figueirdo
-	 */
+	
 	public class BarcoHeroiUpgrades 
 	{
 		//Upgrade navio

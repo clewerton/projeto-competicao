@@ -2,10 +2,6 @@ package TangoGames.Atores
 {
 	import flash.events.Event;
 	
-	/**
-	 * ...
-	 * @author Arthur Figueirdo
-	 */
 	public class AtorEvent extends Event 
 	{
 		//constantes estaticas dos nome dos eventos

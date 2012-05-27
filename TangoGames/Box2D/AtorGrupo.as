@@ -1,8 +1,4 @@
-/**
- * ...
- * @author Arthur Figueirdo
- */
-package TangoGames.Utils 
+package TangoGames.Box2D 
 {
 	import Box2D.Collision.b2Bound;
 	import Box2D.Collision.Shapes.b2CircleShape;

@@ -13,10 +13,6 @@ package Fases.FaseTesouroElementos
 	import TangoGames.Fases.FaseEvent;
 	import TangoGames.Utils;
 	
-	/**
-	 * ...
-	 * @author Arthur Figueirdo
-	 */
 	public class IlhaAtor extends AtorBase implements AtorInterface {
 		
 		//PREMIOS

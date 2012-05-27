@@ -5,7 +5,7 @@ package TangoGames.Fases
 	
 	/**
 	 * Controla as fase do jogo
-	 * @author Arthur Figueirdo
+	 * 
 	 */
 	public interface FaseInterface 
 	{

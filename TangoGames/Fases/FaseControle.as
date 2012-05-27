@@ -11,7 +11,7 @@ package TangoGames.Fases
 	import TangoGames.Menus.MenuEvent;
 	/**
 	 * controle de execução das fases do jogo
-	 * @author Arthur Figueiredo
+	 * 
 	 */
 	public class FaseControle extends EventDispatcher 
 	{

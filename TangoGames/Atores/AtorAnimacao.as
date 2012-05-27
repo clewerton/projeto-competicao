@@ -5,10 +5,6 @@ package TangoGames.Atores
 	import flash.media.Sound;
 	import flash.media.SoundChannel;
 	
-	/**
-	 * ...
-	 * @author Arthur Figueirdo
-	 */
 	public class AtorAnimacao extends MovieClip 
 	{
 		private var SC_canal:SoundChannel;

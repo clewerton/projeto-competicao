@@ -30,10 +30,6 @@ package Fases
 	import TangoGames.Fases.FaseInterface;
 	import TangoGames.Utils;
 	
-	/**
-	 * 
-	 * @author ...
-	 */
 	public class FaseTesouro extends FaseBase implements FaseInterface
 	{	
 		//tamanho do mapa

@@ -10,7 +10,7 @@ package TangoGames.Menus
 	
 	/**
 	 * Classe auxiliar para criar vetor de opções de Menu
-	 * @author Arthur Figueirdo
+	 * 
 	 */
 	public class MenuOpcao extends Sprite {
 		private var ST_titulo: String;

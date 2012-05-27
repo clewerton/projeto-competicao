@@ -18,7 +18,7 @@ package TangoGames.Menus
 	
 	/**
 	 * Menu básico para construção de opções
-	 * @author Arthur Figueiredo
+	 * 
 	 */
 	public class MenuBase extends MovieClip {
 		

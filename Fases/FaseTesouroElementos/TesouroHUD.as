@@ -6,10 +6,6 @@ package Fases.FaseTesouroElementos
 	import TangoGames.Fases.FaseHUD;
 	import TangoGames.Fases.FaseHUDInterface;
 	
-	/**
-	 * ...
-	 * @author Arthur Werneck
-	 */
 	public class TesouroHUD extends FaseHUD implements FaseHUDInterface 
 	{
 		private var FB_faseTesouro:FaseTesouro;

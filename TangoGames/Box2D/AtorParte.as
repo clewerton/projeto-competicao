@@ -1,8 +1,4 @@
-/**
- * ...
- * @author Arthur Figueirdo
- */
-package TangoGames.Utils 
+package TangoGames.Box2D 
 {
 	import Box2D.Common.Math.b2Transform;
 	import Box2D.Common.Math.b2Vec2;

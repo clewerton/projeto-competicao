@@ -12,7 +12,7 @@ package TangoGames.Menus {
 	/**
 	 * Classe realiza o controle de navegação de Menus
 	 * Deve ser derivada, não deve ser instanciada diretamente.
-	 * @author Arthur Figueirdo
+	 * 
 	 */
 	public class MenuControle extends EventDispatcher {
 		

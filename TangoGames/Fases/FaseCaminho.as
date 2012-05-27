@@ -7,10 +7,7 @@ package TangoGames.Fases
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import TangoGames.Atores.AtorBase;
-	/**
-	 * ...
-	 * @author Arthur Figueirdo
-	 */
+	
 	public class FaseCaminho extends Object
 	{
 		private var AR_mapa:Array;

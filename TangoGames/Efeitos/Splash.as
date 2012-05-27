@@ -7,10 +7,7 @@ package TangoGames.Efeitos
 	import flash.events.Event;
 	import flash.geom.Point;
 	import TangoGames.Utils.Mundo;
-	/**
-	 * ...
-	 * @author Arthur Figueirdo
-	 */
+	
 	public class Splash extends Sprite {
 		
 		

@@ -1,8 +1,4 @@
-/**
- * ...
- * @author Arthur Figueirdo
- */
-package TangoGames.Utils 
+package TangoGames.Box2D 
 {
 	import Box2D.Common.Math.b2Vec2;
 	import Box2D.Dynamics.b2ContactListener;

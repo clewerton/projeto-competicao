@@ -5,10 +5,6 @@ package
 	import TangoGames.Teclado.TeclasControle;
 	import flash.display.MovieClip;
 
-	/**
-	 * ...
-	 * @author Diogo Honorato
-	 */
 	public class Main extends MovieClip implements MenuMainInterface,FaseMainInterface
 	{
 		private var menus:MenuControle;
