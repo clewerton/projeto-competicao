@@ -1,5 +1,7 @@
 package  
 {
+	import flash.media.Sound;
+	import flash.media.SoundChannel;
 	import TangoGames.Menus.*;
 	import flash.display.DisplayObjectContainer;
 	import flash.events.Event;
@@ -16,6 +18,10 @@ package
 		public static const MENU_UPGRADES:String  =  "MenuUpgrades";
 		public static const MENU_TUTORIAL:String  =  "MenuTutorial";
 		
+		//Musica
+		private var SC_canalSom		:SoundChannel;
+		private var BO_isPlaying	:Boolean;
+		
 		private	var TF_txtForm:TextFormat;
 		private var FaseID:int;
 		/**
@@ -25,6 +31,8 @@ package
 		public function MenuPrincipal(_main:DisplayObjectContainer) {
 			super(_main);
 			configuraFormatacao();
+			SC_canalSom = new SoundChannel
+			BO_isPlaying = false;
 		}
 			
 		//****************************************************
@@ -56,8 +64,9 @@ package
 				this.desativaMenu();
 				this.ativaMenu(defineNivel());
 				return false;
-				
 			}
+			SC_canalSom.stop();
+			BO_isPlaying = false;
 			return MenuMainInterface( mainapp).manipulaMenuOpcaoSelecionada(Menu, Opcao); 
 		}
 		
@@ -70,7 +79,11 @@ package
 		 * Retorna uma instancia do Menu do tipo MenuBase
 		 */
 		override protected function defineMenuInicial():MenuBase 
-		{
+		{	if (!BO_isPlaying) {
+				BO_isPlaying = true;
+				SC_canalSom = Sound( new MusicaMenu).play(0, int.MAX_VALUE);
+			}
+				
 			var mn:MenuBase = new MenuBase(MENU_PRINCIPAL, new MenuPrincipalFundo());
 			mn.adicionaOpcao("Novo Jogo", 1 );
 			//mn.adicionaOpcao("Opções", 2,defineMenuOpcoes);
@@ -87,6 +100,10 @@ package
 		 * Retorna uma instancia do Menu do tipo MenuBase
 		 */
 		private function defineMenuFases():MenuBase {
+			if (!BO_isPlaying) {
+				BO_isPlaying = true;
+				SC_canalSom = Sound( new MusicaMenu).play(0, int.MAX_VALUE);
+			}
 			var mn:MenuBase = new MenuBase(MENU_CONTROLE_FASES , new MenuPrincipalFundo());
 			controleFase.adicionaOpcoesMenu(mn);
 			mn.adicionaOpcao("Voltar", 2 , defineMenuInicial);			
@@ -95,6 +112,10 @@ package
 		}
 
 		private function defineMenuUpgrades():MenuBase {
+			if (!BO_isPlaying) {
+				BO_isPlaying = true;
+				SC_canalSom = Sound( new MusicaMenu).play(0, int.MAX_VALUE);
+			}
 			var mn:MenuBase = new MenuUpgrades(MENU_PRINCIPAL);
 			mn.semFundo = true;
 			mn.adicionaOpcao("Voltar", 99 , defineMenuInicial);			
@@ -103,6 +124,10 @@ package
 		}
 		
 		private function defineMenuTutorial():MenuBase {
+			if (!BO_isPlaying) {
+				BO_isPlaying = true;
+				SC_canalSom = Sound( new MusicaMenu).play(0, int.MAX_VALUE);
+			}
 			var mn:MenuBase = new MenuTutorial(MENU_TUTORIAL, new MenuPrincipalFundo());
 			mn.adicionaOpcao("Voltar", 99 , defineMenuInicial);			
 			mn.formatacao = TF_txtForm;
@@ -131,6 +156,7 @@ package
 		 * Retorna uma instancia do Menu do tipo MenuBase
 		 */		
 		private function defineNivel():MenuBase {
+			SC_canalSom = Sound( new MusicaMenu).play(0, int.MAX_VALUE);
 			var nome:String = ("menufase" + FaseID.toString());
 			var mn:MenuBase = new MenuBase(nome,new MenuPrincipalFundo());
 			mn.adicionaOpcao("Fácil", 1);
