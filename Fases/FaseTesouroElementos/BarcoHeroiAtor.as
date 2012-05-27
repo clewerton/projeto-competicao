@@ -94,12 +94,25 @@
 		 */
 		public function BarcoHeroiAtor()
 		{
-			//Define a  imagem para o casco do navio
-			MC_Barco = new BarcoHeroiCasco;
-			super(MC_Barco);
-			
 			//Recupera upgrades
 			UP_upgrades = new BarcoHeroiUpgrades;
+			
+			//Define a  imagem para o casco do navio
+			//MC_Barco = new BarcoHeroiCasco;
+			switch (UP_upgrades.nivelNavio)
+			{
+				case 0:
+					MC_Barco = new BarcoHeroiCasco;
+				break;
+				case 1:
+					MC_Barco = new BarcoHeroi2;
+				break;
+				case 2:
+					MC_Barco = new BarcoHeroi3;
+				break;
+				default:
+			}
+			super(MC_Barco);
 			
 			//anexa a imagem da Vela
 			switch (UP_upgrades.nivelVela)
