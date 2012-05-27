@@ -105,7 +105,7 @@
 					MC_Barco = new BarcoHeroiCasco;
 				break;
 				case 1:
-					MC_Barco = new BarcoHeroi2;
+					MC_Barco = new BarcoHeroi3;
 				break;
 				case 2:
 					MC_Barco = new BarcoHeroi3;
@@ -115,25 +115,32 @@
 			super(MC_Barco);
 			
 			//anexa a imagem da Vela
-			switch (UP_upgrades.nivelVela)
+			if (UP_upgrades.nivelNavio != 1)
 			{
-				case 0:
-					MC_velas = new BarcoHeroiVelas1;
-				break;
-				case 1:
-					MC_velas = new BarcoHeroiVelas2;
-				break;
-				case 2:
-					MC_velas = new BarcoHeroiVelas3;
-				break;
-				default:
-			} 
+				switch (UP_upgrades.nivelVela)
+				{
+					case 0:
+						MC_velas = new BarcoHeroiVelas1;
+					break;
+					case 1:
+						MC_velas = new BarcoHeroiVelas2;
+					break;
+					case 2:
+						MC_velas = new BarcoHeroiVelas3;
+					break;
+					default:
+				}
+				this.addChild(MC_velas);
+				
+				//posiciona da vela no slot
+				MC_velas.x = MC_Barco.slotVela.x;
+				MC_velas.y = MC_Barco.slotVela.y;
+			}
 			
-			this.addChild(MC_velas)
 			
-			//posiciona da vela no slot
-			MC_velas.x = MC_Barco.slotVela.x;
-			MC_velas.y = MC_Barco.slotVela.y;
+			
+			
+			
 			
 		}
 		
