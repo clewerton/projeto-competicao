@@ -2,10 +2,6 @@ package TangoGames.Fases
 {
 	import flash.events.Event;
 	
-	/**
-	 * ...
-	 * @author Arthur Figueirdo
-	 */
 	public interface FaseHUDInterface 
 	{
 		/**

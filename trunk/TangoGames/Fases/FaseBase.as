@@ -11,10 +11,6 @@ package TangoGames.Fases
 	import flash.display.MovieClip;
 	import flash.events.Event;
 	
-	/**
-	 * ...
-	 * @author Diogo Honorato
-	 */
 	public class FaseBase extends MovieClip {
 		
 		private var UI_faseID:uint;

@@ -6,10 +6,6 @@ package Fases.FaseTesouroElementos
 	import TangoGames.Atores.AtorBase;
 	import TangoGames.Atores.AtorInterface;
 	
-	/**
-	 * ...
-	 * @author Arthur Figueirdo
-	 */
 	public class BarcoInimigoNaufragioAtor extends AtorBase implements AtorInterface 
 	{
 		var MC_Naufragio:MovieClip;

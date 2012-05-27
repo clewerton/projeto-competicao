@@ -8,10 +8,6 @@ package TangoGames.Efeitos
 	import flash.geom.Point;
 	import TangoGames.Utils.Mundo;
 	
-	/**
-	 * ...
-	 * @author Arthur Figueirdo
-	 */
 	public class Trancante extends Sprite 
 	{
 		

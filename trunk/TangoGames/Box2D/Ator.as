@@ -1,17 +1,9 @@
-﻿/**
- * ...
- * @author Arthur Figueirdo
- */
-package TangoGames.Box2D
+﻿package TangoGames.Box2D
 {
 	import Box2D.Dynamics.b2Body;
 	import flash.display.DisplayObject;
 	import flash.events.EventDispatcher;
 	
-	/**
-	 * ...
-	 * @author Arthur Figueirdo
-	 */
 	public class Ator extends EventDispatcher
 	{	
 		//Represantacao do corpo fisico na simulacao fisica do mundo

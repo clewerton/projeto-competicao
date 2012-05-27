@@ -18,7 +18,7 @@ package TangoGames.Atores
 	import TangoGames.Fases.FaseBase;
 	/**
 	 * Classe AtorBase auxila a controlar o coportamento dos elementos dinamicos do jogos
-	 * @author Arthur Figueirdo
+	 * 
 	 */
 	public class AtorBase extends Sprite {
 		//variaveis de representação visual da classe Ator

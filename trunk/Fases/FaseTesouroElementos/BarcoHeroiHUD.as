@@ -8,10 +8,6 @@ package Fases.FaseTesouroElementos
 	import TangoGames.Fases.FaseHUD;
 	import TangoGames.Fases.FaseHUDInterface;
 	
-	/**
-	 * ...
-	 * @author Arthur Figueirdo
-	 */
 	public class BarcoHeroiHUD extends FaseHUD implements FaseHUDInterface 
 	{
 		

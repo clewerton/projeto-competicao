@@ -1,4 +1,4 @@
-package TangoGames.Utils 
+package TangoGames.Box2D 
 {
 	import Box2D.Collision.Shapes.b2EdgeChainDef;
 	import Box2D.Collision.Shapes.b2EdgeShape;
@@ -10,10 +10,7 @@ package TangoGames.Utils
 	import Box2D.Dynamics.b2FixtureDef;
 	import flash.display.Sprite;
 	import flash.geom.Point;
-	/**
-	 * ...
-	 * @author Arthur Figueirdo
-	 */
+	
 	public class Superfices extends Ator {
 		
 		public function Superfices( pPosicao:Point ,  pListaVertices:Array )  {

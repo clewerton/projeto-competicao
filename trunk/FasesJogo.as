@@ -4,10 +4,6 @@ package
 	import Fases.*;
 	import flash.display.DisplayObjectContainer;
 	
-	/**
-	 * ...
-	 * @author Diogo Honorato
-	 */
 	public class FasesJogo extends FaseControle 
 	{
 		private var FD_dados		:FasesDados;

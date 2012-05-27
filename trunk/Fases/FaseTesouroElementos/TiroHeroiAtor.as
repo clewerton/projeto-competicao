@@ -13,10 +13,6 @@ package Fases.FaseTesouroElementos
 	import TangoGames.Atores.AtorInterface;
 	import TangoGames.Utils;
 	
-	/**
-	 * ...
-	 * @author Arthur Figueirdo
-	 */
 	public class TiroHeroiAtor extends AtorBase implements AtorInterface 
 	{
 		//tipos de tiro

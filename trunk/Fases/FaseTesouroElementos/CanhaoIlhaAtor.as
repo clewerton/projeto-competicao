@@ -14,10 +14,6 @@ package Fases.FaseTesouroElementos
 	import TangoGames.Atores.AtorInterface;
 	import TangoGames.Utils;
 	
-	/**
-	 * ...
-	 * @author Arthur Figueirdo
-	 */
 	public class CanhaoIlhaAtor extends AtorBase implements AtorInterface 
 	{
 		//constantes de estado do canhão

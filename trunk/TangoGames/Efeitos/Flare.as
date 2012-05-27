@@ -5,10 +5,6 @@ package TangoGames.Efeitos
 	import flash.events.Event;
 	import flash.geom.Point;
 	
-	/**
-	 * ...
-	 * @author Arthur Figueirdo
-	 */
 	public class Flare extends Sprite 
 	{
 		private var _stageRef:Stage;

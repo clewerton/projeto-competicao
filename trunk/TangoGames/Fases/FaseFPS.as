@@ -7,10 +7,7 @@ package TangoGames.Fases
 	import flash.text.TextField;
 	import flash.text.TextFormat;
 	import flash.utils.Timer;
-	/**
-	 * ...
-	 * @author Arthur Figueirdo
-	 */
+	
 	public class FaseFPS extends FaseHUD implements FaseHUDInterface 
 	{
 		private var TM_timer:Timer;

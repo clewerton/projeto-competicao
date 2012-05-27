@@ -3,10 +3,6 @@ package TangoGames.Fases
 	import flash.events.Event;
 	import TangoGames.Atores.AtorBase;
 	
-	/**
-	 * ...
-	 * @author Arthur Figueirdo
-	 */
 	public class FaseEvent extends Event 
 	{
 		//constantes estaticas dos nome dos eventos

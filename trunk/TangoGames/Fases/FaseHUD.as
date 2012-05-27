@@ -4,10 +4,6 @@ package TangoGames.Fases
 	import flash.utils.getDefinitionByName;
 	import flash.utils.getQualifiedClassName;
 	
-	/**
-	 * ...
-	 * @author Arthur Figueirdo
-	 */
 	public class FaseHUD extends MovieClip 
 	{
 		//variavel para guardar a referencia a classe FaseBase que o FaseHUD pertence

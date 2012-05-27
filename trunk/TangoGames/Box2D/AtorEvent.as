@@ -1,11 +1,7 @@
-package TangoGames.Utils 
+package TangoGames.Box2D 
 {
 	import flash.events.Event;
 	
-	/**
-	 * ...
-	 * @author Arthur Figueirdo
-	 */
 	public class AtorEvent extends Event 
 	{
 		public static const ATOR_SAIU_STAGE:String = "AtorSaiuStage";

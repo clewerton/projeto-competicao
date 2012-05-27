@@ -5,10 +5,7 @@ package TangoGames
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
-	/**
-	 * ...
-	 * @author Arthur Figueirdo
-	 */
+	
 	public class Utils
 	{
 		public static const RADIANOS_TO_GRAUS:Number = 57.29577951308232;

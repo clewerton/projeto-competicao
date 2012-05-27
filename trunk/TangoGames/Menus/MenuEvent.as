@@ -5,7 +5,7 @@ package TangoGames.Menus
 	/**
 	 * Clase Eventos do MenuBase
 	 * Contém as Propriedades: OpcaoMenu (valor de retorno da opcao) e OpcaoObj (objeto MenuOpcao relacionada a opção criada no MenuBase)
-	 * @author Diogo Honorato
+	 * 
 	 */
 	public class MenuEvent extends Event 
 	{

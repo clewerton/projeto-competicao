@@ -4,10 +4,7 @@ package TangoGames.Fases
 	import flash.utils.getDefinitionByName;
 	import flash.utils.getQualifiedClassName;
 	import flash.utils.Proxy;
-	/**
-	 * ...
-	 * @author Arthur Figueirdo
-	 */
+	
 	dynamic public class FaseParamentos extends Proxy
 	{
 		private var UI_faseID:uint;
