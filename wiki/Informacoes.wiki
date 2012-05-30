@@ -4,9 +4,6 @@
 
 Email para envio: sggame@hotmail.com
 
-= Details =
+= Detalhes =
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+data limite passou para 02/07/2012
