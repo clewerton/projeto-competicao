@@ -17,6 +17,7 @@ package
 		public static const MENU_PRINCIPAL:String =  "MenuPrincipal";
 		public static const MENU_UPGRADES:String  =  "MenuUpgrades";
 		public static const MENU_TUTORIAL:String  =  "MenuTutorial";
+		public static const MENU_CREDITOS:String  =  "MenuCreditos";
 		
 		//Musica
 		private var SC_canalSom		:SoundChannel;
@@ -82,11 +83,12 @@ package
 		{	tocaMusica (new MusicaMenu);
 				
 			var mn:MenuBase = new MenuBase(MENU_PRINCIPAL, new MenuPrincipalFundo());
-			mn.adicionaOpcao("Novo Jogo", 1 );
+			mn.adicionaOpcao("New Game", 1 );
 			//mn.adicionaOpcao("Opções", 2,defineMenuOpcoes);
-			mn.adicionaOpcao("Selecionar Fase",3,defineMenuFases);
+			mn.adicionaOpcao("Stage Select",3,defineMenuFases);
 			mn.adicionaOpcao("Upgrades", 4, defineMenuUpgrades);
-			mn.adicionaOpcao("Tutorial",5, defineMenuTutorial);
+			mn.adicionaOpcao("Tutorial", 5, defineMenuTutorial);
+			mn.adicionaOpcao("Credits", 6, defineMenuCreditos);
 			mn.formatacao = TF_txtForm;	
 			return mn;
 		}
@@ -100,7 +102,7 @@ package
 			tocaMusica (new MusicaMenu);
 			var mn:MenuBase = new MenuBase(MENU_CONTROLE_FASES , new MenuPrincipalFundo());
 			controleFase.adicionaOpcoesMenu(mn);
-			mn.adicionaOpcao("Voltar", 2 , defineMenuInicial);			
+			mn.adicionaOpcao("Return", 2 , defineMenuInicial);			
 			mn.formatacao = TF_txtForm;
 			return mn;
 		}
@@ -109,7 +111,7 @@ package
 			tocaMusica (new MusicaUpgrade);
 			var mn:MenuBase = new MenuUpgrades(MENU_UPGRADES);
 			mn.semFundo = true;
-			mn.adicionaOpcao("Voltar", 99 , defineMenuInicial);			
+			mn.adicionaOpcao("Return", 99 , defineMenuInicial);			
 			mn.formatacao = TF_txtForm;
 			return mn;
 		}
@@ -117,11 +119,19 @@ package
 		private function defineMenuTutorial():MenuBase {
 			tocaMusica (new MusicaCreditos);
 			var mn:MenuBase = new MenuTutorial(MENU_TUTORIAL, new MenuPrincipalFundo());
-			mn.adicionaOpcao("Voltar", 99 , defineMenuInicial);			
+			mn.adicionaOpcao("Return", 99 , defineMenuInicial);			
 			mn.formatacao = TF_txtForm;
 			return mn;
 		}
 
+		private function defineMenuCreditos():MenuBase {
+			tocaMusica (new MusicaCreditos);
+			var mn:MenuBase = new MenuCreditos(MENU_CREDITOS, new MenuPrincipalFundo());
+			mn.adicionaOpcao("Return", 99 , defineMenuInicial);			
+			mn.formatacao = TF_txtForm;
+			return mn;
+		}
+		
 		
 		/**
 		 * Define Menu de Opções do Jogo
@@ -150,7 +160,7 @@ package
 			mn.adicionaOpcao("Fácil", 1);
 			mn.adicionaOpcao("Médio", 2);
 			mn.adicionaOpcao("Dificíl", 3);
-			mn.adicionaOpcao("Voltar", 2 , defineMenuFases);			
+			mn.adicionaOpcao("Return", 2 , defineMenuFases);			
 			mn.formatacao = TF_txtForm;
 			return mn;
 		}

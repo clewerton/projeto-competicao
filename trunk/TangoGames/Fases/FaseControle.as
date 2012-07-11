@@ -73,13 +73,13 @@ package TangoGames.Fases
 		{	var mn:MenuBase = new MenuBase("MenuControle", criaFundo());
 			switch (e.type) {
 				case FaseEvent.FASE_PAUSA:
-					mn.adicionaOpcao("Continuar", 0)
-					mn.adicionaOpcao("Reiniciar", 1);
-					mn.adicionaOpcao("Abandonar", 2);
+					mn.adicionaOpcao("Continue", 0)
+					mn.adicionaOpcao("Restart", 1);
+					mn.adicionaOpcao("Back to Menu", 2);
 				break;
 				case FaseEvent.FASE_FIMDEJOGO:
-					mn.adicionaOpcao("Reiniciar", 1);
-					mn.adicionaOpcao("Sair", 2);
+					mn.adicionaOpcao("Restart", 1);
+					mn.adicionaOpcao("Back to Menu", 2);
 				break;
 			case FaseEvent.FASE_CONCLUIDA:
 					if (!destravaProximaFase(FaseBase(e.currentTarget).faseID , FaseBase(e.currentTarget).nivel)) {
@@ -88,9 +88,9 @@ package TangoGames.Fases
 						FaseMainInterface(DO_mainapp).manipulaSairFases();
 						return;
 					}
-					mn.adicionaOpcao("Joga Novamente", 1);
-					mn.adicionaOpcao("Proxima Fase", 4);
-					mn.adicionaOpcao("Sair", 2);
+					mn.adicionaOpcao("Play Again", 1);
+					mn.adicionaOpcao("Next Stage", 4);
+					mn.adicionaOpcao("Back to Menu", 2);
 				break;
 					
 				default:
